@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="google" content="notranslate">
+<title>💻 Operating Systems — Midterm Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#fbbf24; --green:#34d399; --red:#f87171;
+    --purple:#a78bfa; --bg-card:#1e1b4b; --line:rgba(255,255,255,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:'Cairo',system-ui,sans-serif;min-height:100vh;
+    background:linear-gradient(135deg,#141033,#1e1b4b 45%,#2e1065);
+    color:#fff;display:block;padding:20px 12px;overflow-x:hidden;
+  }
+  .app{width:100%;max-width:820px;margin:0 auto;}
+  .card{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:24px;
+    padding:24px 20px;box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    position:relative;z-index:10;
+  }
+  .hidden{display:none!important}
+  h1{font-size:clamp(1.3rem,4vw,2rem);font-weight:900;line-height:1.4;margin-bottom:10px}
+  h1 span{color:var(--gold)}
+  .sub{color:#c7d2fe;line-height:1.8;font-size:.95rem;margin-bottom:20px}
+  .badge{
+    display:inline-block;font-size:.8rem;font-weight:700;
+    background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.45);
+    color:var(--gold);padding:6px 14px;border-radius:99px;margin-bottom:16px;
+  }
+  .btn{font-family:inherit;font-size:1rem;font-weight:700;border:none;border-radius:14px;padding:14px 20px;cursor:pointer;transition:.2s;touch-action:manipulation;width:100%}
+  .btn-primary{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#2a1a00;box-shadow:0 6px 20px rgba(251,191,36,.3)}
+  .btn-primary:active{transform:scale(0.98)}
+  .btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--line)}
+  .btn-ghost:active{background:rgba(255,255,255,.2)}
+  .btn-skip{background:rgba(167,139,250,.18);color:#c4b5fd;border:1px solid rgba(167,139,250,.45)}
+  .btn-skip:active{background:rgba(167,139,250,.3)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .hint{margin-top:16px;text-align:center;font-size:.85rem;color:#a5b4fc}
+  .hint b{color:var(--gold)}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:.8rem;color:#c7d2fe;font-weight:600;flex-wrap:wrap;margin-bottom:12px}
+  #score-pill{background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.4);color:var(--gold);padding:4px 10px;border-radius:99px}
+  #streak-pill{background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.5);color:#fbbf24;padding:4px 10px;border-radius:99px;font-weight:800;transition:transform .2s}
+  #streak-pill.active{transform:scale(1.08);box-shadow:0 0 15px rgba(251,191,36,.5)}
+  #section-pill{background:rgba(167,139,250,.18);border:1px solid rgba(167,139,250,.5);color:#c4b5fd;padding:4px 10px;border-radius:99px;direction:rtl;font-size:.75rem}
+  .timer-pill{
+    background:rgba(52,211,153,.16);border:1px solid rgba(52,211,153,.4);color:#6ee7b7;
+    padding:4px 10px;border-radius:99px;direction:ltr;
+    font-variant-numeric:tabular-nums;font-weight:800;font-size:.8rem;transition:all .3s;
+  }
+  .timer-pill.warn{background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.4);color:#fbbf24}
+  .timer-pill.danger{background:rgba(248,113,113,.16);border-color:rgba(248,113,113,.4);color:#f87171}
+  #sound-btn{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;padding:4px 10px;border-radius:99px;font-size:.9rem;cursor:pointer;font-family:inherit}
+
+  .progress{height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:10px 0 16px}
+  .progress-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#fbbf24,#a78bfa);transition:width .3s ease}
+
+  .q-en{font-size:1.15rem;font-weight:800;line-height:1.5;direction:ltr;text-align:left;margin-bottom:8px;color:#fff;white-space:pre-wrap}
+  .q-ar{font-size:0.85rem;color:#a5b4fc;line-height:1.5;margin-bottom:16px;border-right:2px solid rgba(167,139,250,.5);padding-right:8px}
+
+  .q-timer-wrap{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .q-timer-label{font-size:.75rem;color:#a5b4fc;font-weight:700;min-width:45px;direction:ltr;text-align:left}
+  .q-timer-bar{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+  .q-timer-fill{height:100%;background:linear-gradient(90deg,#34d399,#fbbf24);border-radius:99px;transition:width 1s linear,background .3s}
+  .q-timer-fill.warn{background:linear-gradient(90deg,#fbbf24,#f87171)}
+  .q-timer-fill.danger{background:#f87171}
+
+  .option{
+    display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;direction:ltr;
+    font-family:'Courier New',Courier,monospace;font-size:1rem;font-weight:600;color:#fff;
+    background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);
+    border-radius:12px;padding:14px 16px;cursor:pointer;transition:.15s;margin-bottom:10px;
+    touch-action:manipulation;white-space:pre-wrap;line-height:1.4;
+  }
+  .option:active:not(:disabled){background:rgba(255,255,255,.2);border-color:rgba(251,191,36,.6)}
+  .option .key{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.15);font-weight:800;font-size:.85rem;font-family:'Cairo',sans-serif}
+  .option.correct{background:rgba(52,211,153,.2);border-color:var(--green);animation:popCorrect .5s}
+  .option.correct .key{background:var(--green);color:#053b28}
+  .option.wrong{background:rgba(248,113,113,.2);border-color:var(--red);animation:shakeWrong .4s}
+  .option.wrong .key{background:var(--red);color:#450a0a}
+  .option:disabled{cursor:default}
+  @keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @keyframes shakeWrong{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  .feedback{margin-top:12px;padding:16px;border-radius:14px;font-size:.9rem;line-height:1.8;animation:fadeIn .3s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .feedback.ok{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.5)}
+  .feedback.no{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.5)}
+  .feedback.skip{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.5)}
+  .feedback .title{font-weight:900;font-size:1rem;margin-bottom:8px;display:block}
+  .feedback.ok .title{color:var(--green)}
+  .feedback.no .title{color:var(--red)}
+  .feedback.skip .title{color:#c4b5fd}
+  .feedback .exp{padding:12px 14px;background:rgba(0,0,0,.3);border-radius:10px;margin:8px 0;font-size:.9rem;line-height:1.7;direction:rtl}
+  .feedback .exp b{color:var(--gold)}
+  .feedback .motive{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.2);color:#fef3c7;font-weight:700;font-size:.9rem}
+
+  .combo-banner{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    font-size:2rem;font-weight:900;color:#fbbf24;
+    text-shadow:0 0 30px rgba(251,191,36,.8),0 0 60px rgba(251,191,36,.4);
+    pointer-events:none;z-index:2000;
+    transition:transform .4s cubic-bezier(0.175,0.885,0.32,1.275),opacity .4s;
+    opacity:0;text-align:center;direction:rtl;
+  }
+  .combo-banner.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+
+  .confetti-particle{
+    position:fixed;width:10px;height:10px;pointer-events:none;z-index:1500;
+    border-radius:50%;animation:fallConfetti 1.2s ease-out forwards;
+  }
+  @keyframes fallConfetti{
+    0%{transform:translate(0,0) rotate(0deg);opacity:1}
+    100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}
+  }
+
+  .ring-wrap{display:grid;place-items:center;margin:6px 0 16px}
+  .ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) 0deg,rgba(255,255,255,.1) 0deg);transition:background .7s ease}
+  .ring-inner{width:100px;height:100px;border-radius:50%;background:#221a4d;border:1px solid var(--line);display:grid;place-items:center;font-size:1.3rem;font-weight:900;color:var(--gold)}
+  .result-title{text-align:center;font-size:1.3rem;font-weight:900;margin-bottom:6px}
+  .result-msg{text-align:center;color:#c7d2fe;line-height:1.8;margin-bottom:12px;font-size:.9rem}
+  .score-line{text-align:center;font-size:1rem;margin-bottom:12px;color:#c7d2fe}
+  .score-line b{color:var(--gold);font-size:1.1rem}
+  .time-line{text-align:center;font-size:.85rem;margin-bottom:18px;color:#a5b4fc}
+  .time-line b{color:var(--gold)}
+
+  .breakdown{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+  .breakdown h3{font-size:.85rem;font-weight:800;margin-bottom:12px;color:#c7d2fe}
+  .bd-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;font-weight:600;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.1)}
+  .bd-row:last-child{border-bottom:none}
+  .bd-section{flex:none;min-width:45px;direction:ltr;background:rgba(167,139,250,.18);color:#c4b5fd;padding:2px 6px;border-radius:6px;font-weight:800;font-size:.7rem;text-align:center}
+  .bd-title{flex:1;font-size:.8rem}
+  .bd-bar{flex:none;width:80px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+  .bd-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#fbbf24,#34d399)}
+  .bd-score{flex:none;min-width:40px;text-align:center;font-weight:800;font-size:.8rem}
+
+  .review-list{max-height:60vh;overflow-y:auto;padding-left:4px;margin-bottom:16px}
+  .review-list::-webkit-scrollbar{width:5px}
+  .review-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:9px}
+  .review-item{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .review-section{display:inline-block;background:rgba(167,139,250,.18);color:#c4b5fd;padding:2px 8px;border-radius:6px;font-weight:800;font-size:.7rem;direction:ltr;margin-bottom:8px}
+  .review-en{font-weight:800;font-size:.95rem;line-height:1.5;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap}
+  .review-ar{font-size:.8rem;color:#a5b4fc;margin-bottom:8px}
+  .review-answer{font-size:.85rem;color:#6ee7b7;font-weight:700;background:rgba(52,211,153,.1);padding:6px 10px;border-radius:6px;margin-bottom:8px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+  .review-exp{font-size:.8rem;color:#cbd5e1;line-height:1.7;background:rgba(0,0,0,.2);padding:8px 12px;border-radius:8px}
+  .review-exp b{color:var(--gold)}
+
+  #toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120%);background:#fbbf24;color:#2a1a00;font-weight:800;padding:10px 20px;border-radius:12px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.3s;z-index:999;text-align:center;max-width:90vw}
+  #toast.show{transform:translate(-50%,0)}
+
+  #print-area{display:none}
+  @media print{
+    @page{margin:12mm;size:A4}
+    html,body{background:#fff!important;color:#000!important;display:block!important;padding:0!important}
+    .app,#toast,#error-box,.combo-banner{display:none!important}
+    #print-area{display:block!important;padding:0}
+    .p-header{border-bottom:2px solid #333;padding-bottom:10px;margin-bottom:16px}
+    .p-header h1{font-size:18px;margin-bottom:4px;color:#111}
+    .p-header .p-meta{font-size:11px;color:#555}
+    .p-section-title{font-size:14px;background:#ede9fe;padding:6px 10px;border-radius:6px;margin:14px 0 8px;color:#4c1d95;page-break-after:avoid}
+    .p-q{page-break-inside:avoid;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #ddd}
+    .p-q .p-q-num{font-weight:800;font-size:13px;margin-bottom:2px;color:#111;direction:ltr;text-align:left;white-space:pre-wrap}
+    .p-q .p-q-ar{font-size:10px;color:#666;margin-bottom:4px}
+    .p-q .p-answer{font-size:12px;color:#0a7a3b;font-weight:700;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+    .p-q .p-exp{font-size:11.5px;color:#333;background:#f5f5f5;padding:6px 8px;border-radius:4px;line-height:1.6}
+    .p-q .p-exp b{color:#b45309}
+    .p-footer{margin-top:16px;padding-top:8px;border-top:1px solid #ccc;font-size:9px;color:#888;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<div id="error-box" class="hidden" style="background:red;color:white;padding:15px;border-radius:10px;margin-bottom:10px;font-weight:bold;z-index:9999;position:relative;"></div>
+
+<div class="combo-banner" id="combo-banner"></div>
+
+<div class="app">
+  <section id="screen-home" class="card">
+    <div class="badge">💻 Operating Systems · Midterm Prep</div>
+    <h1>لعبة <span>نظم التشغيل</span> — استعد للاختبار</h1>
+    <p class="sub">أسئلة شاملة من سلايدات د. مباركة + د. ماجد السفياني + التجميعات (بدون تكرار).</p>
+    <div style="background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.35);border-radius:12px;padding:10px 14px;margin-bottom:20px;font-size:.85rem;color:#c4b5fd;line-height:1.7">
+      🔊 <b>أصوات تفاعلية</b> — تصفيق عند الإجابة الصحيحة.<br>
+      🔥 <b>عدّاد السلاسل (Streak)</b> — كل 3 إجابات صحيحة متتالية = مكافأة!<br>
+      ⏱ <b>مؤقت لكل سؤال</b> + مؤقت شامل (120 دقيقة).<br>
+      ⏭ <b>زر التخطي</b> — يمكنك تخطي أي سؤال بدون احتسابه في الأخطاء.
+    </div>
+    <button class="btn btn-primary" id="btn-start">ابدأ المهمة 🚀</button>
+    <div class="hint">إجمالي الأسئلة: <b id="q-count">0</b></div>
+  </section>
+
+  <section id="screen-quiz" class="card hidden">
+    <div class="topbar">
+      <span id="counter">السؤال 1 من 1</span>
+      <span id="section-pill">MB</span>
+      <span id="streak-pill">🔥 0</span>
+      <span id="global-timer" class="timer-pill">⏱ 120:00</span>
+      <span id="score-pill">⭐ 0</span>
+      <button id="sound-btn" title="الصوت">🔊</button>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    
+    <div id="question-en" class="q-en"></div>
+    <div id="question-ar" class="q-ar"></div>
+
+    <div class="q-timer-wrap">
+      <span class="q-timer-label">⏳ <span id="q-timer-text">60s</span></span>
+      <div class="q-timer-bar"><div id="q-timer-fill" class="q-timer-fill"></div></div>
+    </div>
+    
+    <div id="options"></div>
+    
+    <div id="feedback" class="feedback hidden"></div>
+    <button class="btn btn-skip" id="btn-skip" style="margin-top:10px">⏭ تخطي السؤال</button>
+    <button class="btn btn-primary hidden" id="btn-next" style="margin-top:12px">السؤال التالي ←</button>
+    <button class="btn btn-primary hidden" id="btn-finish" style="margin-top:12px">عرض النتيجة 🏁</button>
+  </section>
+
+  <section id="screen-result" class="card hidden">
+    <div class="ring-wrap">
+      <div class="ring" id="ring"><div class="ring-inner" id="result-pct">0%</div></div>
+    </div>
+    <div class="result-title" id="result-title">—</div>
+    <p class="result-msg" id="result-msg">—</p>
+    <p class="score-line">النتيجة: <b id="result-score">0 / 0</b></p>
+    <p class="time-line">⏱ الوقت المستغرق: <b id="result-time">—</b></p>
+    <p class="time-line">🔥 أطول سلسلة: <b id="result-streak">0</b></p>
+    <p class="time-line">⏭ الأسئلة المتخطاة: <b id="result-skipped">0</b></p>
+    <div class="breakdown" id="breakdown"></div>
+    <button class="btn btn-primary" id="btn-retry">إعادة المحاولة الكاملة 🔁</button>
+    <button class="btn btn-ghost" id="btn-review-wrong" style="margin-top:8px">🎯 مراجعة الأخطاء فقط</button>
+    <button class="btn btn-ghost" id="btn-review-full" style="margin-top:8px">📖 مراجعة شاملة</button>
+    <button class="btn btn-ghost" id="btn-pdf-result" style="margin-top:8px">📄 تصدير الأسئلة PDF</button>
+    <button class="btn btn-ghost" id="btn-back-portal" style="margin-top:8px">↩ العودة للبوابة</button>
+  </section>
+
+  <section id="screen-review" class="card hidden">
+    <h1 style="font-size:1.2rem;margin-bottom:6px">📖 <span id="review-title">مراجعة</span></h1>
+    <div id="review-list" class="review-list"></div>
+    <button class="btn btn-ghost" id="btn-review-pdf">📄 تصدير المراجعة PDF</button>
+    <button class="btn btn-ghost" id="btn-review-back" style="margin-top:8px">← رجوع للنتيجة</button>
+  </section>
+</div>
+
+<div id="print-area"></div>
+<div id="toast"></div>
+
+<script>
+window.onerror = function(msg, url, line) {
+  const errBox = document.getElementById('error-box');
+  if(errBox) {
+    errBox.classList.remove('hidden');
+    errBox.innerHTML = "⚠️ خطأ: " + msg + "<br>السطر: " + line;
+  }
+  return false;
+};
+
+/* ============ نظام الأصوات ============ */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio(){
+  if(!audioCtx){
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTone(freq, duration, type='sine', volume=0.25, delay=0){
+  if(!soundEnabled || !audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.start(t); osc.stop(t + duration + 0.05);
+}
+function sfxCorrect(){ playTone(523.25,0.15,'sine',0.3,0); playTone(659.25,0.15,'sine',0.3,0.1); playTone(783.99,0.35,'sine',0.3,0.2); }
+function sfxWrong(){ playTone(220,0.2,'sawtooth',0.2,0); playTone(165,0.35,'sawtooth',0.2,0.15); }
+function sfxSkip(){ playTone(440,0.08,'triangle',0.2,0); playTone(330,0.12,'triangle',0.2,0.08); }
+function sfxStart(){ playTone(392,0.1,'sine',0.25,0); playTone(523.25,0.1,'sine',0.25,0.08); playTone(659.25,0.2,'sine',0.25,0.16); }
+function sfxTick(){ playTone(880,0.04,'square',0.12,0); }
+function sfxCombo(){ playTone(659.25,0.1,'square',0.25,0); playTone(880,0.1,'square',0.25,0.1); playTone(1046.5,0.25,'square',0.25,0.2); }
+function sfxWin(){ [523.25,659.25,783.99,1046.5,1318.51].forEach((f,i)=>playTone(f,0.25,'sine',0.3,i*0.13)); }
+function sfxLose(){ playTone(392,0.2,'sine',0.2,0); playTone(329.63,0.2,'sine',0.2,0.15); playTone(261.63,0.4,'sine',0.2,0.3); }
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+  if(soundEnabled) initAudio();
+}
+
+function showCombo(text){
+  const b = document.getElementById('combo-banner');
+  b.textContent = text;
+  b.classList.add('show');
+  sfxCombo();
+  setTimeout(()=>b.classList.remove('show'), 1200);
+}
+
+function spawnConfetti(x, y){
+  const colors = ['#fbbf24','#a78bfa','#34d399','#60a5fa','#f472b6'];
+  for(let i=0; i<18; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const angle = (Math.PI*2*i/18) + Math.random()*0.5;
+    const dist = 80 + Math.random()*120;
+    p.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1300);
+  }
+}
+
+const COMBO_MESSAGES = ["🔥 سلسلة نارية!","⚡ أنت في القمة!","🌟 لا يمكن إيقافك!","💎 أداء أسطوري!","🚀 انطلق بقوة!"];
+
+/* ============ بيانات الأسئلة ============ */
+const SECTION_TITLES = {
+  "MB":"د. مباركة العصيمي",
+  "AY":"د. ماجد السفياني",
+  "CL":"التجميعات"
+};
+
+const QUESTIONS = [
+  /* ========== د. مباركة العصيمي (MB) ========== */
+  {s:"MB", t:45, en:"Linux is:", ar:"لينكس هو:",
+   o:["A closed-source OS","An open-source OS","A programming language","A web browser"],c:1,
+   e:"<b>لماذا؟</b> لينكس نظام تشغيل مفتوح المصدر ومجاني، يمكنك رؤية كوده وتعديله ومشاركته."},
+  {s:"MB", t:45, en:"Who created Unix at Bell Labs in 1969?", ar:"من أنشأ يونكس في مختبرات بيل 1969؟",
+   o:["Linus Torvalds","Ken Thompson and Dennis Ritchie","Richard Stallman","Bill Gates"],c:1,
+   e:"<b>لماذا؟</b> Unix صُنع بواسطة Ken Thompson و Dennis Ritchie عام 1969."},
+  {s:"MB", t:45, en:"What was the earlier failed project that led to Unix?", ar:"ما المشروع السابق الذي أدى إلى يونكس؟",
+   o:["Multics","Linux","GNU","Windows"],c:0,
+   e:"<b>لماذا؟</b> Multics فشل، فبنوا نسخة أبسط اسمها Unix (تلاعب لفظي على Multics)."},
+  {s:"MB", t:45, en:"Unix was rewritten in C in 1973 for:", ar:"أُعيدت كتابة يونكس بلغة C عام 1973 من أجل:",
+   o:["Better graphics","Portability","Networking","Security"],c:1,
+   e:"<b>لماذا؟</b> قابلية النقل (Portability) بين أجهزة مختلفة."},
+  {s:"MB", t:45, en:"What does GNU stand for?", ar:"ماذا يعني GNU؟",
+   o:["GNU's Not Unix","General Unix Network","Global Network Utility","GNU Native Unix"],c:0,
+   e:"<b>لماذا؟</b> GNU = GNU's Not Unix (تسمية تلاعبية)."},
+  {s:"MB", t:45, en:"Who started the GNU Project in 1985?", ar:"من بدأ مشروع GNU عام 1985؟",
+   o:["Linus Torvalds","Richard Stallman","Ken Thompson","Dennis Ritchie"],c:1,
+   e:"<b>لماذا؟</b> Richard Stallman بدأ مشروع GNU ومؤسسة FSF."},
+  {s:"MB", t:45, en:"What is the GPL License?", ar:"ما رخصة GPL؟",
+   o:["A proprietary license","General Public License","A hardware license","A network protocol"],c:1,
+   e:"<b>لماذا؟</b> GPL = General Public License من إنشاء Richard Stallman."},
+  {s:"MB", t:45, en:"Which is NOT a freedom under GPL?", ar:"أي مما يلي ليس حرية تحت GPL؟",
+   o:["Use the software for any purpose","Change it to suit your needs","Share it with friends","Keep the source code secret"],c:3,
+   e:"<b>لماذا؟</b> GPL تفرض مشاركة الكود المصدري، لا إخفاءه."},
+  {s:"MB", t:45, en:"Who created the Linux kernel?", ar:"من أنشأ نواة لينكس؟",
+   o:["Richard Stallman","Linus Torvalds","Ken Thompson","Dennis Ritchie"],c:1,
+   e:"<b>لماذا؟</b> Linus Torvalds هو من أنشأ نواة Linux عام 1991."},
+  {s:"MB", t:45, en:"In which year was the Linux kernel first released?", ar:"في أي سنة صدرت نواة لينكس أول مرة؟",
+   o:["1985","1991","1969","1973"],c:1,
+   e:"<b>لماذا؟</b> 1991 على يد Linus Torvalds."},
+  {s:"MB", t:60, en:"What is a Linux distribution?", ar:"ما هي توزيعة لينكس؟",
+   o:["A type of kernel","Kernel + tools + software + installer","A programming language","A hardware device"],c:1,
+   e:"<b>لماذا؟</b> التوزيعة تجمع نواة لينكس + أدوات + برامج + مثبّت."},
+  {s:"MB", t:45, en:"Red Hat is from which country?", ar:"Red Hat من أي دولة؟",
+   o:["USA","Germany","France","South Africa"],c:0,
+   e:"<b>لماذا؟</b> Red Hat شركة أمريكية."},
+  {s:"MB", t:45, en:"SUSE Linux is from which country?", ar:"SUSE من أي دولة؟",
+   o:["USA","Germany","France","Brazil"],c:1,
+   e:"<b>لماذا؟</b> SUSE شركة ألمانية."},
+  {s:"MB", t:45, en:"Ubuntu is a Linux distribution from:", ar:"Ubuntu من:",
+   o:["Germany","USA","South Africa","Japan"],c:2,
+   e:"<b>لماذا؟</b> Ubuntu شركة جنوب أفريقية (Canonical)."},
+  {s:"MB", t:45, en:"What is the core of the Linux OS?", ar:"ما جوهر نظام لينكس؟",
+   o:["Shell","Kernel","Commands","Scripts"],c:1,
+   e:"<b>لماذا؟</b> النواة (Kernel) هي قلب نظام التشغيل."},
+  {s:"MB", t:45, en:"The kernel is responsible for:", ar:"النواة مسؤولة عن:",
+   o:["Interfacing with hardware, memory, CPU allocation","Displaying graphics only","Running web browsers only","Managing printers only"],c:0,
+   e:"<b>لماذا؟</b> النواة تتفاعل مع العتاد وتخصص الذاكرة ووقت المعالج."},
+  {s:"MB", t:45, en:"The shell is:", ar:"الغلاف (Shell) هو:",
+   o:["A hardware component","A program that interprets user commands","A type of kernel","A file system"],c:1,
+   e:"<b>لماذا؟</b> Shell يفسر أوامر المستخدم ويترجمها للنواة."},
+  {s:"MB", t:45, en:"Which of the following is NOT a shell?", ar:"أي مما يلي ليس غلافاً؟",
+   o:["bash","ksh","csh","gzip"],c:3,
+   e:"<b>لماذا؟</b> gzip أداة ضغط، بينما bash/ksh/csh كلها أغلفة."},
+  {s:"MB", t:45, en:"bash stands for:", ar:"bash اختصار لـ:",
+   o:["Bourne Again Shell","Basic Shell","Binary Shell","Batch Shell"],c:0,
+   e:"<b>لماذا؟</b> Bourne Again Shell، تطوير لـ sh."},
+  {s:"MB", t:45, en:"Default number of command-line sessions in Linux?", ar:"عدد جلسات سطر الأوامر الافتراضي في لينكس؟",
+   o:["1","3","6","7"],c:2,
+   e:"<b>لماذا؟</b> 6 جلسات CLI + 1 رسومية = 7 إجمالاً."},
+  {s:"MB", t:45, en:"Key combination for the graphical session?", ar:"تركيبة المفاتيح للجلسة الرسومية؟",
+   o:["Ctrl+Alt+F1","Ctrl+Alt+F7","Ctrl+Shift+F7","Ctrl+Alt+Del"],c:1,
+   e:"<b>لماذا؟</b> Ctrl+Alt+F7 تنتقل للجلسة الرسومية."},
+  {s:"MB", t:45, en:"In prompt [user@machine ~]$, what does ~ mean?", ar:"في الموجه، ~ يعني:",
+   o:["Root directory","User home directory","Current directory","Parent directory"],c:1,
+   e:"<b>لماذا؟</b> ~ = مجلد المستخدم الرئيسي (home)."},
+  {s:"MB", t:45, en:"In prompt, what does # mean?", ar:"# في الموجه تعني:",
+   o:["Normal user","Superuser/root","Comment","Separator"],c:1,
+   e:"<b>لماذا؟</b> # = root أو superuser، بينما $ = مستخدم عادي."},
+  {s:"MB", t:45, en:"General syntax of a Linux command?", ar:"الصيغة العامة لأمر لينكس؟",
+   o:["command [options] [parameters]","parameters command options","command parameters options","options command parameters"],c:0,
+   e:"<b>لماذا؟</b> command ثم options (اختياري) ثم parameters."},
+  {s:"MB", t:45, en:"What does ; do in the shell?", ar:"ماذا تفعل ; في الغلاف؟",
+   o:["Separates multiple commands on one line","Comments out a line","Redirects output","Stops execution"],c:0,
+   e:"<b>لماذا؟</b> ; يفصل أوامر متعددة على سطر واحد."},
+  {s:"MB", t:45, en:"Which command shows the manual page of a command?", ar:"أي أمر يعرض دليل الأمر؟",
+   o:["help","man","info","doc"],c:1,
+   e:"<b>لماذا؟</b> man يعرض manual pages."},
+  {s:"MB", t:45, en:"Which man section contains shell commands?", ar:"أي قسم في man يحتوي أوامر الغلاف؟",
+   o:["Section 1","Section 2","Section 5","Section 8"],c:0,
+   e:"<b>لماذا؟</b> Section 1 = executable programs & shell commands."},
+  {s:"MB", t:45, en:"Which key shows the next screen in man?", ar:"أي مفتاح يعرض الشاشة التالية في man؟",
+   o:["b","n","Spacebar","h"],c:2,
+   e:"<b>لماذا؟</b> Spacebar = next screen، b = back، n = next match."},
+  {s:"MB", t:45, en:"Which command lists directory contents?", ar:"أي أمر يعرض محتويات المجلد؟",
+   o:["cd","ls","pwd","mkdir"],c:1,
+   e:"<b>لماذا؟</b> ls = list."},
+  {s:"MB", t:45, en:"Which shows a long listing including hidden files?", ar:"أي أمر يعرض قائمة طويلة مع الملفات المخفية؟",
+   o:["ls -a","ls -l","ls -la","ls -R"],c:2,
+   e:"<b>لماذا؟</b> -la = long + all (hidden)."},
+  {s:"MB", t:45, en:"Which prints current working directory?", ar:"أي أمر يطبع مجلد العمل الحالي؟",
+   o:["pwd","cd","ls","mkdir"],c:0,
+   e:"<b>لماذا؟</b> pwd = print working directory."},
+  {s:"MB", t:45, en:"Which changes to the parent directory?", ar:"أي أمر ينتقل للمجلد الأب؟",
+   o:["cd ~","cd ..","cd -","cd /"],c:1,
+   e:"<b>لماذا؟</b> .. = parent directory."},
+  {s:"MB", t:45, en:"Which creates a directory path including parents?", ar:"أي أمر ينشئ مسار مجلدات بما فيهم الآباء؟",
+   o:["mkdir -p a/b/c","mkdir a/b/c only","rmdir -p a/b/c","touch -p a/b/c"],c:0,
+   e:"<b>لماذا؟</b> -p ينشئ الآباء تلقائياً."},
+  {s:"MB", t:45, en:"Which removes an empty directory?", ar:"أي أمر يحذف مجلداً فارغاً؟",
+   o:["rm -r","rmdir","rm -f","mv"],c:1,
+   e:"<b>لماذا؟</b> rmdir = remove directory (فارغ فقط)."},
+  {s:"MB", t:45, en:"Which removes a non-empty directory recursively?", ar:"أي أمر يحذف مجلداً غير فارغ تكراريًا؟",
+   o:["rmdir","rm -r","rm -i","cp -r"],c:1,
+   e:"<b>لماذا؟</b> rm -r يحذف المحتوى بأكمله."},
+  {s:"MB", t:45, en:"Which copies a directory recursively?", ar:"أي أمر ينسخ مجلداً تكراريًا؟",
+   o:["cp -i","cp -r","mv -r","cp -f"],c:1,
+   e:"<b>لماذا؟</b> cp -r = recursive copy."},
+  {s:"MB", t:45, en:"Which creates an empty file?", ar:"أي أمر ينشئ ملفاً فارغاً؟",
+   o:["cat","touch","mkdir","nano"],c:1,
+   e:"<b>لماذا؟</b> touch ينشئ ملفاً فارغاً أو يحدّث التاريخ."},
+  {s:"MB", t:45, en:"Which displays the whole content of a file?", ar:"أي أمر يعرض محتوى الملف كاملاً؟",
+   o:["more","cat","head","tail"],c:1,
+   e:"<b>لماذا؟</b> cat يعرض كل المحتوى دفعة واحدة."},
+  {s:"MB", t:45, en:"Which shows the first 10 lines?", ar:"أي أمر يعرض أول 10 أسطر؟",
+   o:["tail","head","cat","more"],c:1,
+   e:"<b>لماذا؟</b> head = أول الأسطر (10 افتراضياً)."},
+  {s:"MB", t:45, en:"Which shows the last 10 lines?", ar:"أي أمر يعرض آخر 10 أسطر؟",
+   o:["head","tail","cat","more"],c:1,
+   e:"<b>لماذا؟</b> tail = آخر الأسطر (10 افتراضياً)."},
+  {s:"MB", t:45, en:"Which creates a symbolic link?", ar:"أي أمر ينشئ رابطاً رمزياً؟",
+   o:["ln -s","ln -r","cp -s","mv -s"],c:0,
+   e:"<b>لماذا؟</b> ln -s = symbolic link."},
+  {s:"MB", t:45, en:"Which archives with tar?", ar:"أي أمر يؤرشف بـ tar؟",
+   o:["tar -xvf","tar -cvf","tar -tvf","tar -rvf"],c:1,
+   e:"<b>لماذا؟</b> -c = create، -v = verbose، -f = file."},
+  {s:"MB", t:45, en:"Which tar option uses gzip?", ar:"أي خيار في tar يستخدم gzip؟",
+   o:["j","z","v","f"],c:1,
+   e:"<b>لماذا؟</b> z = gzip، j = bzip2."},
+  {s:"MB", t:45, en:"Which command decompresses a gzip file?", ar:"أي أمر يفك ضغط gzip؟",
+   o:["gzip","gunzip","zip","tar"],c:1,
+   e:"<b>لماذا؟</b> gunzip يفك ضغط gzip."},
+  {s:"MB", t:45, en:"Which compression tool gives the best rate but takes longer?", ar:"أي أداة ضغط تعطي أفضل نسبة لكن وقت أطول؟",
+   o:["gzip","bzip2","zip","tar"],c:1,
+   e:"<b>لماذا؟</b> bzip2 أبطأ لكنه يضغط أفضل."},
+  {s:"MB", t:45, en:"Which shows date and time?", ar:"أي أمر يعرض التاريخ والوقت؟",
+   o:["cal","date","time","clock"],c:1,
+   e:"<b>لماذا؟</b> date = التاريخ والوقت."},
+  {s:"MB", t:45, en:"Which displays system information?", ar:"أي أمر يعرض معلومات النظام؟",
+   o:["uname -a","sysinfo","system","info"],c:0,
+   e:"<b>لماذا؟</b> uname -a = all system info."},
+  {s:"MB", t:45, en:"Which lists processes?", ar:"أي أمر يعرض العمليات؟",
+   o:["ps -A","ls -A","show -A","proc -A"],c:0,
+   e:"<b>لماذا؟</b> ps -A = all processes."},
+
+  /* ========== د. ماجد السفياني (AY) ========== */
+  {s:"AY", t:45, en:"Which of the following is NOT a goal of an operating system?", ar:"أي مما يلي ليس هدفاً لنظام التشغيل؟",
+   o:["Make the computer convenient to use","Help you write an email","Execute user programs","Use hardware efficiently"],c:1,
+   e:"<b>لماذا؟</b> كتابة الإيميل مهمة تطبيق، ليست هدف نظام التشغيل."},
+  {s:"AY", t:45, en:"Which mobile phones do NOT have an operating system?", ar:"أي هواتف لا تحتوي نظام تشغيل؟",
+   o:["Samsung S2","Google Nexus One","Nokia Lumia","All phones have OS"],c:3,
+   e:"<b>لماذا؟</b> كل الهواتف الحديثة بها نظام تشغيل."},
+  {s:"AY", t:45, en:"A program that runs all the time in a computer is:", ar:"برنامج يعمل طوال الوقت:",
+   o:["A thread","ROM","A process","A kernel"],c:3,
+   e:"<b>لماذا؟</b> Kernel هو البرنامج الدائم العمل."},
+  {s:"AY", t:45, en:"Which is NOT an application program?", ar:"أي مما يلي ليس برنامج تطبيقي؟",
+   o:["Wordpad","Internet Explorer","Microsoft Paint","All are application programs"],c:3,
+   e:"<b>لماذا؟</b> كل ما ذُكر برامج تطبيقية."},
+  {s:"AY", t:45, en:"A bootstrap program is located in:", ar:"برنامج الإقلاع يوجد في:",
+   o:["Kernel","Process","ROM","Strap"],c:2,
+   e:"<b>لماذا؟</b> bootstrap موجود في ROM ويُحمّل النواة."},
+  {s:"AY", t:45, en:"The hardware layer is composed of:", ar:"طبقة العتاد تتكون من:",
+   o:["Physical components only","Programs only","Both","None"],c:0,
+   e:"<b>لماذا؟</b> العتاد مادي فقط، البرامج طبقة أعلى."},
+  {s:"AY", t:45, en:"The top level of memory hierarchy is:", ar:"أعلى مستوى في هرمية الذاكرة:",
+   o:["Main memory","Cache memory","Secondary storage","Registers"],c:3,
+   e:"<b>لماذا؟</b> Registers هي الأسرع والأعلى في الهرم."},
+  {s:"AY", t:45, en:"A program is passive and a process is active.", ar:"البرنامج سلبي والعملية نشطة.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> البرنامج ملف ساكن، العملية برنامج قيد التنفيذ."},
+  {s:"AY", t:45, en:"A CPU can execute only three processes at a time.", ar:"المعالج ينفذ 3 عمليات فقط في وقت واحد.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> CPU ينفذ عملية واحدة في كل لحظة (لكن يبدّل بسرعة)."},
+  {s:"AY", t:45, en:"The OS tracks which users use how much of resources.", ar:"نظام التشغيل يتتبع استخدام المستخدمين للموارد.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> جزء من إدارة الموارد والمحاسبة (accounting)."},
+  {s:"AY", t:45, en:"In DOS, more than one process can be executed in parallel in RAM.", ar:"في DOS، يمكن تنفيذ أكثر من عملية بالتوازي في RAM.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> DOS أحادي المهمة."},
+  {s:"AY", t:45, en:"A process can transition from waiting to ready.", ar:"العملية تنتقل من waiting إلى ready.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> عند اكتمال الحدث (event complete) تنتقل من waiting إلى ready."},
+  {s:"AY", t:45, en:"A process can have parents and child processes.", ar:"العملية يمكن أن يكون لها أب وأبناء.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> عبر fork() يمكن للعملية إنشاء أبناء."},
+  {s:"AY", t:45, en:"On an interrupt, the CPU switches to user mode.", ar:"عند الانقطاع، ينتقل CPU إلى user mode.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> العكس: ينتقل إلى kernel mode لمعالجة الانقطاع."},
+  {s:"AY", t:45, en:"Most OS interface details are hidden from the programmer by the API.", ar:"تفاصيل واجهة OS مخفية عن المبرمج بواسطة API.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> المبرمج يستخدم API دون معرفة التفاصيل الداخلية."},
+  {s:"AY", t:45, en:"The selection function determines which process is selected next.", ar:"دالة الاختيار تحدد العملية التالية للتنفيذ.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> selection هي مهمة المجدول (scheduler)."},
+  {s:"AY", t:60, en:"In paging, the chunks of a process are called:", ar:"في paging، تُسمى أجزاء العملية:",
+   o:["Pages","Frames","Segments","Blocks"],c:0,
+   e:"<b>لماذا؟</b> العملية تُقسّم إلى pages، والذاكرة إلى frames."},
+  {s:"AY", t:60, en:"In paging, the available chunks of memory are called:", ar:"في paging، أجزاء الذاكرة المتاحة تُسمى:",
+   o:["Pages","Frames","Segments","Blocks"],c:1,
+   e:"<b>لماذا؟</b> الذاكرة تُقسّم إلى frames."},
+  {s:"AY", t:60, en:"Fixed-partition internal fragmentation can be lessened by:", ar:"تقليل التجزئة الداخلية في التقسيم الثابت باستخدام:",
+   o:["Equal-size partitions","Unequal-size partitions","Larger partitions","Smaller partitions"],c:1,
+   e:"<b>لماذا؟</b> أحجام غير متساوية تقلل الهدر."},
+  {s:"AY", t:60, en:"Wasted space internal to a partition is called:", ar:"الفضاء المهدر داخل القسم يُسمى:",
+   o:["External fragmentation","Internal fragmentation","Compaction","Swapping"],c:1,
+   e:"<b>لماذا؟</b> Internal fragmentation = هدر داخل التقسيم."},
+  {s:"AY", t:60, en:"In segmentation, wasted space is due to:", ar:"في segmentation، الهدر بسبب:",
+   o:["External fragmentation","Internal fragmentation","Segments of different sizes","None"],c:0,
+   e:"<b>لماذا؟</b> Segmentation يعاني من external fragmentation."},
+  {s:"AY", t:60, en:"Subdividing memory between OS and processes is called:", ar:"تقسيم الذاكرة بين OS والعمليات يُسمى:",
+   o:["Protection","Relocation","Memory management","Swapping"],c:2,
+   e:"<b>لماذا؟</b> إدارة الذاكرة مسؤولة عن التوزيع."},
+  {s:"AY", t:45, en:"One-to-One thread model overcomes blocking and splitting problems.", ar:"نموذج واحد-لواحد يتغلب على مشاكل blocking و splitting.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> لكل user thread kernel thread خاص."},
+  {s:"AY", t:45, en:"Multi-threaded applications have threads sharing code and data.", ar:"التطبيقات متعددة الخيوط تتشارك الكود والبيانات.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> كل thread له PC/stack/registers خاصة، لكن يتشاركون code/data."},
+  {s:"AY", t:60, en:"Permanent blocking of processes competing for resources is called:", ar:"الحجب الدائم للعمليات المتنافسة على الموارد:",
+   o:["Starvation","Deadlock","Synchronization","Preemption"],c:1,
+   e:"<b>لماذا؟</b> Deadlock = جمود، لا يمكن لأي عملية التقدم."},
+  {s:"AY", t:60, en:"One disadvantage of ULTs vs KLTs:", ar:"عيب ULTs مقارنة بـ KLTs:",
+   o:["Scheduling is app-specific","When a ULT makes a syscall, all threads block","No kernel privileges","None"],c:1,
+   e:"<b>لماذا؟</b> استدعاء نظام واحد يحجب كل الـ threads لأن النواة ترى العملية فقط."},
+  {s:"AY", t:45, en:"Deadlock prevention minimizes possibility of deadlock.", ar:"منع الجمود يقلل احتمالية حدوثه.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> Prevention يصمم النظام لتجنب الشروط."},
+  {s:"AY", t:45, en:"Thread library provides API for creating/managing threads.", ar:"مكتبة الخيوط توفر API للإنشاء والإدارة.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> هذه وظيفتها الأساسية."},
+  {s:"AY", t:45, en:"Long-term scheduler invoked on suspension events.", ar:"المجدول طويل المدى يُستدعى عند أحداث التعليق.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> long-term يقرر إدخال العمليات للنظام (jobs). short-term هو الذي يستدعى أحداث التنفيذ."},
+  {s:"AY", t:60, en:"Moving process image for swapping is called:", ar:"نقل صورة العملية لدعم swaping يُسمى:",
+   o:["Protection","Relocation","Swapping","Paging"],c:1,
+   e:"<b>لماذا؟</b> Relocation = إعادة تحديد الموقع."},
+  {s:"AY", t:60, en:"In a multithreaded env, a process is:", ar:"في بيئة متعددة الخيوط، العملية هي:",
+   o:["Unit of resource allocation and protection","Unit of execution","A thread","None"],c:0,
+   e:"<b>لماذا؟</b> العملية وحدة تخصيص الموارد والحماية، Thread وحدة تنفيذ."},
+  {s:"AY", t:60, en:"Dining Philosophers Problem illustrates:", ar:"مشكلة الفلاسفة توضح:",
+   o:["Deadlock only","Starvation only","Both deadlock and starvation","None"],c:2,
+   e:"<b>لماذا؟</b> توضح كلاً من الجمود والجوع."},
+  {s:"AY", t:45, en:"First-fit scans from location of last placement.", ar:"First-fit يفحص من آخر موقع وضع.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> هذا next-fit. first-fit يبدأ من البداية."},
+  {s:"AY", t:45, en:"A thread is a unit of CPU utilization consisting of:", ar:"الخيط وحدة استخدام CPU تتكون من:",
+   o:["PC, stack, registers, thread ID","PC only","Stack only","Registers only"],c:0,
+   e:"<b>لماذا؟</b> كل thread له PC, stack, registers, ID."},
+  {s:"AY", t:60, en:"Round Robin principal design issue:", ar:"القضية الرئيسية في Round Robin:",
+   o:["Fair distribution","Cycling method","Length of time quantum","None"],c:2,
+   e:"<b>لماذا؟</b> طول الكوانتم يؤثر بشكل حاسم على الأداء."},
+  {s:"AY", t:45, en:"Many-to-Many: if blocking syscall, entire process blocks.", ar:"Many-to-Many: إذا حدث blocking syscall تُحجب العملية كلها.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> في Many-to-Many لا تُحجب العملية كلها (هذا عيب Many-to-One)."},
+  {s:"AY", t:45, en:"A semaphore is an example of reusable resource.", ar:"السيمافور مثال على مورد قابل لإعادة الاستخدام.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> يمكن استخدامه أكثر من مرة."},
+  {s:"AY", t:45, en:"All deadlocks involve conflicting needs by 2+ processes.", ar:"كل deadlock يشمل احتياجات متعارضة من عمليتين أو أكثر.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> الجمود يحتاج طرفين على الأقل."},
+  {s:"AY", t:45, en:"Many-to-one creates separate kernel thread per user thread.", ar:"Many-to-one ينشئ kernel thread منفصل لكل user thread.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> هذا One-to-One. Many-to-one يستخدم kernel thread واحد للجميع."},
+  {s:"AY", t:45, en:"Deadlock detection doesn't limit resource access.", ar:"اكتشاف الجمود لا يحد من الوصول للموارد.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> Detection يكتشف بعد الحدوث، لا يمنع."},
+  {s:"AY", t:60, en:"The first Linux kernel was written in C by Richard Stallman.", ar:"أول نواة لينكس كتبها Richard Stallman بلغة C.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> Linus Torvalds هو من كتبها، وليس Stallman."},
+  {s:"AY", t:60, en:"fork() system call does:", ar:"fork() يقوم بـ:",
+   o:["Creates a new process (child)","Terminates the process","Suspends the process","Renames a file"],c:0,
+   e:"<b>لماذا؟</b> ينشئ عملية جديدة نسخة من الأم."},
+
+  /* ========== التجميعات (CL) ========== */
+  {s:"CL", t:45, en:"Which command changes to the previous directory?", ar:"أي أمر ينتقل للمجلد السابق؟",
+   o:["cd ..","cd -","cd ~","cd /"],c:1,
+   e:"<b>لماذا؟</b> cd - يرجع للمجلد السابق."},
+  {s:"CL", t:60, en:"To find files >50MB and <100MB, use:", ar:"لإيجاد ملفات أكبر من 50 وأصغر من 100 MB:",
+   o:["find / -size [50-100]M","find / -size +50M -size -100M","find / -size +50M -size +100M","find / -size -50M -size +100M"],c:1,
+   e:"<b>لماذا؟</b> +50M = أكبر من، -100M = أصغر من."},
+  {s:"CL", t:45, en:"In symbolic chmod, which operator assigns absolute permission?", ar:"في chmod الرمزي، أي عامل يعيّن الصلاحية المطلقة؟",
+   o:["+","-","=","*"],c:2,
+   e:"<b>لماذا؟</b> = يعين بالضبط، + يضيف، - يزيل."},
+  {s:"CL", t:45, en:"In absolute mode, permission 6 means:", ar:"الرقم 6 في الصلاحيات المطلقة يعني:",
+   o:["read, write, execute","read, write","read, execute","write, execute"],c:1,
+   e:"<b>لماذا؟</b> 6 = 4 (read) + 2 (write)."},
+  {s:"CL", t:45, en:"The >> symbol overwrites the existing file.", ar:"الرمز >> يستبدل الملف الموجود.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> >> يضيف في النهاية، > هو الذي يستبدل."},
+  {s:"CL", t:45, en:"Which permission allows running files/scripts?", ar:"أي صلاحية تسمح بتشغيل الملفات/السكربتات؟",
+   o:["r","w","x","-"],c:2,
+   e:"<b>لماذا؟</b> x = execute."},
+  {s:"CL", t:45, en:"Which command finds files modified more than 20 days ago?", ar:"أي أمر يجد ملفات معدّلة منذ أكثر من 20 يوم؟",
+   o:["find -type f -mtime +20","find -type f -mtime -20","find -type f -atime +20","find -type f -atime -20"],c:0,
+   e:"<b>لماذا؟</b> -mtime +20 = أكثر من 20 يوم من التعديل."},
+  {s:"CL", t:45, en:"Who created the GPL License?", ar:"من أنشأ رخصة GPL؟",
+   o:["Ken Thompson","Richard Stallman","Dennis Ritchie","Linus Torvalds"],c:1,
+   e:"<b>لماذا؟</b> GPL من Richard Stallman ومؤسسة FSF."},
+  {s:"CL", t:45, en:"Denied permission is indicated by:", ar:"الصلاحية المرفوضة يُشار إليها بـ:",
+   o:["+","-","=","#"],c:1,
+   e:"<b>لماذا؟</b> - تعني مرفوضة."},
+  {s:"CL", t:45, en:"Permission order in ls -l is:", ar:"ترتيب الصلاحيات في ls -l:",
+   o:["group, user, other","user, group, other","group, other, user","other, user, group"],c:1,
+   e:"<b>لماذا؟</b> user (المالك) ثم group ثم other."},
+  {s:"CL", t:45, en:"To redirect error messages to a file:", ar:"لإعادة توجيه رسائل الخطأ إلى ملف:",
+   o:["cat foo errorfile","cat foo > errorfile","cat errorfile > foo","cat foo 2> errorfile"],c:3,
+   e:"<b>لماذا؟</b> 2> يعيد توجيه stderr."},
+  {s:"CL", t:60, en:"In vi, to replace OOP with 'Object Oriented Programming' globally:", ar:"في vi، لاستبدال OOP بـ 'Object Oriented Programming' كلياً:",
+   o:[":%s/OOP/Object Oriented Programming/g",":OOP/Object Oriented Programming/g",":%s/Object Oriented Programming/OOP/g",":s/OOP/Object Oriented Programming/g"],c:0,
+   e:"<b>لماذا؟</b> :%s/old/new/g = replace globally في كل الأسطر."},
+  {s:"CL", t:45, en:"The | (pipe) character helps to connect commands.", ar:"الرمز | يساعد على ربط الأوامر.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> | يمرر مخرجات أمر كمدخلات لأمر آخر."},
+  {s:"CL", t:45, en:"gunzip can accept multiple filenames.", ar:"gunzip يمكن أن يستقبل عدة أسماء ملفات.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> يقبل عدة ملفات في نفس الأمر."},
+  {s:"CL", t:45, en:"In vi, to save and continue editing:", ar:"في vi، للحفظ والاستمرار:",
+   o:[":w",":wq",":q",":q!"],c:0,
+   e:"<b>لماذا؟</b> :w = write (حفظ دون خروج)."},
+  {s:"CL", t:45, en:"In vi, which mode inserts text?", ar:"في vi، أي وضع يُدخل نصاً؟",
+   o:["Command mode","Edit/Insert mode","Last line mode","Search mode"],c:1,
+   e:"<b>لماذا؟</b> Edit/Insert mode للكتابة."},
+  {s:"CL", t:45, en:"In vi, to place cursor at the beginning of last line:", ar:"في vi، لوضع المؤشر في بداية آخر سطر:",
+   o:["G","gg","0","$"],c:0,
+   e:"<b>لماذا؟</b> G ينقل للسطر الأخير."},
+  {s:"CL", t:45, en:"In vi, to move back one word:", ar:"في vi، للرجوع كلمة واحدة:",
+   o:["back","1w","b","L"],c:2,
+   e:"<b>لماذا؟</b> b = backward word."},
+  {s:"CL", t:45, en:"In vi, to undo the last change:", ar:"في vi، للتراجع عن آخر تغيير:",
+   o:["r","u","U","x"],c:1,
+   e:"<b>لماذا؟</b> u = undo."},
+  {s:"CL", t:60, en:"chmod 544 gives permissions:", ar:"chmod 544 يعطي الصلاحيات:",
+   o:["-rwxrwxrwx","-r-xr--r--","-rw-r--r--","-r--r--r--"],c:1,
+   e:"<b>لماذا؟</b> 5=r-x, 4=r--, 4=r--."},
+  {s:"CL", t:60, en:"To find lines ending with 'le':", ar:"لإيجاد أسطر تنتهي بـ 'le':",
+   o:["grep 'le$' file.txt","grep '$le' file.txt","grep 'le^' file.txt","grep '^le' file.txt"],c:0,
+   e:"<b>لماذا؟</b> $ = نهاية السطر."},
+  {s:"CL", t:45, en:"../exams/quiz1 is an absolute path.", ar:"../exams/quiz1 مسار مطلق.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> يبدأ بـ .. فهو نسبي، والمطلق يبدأ بـ /."},
+  {s:"CL", t:45, en:"sort -n sorts in:", ar:"sort -n يرتب:",
+   o:["Alphabetical order","Numerical order","Reverse order","Random order"],c:1,
+   e:"<b>لماذا؟</b> -n = numeric sort."},
+  {s:"CL", t:45, en:"To login as root:", ar:"للدخول كـ root:",
+   o:["sudo su","sudo root","su root only","root"],c:0,
+   e:"<b>لماذا؟</b> sudo su يفتح shell كـ root."},
+  {s:"CL", t:45, en:"To create user Khalid:", ar:"لإنشاء مستخدم Khalid:",
+   o:["adduser Khalid","useradd Khalid","newuser Khalid","mkuser Khalid"],c:0,
+   e:"<b>لماذا؟</b> adduser (أو useradd) لإنشاء مستخدم."},
+  {s:"CL", t:45, en:"To see permissions of files:", ar:"لعرض صلاحيات الملفات:",
+   o:["ls","ls -l","ls -R","ls -a"],c:1,
+   e:"<b>لماذا؟</b> ls -l يعرض التفاصيل مع الصلاحيات."},
+  {s:"CL", t:60, en:"To set -rwxrw-rw- permissions:", ar:"لضبط صلاحيات -rwxrw-rw-:",
+   o:["chmod u=rwx,g=rw,o=rw file","chmod 777 file","chmod u+x file","chmod 755 file"],c:0,
+   e:"<b>لماذا؟</b> u=rwx (7), g=rw (6), o=rw (6) => 766."},
+  {s:"CL", t:60, en:"To create symbolic link filename1.txt as shortcut1.txt:", ar:"لإنشاء رابط رمزي filename1.txt باسم shortcut1.txt:",
+   o:["ln -s filename1.txt shortcut1.txt","ln shortcut1.txt filename1.txt","ln -r filename1.txt shortcut1.txt","ln -s shortcut1.txt filename1.txt"],c:0,
+   e:"<b>لماذا؟</b> الصيغة: ln -s <source> <link_name>."},
+  {s:"CL", t:60, en:"To install Apache:", ar:"لتثبيت Apache:",
+   o:["sudo install apt-get apache2","install apache2","sudo apt-get install apache2","apt-get apache2"],c:2,
+   e:"<b>لماذا؟</b> sudo apt-get install apache2."},
+  {s:"CL", t:60, en:"To delete user Sahar and home:", ar:"لحذف المستخدم Sahar مع مجلده:",
+   o:["sudo passwd -l 'Sahar'","sudo userdel -r 'Sahar'","sudo ud -r 'Sahar'","None of the above"],c:1,
+   e:"<b>لماذا؟</b> userdel -r يحذف المستخدم ومجلده."},
+  {s:"CL", t:45, en:"Which runs programs with superuser privileges?", ar:"أي أمر يشغل البرامج بصلاحيات superuser؟",
+   o:["sup","sd","sudo","root"],c:2,
+   e:"<b>لماذا؟</b> sudo = superuser do."},
+  {s:"CL", t:45, en:"Package manager for Linux:", ar:"مدير الحزم في لينكس:",
+   o:["pip","install","get-apt","apt-get"],c:3,
+   e:"<b>لماذا؟</b> apt-get هو مدير الحزم الشائع."},
+  {s:"CL", t:45, en:"Conditions in shell scripting use:", ar:"الشروط في shell scripting تستخدم:",
+   o:["()","{}","[]","<>"],c:2,
+   e:"<b>لماذا؟</b> الشروط بين [ ]."},
+  {s:"CL", t:45, en:"Which command shows all logged-in users?", ar:"أي أمر يعرض كل المستخدمين المسجلين؟",
+   o:["who","id","uname","users"],c:0,
+   e:"<b>لماذا؟</b> who (أو w) يعرض المستخدمين المسجلين."},
+  {s:"CL", t:45, en:"To execute a shell script 'hello':", ar:"لتنفيذ سكربت 'hello':",
+   o:["bash hello only","sh hello only","./hello only","All of the above work"],c:3,
+   e:"<b>لماذا؟</b> bash hello و sh hello و ./hello كلها صحيحة."},
+  {s:"CL", t:45, en:"Which character separates multiple commands?", ar:"أي رمز يفصل أوامر متعددة؟",
+   o:[".",";","/","\\"],c:1,
+   e:"<b>لماذا؟</b> ; يفصل الأوامر."},
+  {s:"CL", t:60, en:"To find files in current dir starting with 'OS':", ar:"لإيجاد ملفات في المجلد الحالي تبدأ بـ 'OS':",
+   o:["find / -name *OS -print","find / -name 'OS'* -print","find . -name *OS -print","find . -name 'OS'* -print"],c:3,
+   e:"<b>لماذا؟</b> . = current dir، 'OS'* = يبدأ بـ OS."},
+  {s:"CL", t:45, en:"Which compression tool gives best rate?", ar:"أي أداة تعطي أفضل نسبة ضغط؟",
+   o:["gzip","bzip2","zip","tar"],c:1,
+   e:"<b>لماذا؟</b> bzip2 أفضل نسبة (لكن أبطأ)."},
+  {s:"CL", t:45, en:"An archive file is not compressed and uses the same space as combined files.", ar:"أرشيف tar غير مضغوط يستخدم نفس المساحة كملفات مجتمعة.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> tar يجمع فقط دون ضغط."},
+  {s:"CL", t:45, en:"Which commands are used for archiving?", ar:"أي أوامر تُستخدم للأرشفة؟",
+   o:["tar or jar","zip or gzip","cat or ls","cp or mv"],c:0,
+   e:"<b>لماذا؟</b> tar و jar للأرشفة (لا ضغط)."},
+  {s:"CL", t:45, en:"In ls -l output noor n10, these are:", ar:"في ls -l، noor n10 هما:",
+   o:["user and group","group and user","user and others","group and other"],c:0,
+   e:"<b>لماذا؟</b> العمود الأول = owner، الثاني = group."},
+  {s:"CL", t:45, en:"grep -w matches:", ar:"grep -w يطابق:",
+   o:["Any substring","Whole word only","Start of line","End of line"],c:1,
+   e:"<b>لماذا؟</b> -w = whole word."},
+  {s:"CL", t:60, en:"chmod 654 file.txt gives:", ar:"chmod 654 file.txt يعطي:",
+   o:["-rw-r-xr--","-rwxrwxrwx","-r--r--r--","-rw-r--r--"],c:0,
+   e:"<b>لماذا؟</b> 6=rw, 5=r-x, 4=r--."},
+  {s:"CL", t:45, en:"grep -i is used to:", ar:"grep -i يستخدم لـ:",
+   o:["Treat upper/lower as different","Treat upper/lower as equal","Only upper case","Only lower case"],c:1,
+   e:"<b>لماذا؟</b> -i = case insensitive."},
+  {s:"CL", t:60, en:"In vi, to copy 3 lines:", ar:"في vi، لنسخ 3 أسطر:",
+   o:["3 pp","3 PP","3 yy","3 yw"],c:2,
+   e:"<b>لماذا؟</b> N yy = yank N lines."},
+  {s:"CL", t:45, en:"In vi, to show line numbers:", ar:"في vi، لإظهار أرقام الأسطر:",
+   o:[":set line",":set ic",":set nu",":set N"],c:2,
+   e:"<b>لماذا؟</b> :set nu = number lines."},
+  {s:"CL", t:45, en:"grep 'h...a' matches 'h' followed by:", ar:"grep 'h...a' يطابق 'h' متبوعة بـ:",
+   o:["2 characters then a","3 characters then a","1 character then a","4 characters then a"],c:1,
+   e:"<b>لماذا؟</b> كل . = حرف واحد، فهناك 3 نقاط = 3 أحرف."},
+  {s:"CL", t:60, en:"grep 'foo[0-9][0-9]' matches:", ar:"grep 'foo[0-9][0-9]' يطابق:",
+   o:["foo with 1 digit","foo with 2 digits","foo only","foo with any"],c:1,
+   e:"<b>لماذا؟</b> [0-9] مرتين = رقمان."},
+  {s:"CL", t:60, en:"To set rwx rwx r-x:", ar:"لضبط rwx rwx r-x:",
+   o:["chmod 775 file","chmod 577 file","chmod 771 file","chmod 557 file"],c:0,
+   e:"<b>لماذا؟</b> 7=rwx, 7=rwx, 5=r-x => 775."},
+  {s:"CL", t:45, en:"In vi, unused line is denoted by:", ar:"في vi، السطر غير المستخدم يُشار إليه بـ:",
+   o:["~","I",":","☺"],c:0,
+   e:"<b>لماذا؟</b> ~ يعني سطر فارغ."},
+  {s:"CL", t:45, en:"Default umask 022 denies which permission?", ar:"umask 022 الافتراضي يمنع أي صلاحية؟",
+   o:["read","write","execute","All of the above"],c:1,
+   e:"<b>لماذا؟</b> 2 = write. الآخرون يُمنعون من الكتابة."},
+  {s:"CL", t:45, en:"In regex, which matches one char from {w,n,x}?", ar:"في regex، أي مما يلي يطابق حرفًا من {w,n,x}؟",
+   o:["{wnx}","[wnx]","<wnx>","(wnx)"],c:1,
+   e:"<b>لماذا؟</b> [...] = character class."},
+  {s:"CL", t:45, en:"To search 'clothes' at end of line:", ar:"للبحث عن 'clothes' في نهاية السطر:",
+   o:["grep 'clothes#' shopping","grep 'clothes!' shopping","grep 'clothes$' shopping","grep 'clothes^' shopping"],c:2,
+   e:"<b>لماذا؟</b> $ = end of line."},
+  {s:"CL", t:45, en:"The $ sign can replace arithmetic operation results.", ar:"الرمز $ يمكن أن يستبدل نتائج العمليات الحسابية.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> $((...)) و $(...) تستخدمان للعمليات."},
+  {s:"CL", t:45, en:"fgrep is faster than grep but does NOT support regex.", ar:"fgrep أسرع من grep لكنه لا يدعم regex.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> fgrep = fixed grep."},
+  {s:"CL", t:45, en:"User input can be assigned using 'read'.", ar:"يمكن تعيين إدخال المستخدم باستخدام read.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> read var يقرأ الإدخال في var."},
+  {s:"CL", t:45, en:"To compile C++ hello.cc:", ar:"لترجمة hello.cc:",
+   o:["g++ hello.cc -o hello_object","g++ hello.cc -o ./hello_object","Both are valid","None"],c:2,
+   e:"<b>لماذا؟</b> الصيغتان صحيحتان."},
+  {s:"CL", t:45, en:"Multiple mail recipients can be provided to mail -s.", ar:"يمكن إرسال بريد لعدة مستلمين عبر mail -s.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> يمكن سرد عدة عناوين."},
+  {s:"CL", t:45, en:"#! at end of first line tells OS about shell type.", ar:"#! في نهاية السطر الأول تحدد نوع الغلاف.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> #! في بداية السطر الأول (shebang)."},
+  {s:"CL", t:45, en:"Using && to check file existence before deleting is valid.", ar:"استخدام && للتحقق قبل الحذف صحيح.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> [ -f file ] && rm file صيغة صحيحة."},
+  {s:"CL", t:45, en:"Using || to check file existence before deleting is valid.", ar:"استخدام || للتحقق قبل الحذف صحيح.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> || تنفذ عند فشل الأول، عكس المطلوب."},
+  {s:"CL", t:45, en:"Several shells can be installed on the same system.", ar:"يمكن تثبيت عدة أغلفة على نفس النظام.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> يمكن اختيار الغلاف المفضل."},
+  {s:"CL", t:45, en:"In shell, commands are executed sequentially.", ar:"في shell، الأوامر تُنفذ تتابعيًا.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> افتراضيًا shell ينفذ تتابعيًا (إلا مع &)."}
+];
+
+const PHRASES = [
+  "أنت أقوى مما تظن، استمر! 💪", "كل دقيقة مراجعة تقرّبك من هدفك ⏳",
+  "الثقة بالنفس نصف النجاح ✨", "لا تقارن بدايتك بنهاية غيرك 🌱",
+  "تعب اليوم راحة الغد 🌟", "أنت قادر… فقط ابدأ 🚀",
+  "النجاح خطوات صغيرة تتكرر كل يوم 🔥", "الخطأ فرصة لتتعلم شيئًا جديدًا 📚",
+  "ركّز على التقدم لا على الكمال 🎯", "اقتربت كثيرًا، لا تتوقف الآن! 🏆"
+];
+
+const QUIZ_TOTAL_SECONDS = 120 * 60;
+const $ = id => document.getElementById(id);
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]];} return b; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const AR_KEYS = ['A','B','C','D'];
+const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+let toastTimer;
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+let playList = [];
+let idx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let locked = false;
+let wrongQuestions = [];
+let skippedCount = 0;
+let resultsBySection = {};
+let reviewReturnTo = 'screen-result';
+
+let globalTimeLeft = QUIZ_TOTAL_SECONDS;
+let questionTimeLeft = 60;
+let currentQuestionTime = 60;
+let globalTimerId = null;
+let questionTimerId = null;
+let quizStartTime = 0;
+let elapsedSeconds = 0;
+
+function show(id){
+  ['screen-home','screen-quiz','screen-result','screen-review'].forEach(s=>$(s).classList.toggle('hidden', s!==id));
+  window.scrollTo(0,0);
+}
+
+function updateGlobalDisplay(){
+  const el = $('global-timer');
+  el.textContent = '⏱ ' + fmtTime(globalTimeLeft);
+  el.classList.remove('warn','danger');
+  if(globalTimeLeft <= 60) el.classList.add('danger');
+  else if(globalTimeLeft <= 300) el.classList.add('warn');
+}
+
+function startGlobalTick(){
+  if(globalTimerId) return;
+  globalTimerId = setInterval(()=>{
+    globalTimeLeft--;
+    updateGlobalDisplay();
+    if(globalTimeLeft <= 0){
+      clearInterval(globalTimerId); globalTimerId = null;
+      onGlobalTimeout();
+    }
+  },1000);
+}
+
+function pauseGlobalTick(){
+  if(globalTimerId){ clearInterval(globalTimerId); globalTimerId = null; }
+}
+
+function startQuestionTick(){
+  questionTimeLeft = currentQuestionTime;
+  updateQuestionDisplay();
+  if(questionTimerId) clearInterval(questionTimerId);
+  questionTimerId = setInterval(()=>{
+    questionTimeLeft--;
+    updateQuestionDisplay();
+    if(questionTimeLeft <= 5 && questionTimeLeft > 0) sfxTick();
+    if(questionTimeLeft <= 0){
+      clearInterval(questionTimerId); questionTimerId = null;
+      if(!locked) revealAnswer(-1, true);
+    }
+  },1000);
+}
+
+function stopQuestionTick(){
+  if(questionTimerId){ clearInterval(questionTimerId); questionTimerId = null; }
+}
+
+function updateQuestionDisplay(){
+  $('q-timer-text').textContent = questionTimeLeft + 's';
+  const fill = $('q-timer-fill');
+  const pct = (questionTimeLeft / currentQuestionTime) * 100;
+  fill.style.width = pct + '%';
+  fill.classList.remove('warn','danger');
+  if(questionTimeLeft <= 10) fill.classList.add('danger');
+  else if(questionTimeLeft <= 20) fill.classList.add('warn');
+}
+
+function onGlobalTimeout(){
+  stopQuestionTick();
+  toast('⏰ انتهى الوقت الإجمالي!');
+  sfxLose();
+  if(!$('screen-quiz').classList.contains('hidden')) showResult();
+}
+
+function startGame(source){
+  initAudio();
+  sfxStart();
+  const src = source || QUESTIONS;
+  playList = shuffle(src.map(q => ({...q, o:[...q.o]})));
+  idx = 0; score = 0; locked = false; streak = 0; bestStreak = 0;
+  wrongQuestions = [];
+  skippedCount = 0;
+  resultsBySection = {};
+  playList.forEach(q => {
+    if(!resultsBySection[q.s]) resultsBySection[q.s] = {correct:0, total:0};
+    resultsBySection[q.s].total++;
+  });
+  $('score-pill').textContent = '⭐ 0';
+  $('streak-pill').textContent = '🔥 0';
+  $('streak-pill').classList.remove('active');
+  globalTimeLeft = QUIZ_TOTAL_SECONDS;
+  updateGlobalDisplay();
+  quizStartTime = Date.now();
+  elapsedSeconds = 0;
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const q = playList[idx];
+  currentQuestionTime = q.t || 60;
+  $('counter').textContent = `السؤال ${idx+1} من ${playList.length}`;
+  $('section-pill').textContent = SECTION_TITLES[q.s] || q.s;
+  $('progress-fill').style.width = (idx / playList.length * 100) + '%';
+  $('question-en').textContent = q.en;
+  $('question-ar').textContent = q.ar;
+  const box = $('options'); box.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="key">${AR_KEYS[i]}</span><span>${escapeHtml(opt)}</span>`;
+    btn.addEventListener('click', function(e) { e.preventDefault(); revealAnswer(i, false); });
+    box.appendChild(btn);
+  });
+  const fb = $('feedback'); fb.className='feedback hidden'; fb.innerHTML='';
+  $('btn-next').classList.add('hidden');
+  $('btn-finish').classList.add('hidden');
+  $('btn-skip').classList.remove('hidden');
+  $('btn-skip').disabled = false;
+  startQuestionTick();
+  startGlobalTick();
+}
+
+function revealAnswer(chosenIdx, isTimeout){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  $('btn-skip').classList.add('hidden');
+  const q = playList[idx];
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[q.c]) all[q.c].classList.add('correct');
+  const fb = $('feedback');
+  const phrase = pick(PHRASES);
+  const isCorrect = !isTimeout && chosenIdx === q.c;
+
+  if(isCorrect){
+    score++;
+    streak++;
+    if(streak > bestStreak) bestStreak = streak;
+    resultsBySection[q.s].correct++;
+    $('score-pill').textContent = '⭐ ' + score;
+    $('streak-pill').textContent = '🔥 ' + streak;
+    $('streak-pill').classList.toggle('active', streak >= 3);
+    sfxCorrect();
+    const rect = all[q.c].getBoundingClientRect();
+    spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+    if(streak > 0 && streak % 3 === 0){
+      setTimeout(()=>showCombo(pick(COMBO_MESSAGES) + ' ' + streak), 200);
+    }
+    fb.className = 'feedback ok';
+    fb.innerHTML = `<span class="title">✅ إجابة صحيحة! ${streak>=3?'🔥 سلسلة '+streak:''}</span><div class="exp">${q.e}</div><span class="motive">${phrase}</span>`;
+  } else {
+    if(chosenIdx !== null && chosenIdx >= 0 && all[chosenIdx]) all[chosenIdx].classList.add('wrong');
+    wrongQuestions.push(q);
+    streak = 0;
+    $('streak-pill').textContent = '🔥 0';
+    $('streak-pill').classList.remove('active');
+    sfxWrong();
+    fb.className = 'feedback no';
+    const title = isTimeout ? '⏰ انتهى وقت السؤال!' : '❌ إجابة خاطئة';
+    fb.innerHTML = `<span class="title">${title}</span><div class="exp"><b>الإجابة الصحيحة:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(q.o[q.c])}</span><br><br>${q.e}</div><span class="motive">${phrase}</span>`;
+  }
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function skipQuestion(){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  $('btn-skip').classList.add('hidden');
+  skippedCount++;
+  streak = 0;
+  $('streak-pill').textContent = '🔥 0';
+  $('streak-pill').classList.remove('active');
+  sfxSkip();
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[playList[idx].c]) all[playList[idx].c].classList.add('correct');
+  const fb = $('feedback');
+  fb.className = 'feedback skip';
+  fb.innerHTML = `<span class="title">⏭ تم التخطي</span><div class="exp"><b>الإجابة الصحيحة كانت:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(playList[idx].o[playList[idx].c])}</span></div>`;
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function nextQuestion() { idx++; renderQuestion(); }
+
+function showResult(){
+  stopQuestionTick(); pauseGlobalTick();
+  elapsedSeconds = Math.round((Date.now() - quizStartTime)/1000);
+  const total = playList.length;
+  const pct = total ? Math.round(score / total * 100) : 0;
+  $('result-score').textContent = `${score} / ${total}`;
+  $('result-pct').textContent = pct + '%';
+  $('ring').style.background = `conic-gradient(var(--gold) ${pct*3.6}deg, rgba(255,255,255,.1) 0deg)`;
+  $('result-time').textContent = fmtTime(elapsedSeconds);
+  $('result-streak').textContent = bestStreak;
+  $('result-skipped').textContent = skippedCount;
+  let title, msg;
+  if(pct === 100){ title='مذهل! 🏆'; msg='إجابات كاملة! أنت جاهز تمامًا للاختبار.'; sfxWin(); }
+  else if(pct >= 70){ title='أداء ممتاز! 🌟'; msg='أنت على الطريق الصحيح.'; sfxWin(); }
+  else if(pct >= 40){ title='بداية جيدة 💪'; msg='تحتاج إلى مراجعة إضافية.'; }
+  else { title='لا بأس، ابدأ من هنا 🌱'; msg='راجع الأساسيات وأعد المحاولة.'; sfxLose(); }
+  $('result-title').textContent = title;
+  $('result-msg').textContent = msg;
+  const bd = $('breakdown');
+  const sections = Object.keys(resultsBySection).sort();
+  bd.innerHTML = `<h3>📊 تحليل الأداء</h3>` + sections.map(sec => {
+    const r = resultsBySection[sec];
+    const p = r.total ? Math.round(r.correct/r.total*100) : 0;
+    return `<div class="bd-row"><span class="bd-section">${sec}</span><span class="bd-title">${SECTION_TITLES[sec]}</span><span class="bd-bar"><i style="width:${p}%"></i></span><span class="bd-score">${r.correct}/${r.total}</span></div>`;
+  }).join('');
+  $('btn-review-wrong').style.display = wrongQuestions.length ? 'block' : 'none';
+  show('screen-result');
+}
+
+function renderReview(){
+  reviewReturnTo = 'screen-result';
+  $('review-title').textContent = 'مراجعة شاملة';
+  const list = $('review-list');
+  const bySec = {};
+  QUESTIONS.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  let html = '';
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div style="margin:6px 0 12px"><span class="review-section">${sec}</span> <span style="color:#c7d2fe;font-size:.8rem;font-weight:700">${SECTION_TITLES[sec]}</span></div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="review-item"><div class="review-en">${i+1}. ${escapeHtml(q.en)}</div><div class="review-ar">${escapeHtml(q.ar)}</div><div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="review-exp">${q.e}</div></div>`;
+    });
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function renderWrongReview(){
+  reviewReturnTo = 'screen-result';
+  $('review-title').textContent = 'مراجعة الأخطاء';
+  const list = $('review-list');
+  if(!wrongQuestions.length){
+    list.innerHTML = '<p style="text-align:center;color:#6ee7b7;padding:30px;font-size:1.1rem">🎉 لا توجد أخطاء! أداء ممتاز.</p>';
+    show('screen-review');
+    return;
+  }
+  let html = `<div style="margin:6px 0 12px"><span class="review-section" style="background:rgba(248,113,113,.2);color:#f87171">الأخطاء</span> <span style="color:#c7d2fe;font-size:.8rem;font-weight:700">${wrongQuestions.length} سؤال</span></div>`;
+  wrongQuestions.forEach((q,i)=>{
+    html += `<div class="review-item" style="border-color:rgba(248,113,113,.4)"><div class="review-en">${i+1}. ${escapeHtml(q.en)}</div><div class="review-ar">${escapeHtml(q.ar)}</div><div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="review-exp">${q.e}</div></div>`;
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function buildPrintHTML(opts){
+  const { includeScore = false, onlyWrong = false } = opts || {};
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('ar-SA');
+  const list = onlyWrong ? wrongQuestions : QUESTIONS;
+  const title = onlyWrong ? '📚 مراجعة الأخطاء' : '📚 مراجعة شاملة';
+  let html = `<div class="p-header"><h1>${title} — نظم التشغيل</h1><div class="p-meta">تاريخ: ${dateStr}`;
+  if (includeScore) {
+    const pct = playList.length ? Math.round(score/playList.length*100) : 0;
+    html += ` · <b>النتيجة: ${score} / ${playList.length} (${pct}%) · متخطى: ${skippedCount}</b>`;
+  }
+  html += `</div></div>`;
+  const bySec = {};
+  list.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div class="p-section-title">${sec} — ${SECTION_TITLES[sec]}</div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="p-q"><div class="p-q-num">${i+1}. ${escapeHtml(q.en)}</div><div class="p-q-ar">${escapeHtml(q.ar)}</div><div class="p-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="p-exp">${q.e}</div></div>`;
+    });
+  });
+  html += `<div class="p-footer">Total: ${list.length} questions</div>`;
+  return html;
+}
+
+function exportPDF(opts){
+  const area = $('print-area');
+  area.innerHTML = buildPrintHTML(opts);
+  setTimeout(()=>{ window.print(); }, 150);
+}
+
+$('btn-start').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-next').addEventListener('click', e => { e.preventDefault(); nextQuestion(); });
+$('btn-finish').addEventListener('click', e => { e.preventDefault(); showResult(); });
+$('btn-skip').addEventListener('click', e => { e.preventDefault(); skipQuestion(); });
+$('btn-retry').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-review-wrong').addEventListener('click', e => { e.preventDefault(); renderWrongReview(); });
+$('btn-review-full').addEventListener('click', e => { e.preventDefault(); renderReview(); });
+$('btn-pdf-result').addEventListener('click', e => { e.preventDefault(); exportPDF({includeScore:true}); });
+$('btn-back-portal').addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.html'; });
+$('btn-review-pdf').addEventListener('click', e => {
+  e.preventDefault();
+  const isWrong = $('review-title').textContent.includes('الأخطاء');
+  exportPDF({onlyWrong: isWrong});
+});
+$('btn-review-back').addEventListener('click', e => { e.preventDefault(); show(reviewReturnTo); });
+$('sound-btn').addEventListener('click', e => { e.preventDefault(); toggleSound(); });
+
+$('q-count').textContent = QUESTIONS.length;
+updateGlobalDisplay();
+</script>
+</body>
+</html>

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="google" content="notranslate">
+<title>🧮 Linear Algebra — Midterm Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#fbbf24; --green:#34d399; --red:#f87171;
+    --purple:#a78bfa; --bg-card:#1e1b4b; --line:rgba(255,255,255,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:'Cairo',system-ui,sans-serif;min-height:100vh;
+    background:linear-gradient(135deg,#141033,#1e1b4b 45%,#2e1065);
+    color:#fff;display:block;padding:20px 12px;overflow-x:hidden;
+  }
+  .app{width:100%;max-width:820px;margin:0 auto;}
+  .card{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:24px;
+    padding:24px 20px;box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    position:relative;z-index:10;
+  }
+  .hidden{display:none!important}
+  h1{font-size:clamp(1.3rem,4vw,2rem);font-weight:900;line-height:1.4;margin-bottom:10px}
+  h1 span{color:var(--gold)}
+  .sub{color:#c7d2fe;line-height:1.8;font-size:.95rem;margin-bottom:20px}
+  .badge{
+    display:inline-block;font-size:.8rem;font-weight:700;
+    background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.45);
+    color:var(--gold);padding:6px 14px;border-radius:99px;margin-bottom:16px;
+  }
+  .btn{font-family:inherit;font-size:1rem;font-weight:700;border:none;border-radius:14px;padding:14px 20px;cursor:pointer;transition:.2s;touch-action:manipulation;width:100%}
+  .btn-primary{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#2a1a00;box-shadow:0 6px 20px rgba(251,191,36,.3)}
+  .btn-primary:active{transform:scale(0.98)}
+  .btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--line)}
+  .btn-ghost:active{background:rgba(255,255,255,.2)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .hint{margin-top:16px;text-align:center;font-size:.85rem;color:#a5b4fc}
+  .hint b{color:var(--gold)}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:.8rem;color:#c7d2fe;font-weight:600;flex-wrap:wrap;margin-bottom:12px}
+  #score-pill{background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.4);color:var(--gold);padding:4px 10px;border-radius:99px}
+  #streak-pill{background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.5);color:#fbbf24;padding:4px 10px;border-radius:99px;font-weight:800;transition:transform .2s}
+  #streak-pill.active{transform:scale(1.08);box-shadow:0 0 15px rgba(251,191,36,.5)}
+  #section-pill{background:rgba(167,139,250,.18);border:1px solid rgba(167,139,250,.5);color:#c4b5fd;padding:4px 10px;border-radius:99px;direction:ltr;font-size:.75rem}
+  .timer-pill{
+    background:rgba(52,211,153,.16);border:1px solid rgba(52,211,153,.4);color:#6ee7b7;
+    padding:4px 10px;border-radius:99px;direction:ltr;
+    font-variant-numeric:tabular-nums;font-weight:800;font-size:.8rem;transition:all .3s;
+  }
+  .timer-pill.warn{background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.4);color:#fbbf24}
+  .timer-pill.danger{background:rgba(248,113,113,.16);border-color:rgba(248,113,113,.4);color:#f87171}
+  #sound-btn{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;padding:4px 10px;border-radius:99px;font-size:.9rem;cursor:pointer;font-family:inherit}
+
+  .progress{height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:10px 0 16px}
+  .progress-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#fbbf24,#a78bfa);transition:width .3s ease}
+
+  .q-en{font-size:1.15rem;font-weight:800;line-height:1.5;direction:ltr;text-align:left;margin-bottom:8px;color:#fff;white-space:pre-wrap}
+  .q-ar{font-size:0.85rem;color:#a5b4fc;line-height:1.5;margin-bottom:16px;border-right:2px solid rgba(167,139,250,.5);padding-right:8px}
+
+  .q-timer-wrap{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .q-timer-label{font-size:.75rem;color:#a5b4fc;font-weight:700;min-width:45px;direction:ltr;text-align:left}
+  .q-timer-bar{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+  .q-timer-fill{height:100%;background:linear-gradient(90deg,#34d399,#fbbf24);border-radius:99px;transition:width 1s linear,background .3s}
+  .q-timer-fill.warn{background:linear-gradient(90deg,#fbbf24,#f87171)}
+  .q-timer-fill.danger{background:#f87171}
+
+  .option{
+    display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;direction:ltr;
+    font-family:'Courier New',Courier,monospace;font-size:1rem;font-weight:600;color:#fff;
+    background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);
+    border-radius:12px;padding:14px 16px;cursor:pointer;transition:.15s;margin-bottom:10px;
+    touch-action:manipulation;white-space:pre-wrap;line-height:1.4;
+  }
+  .option:active:not(:disabled){background:rgba(255,255,255,.2);border-color:rgba(251,191,36,.6)}
+  .option .key{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.15);font-weight:800;font-size:.85rem;font-family:'Cairo',sans-serif}
+  .option.correct{background:rgba(52,211,153,.2);border-color:var(--green);animation:popCorrect .5s}
+  .option.correct .key{background:var(--green);color:#053b28}
+  .option.wrong{background:rgba(248,113,113,.2);border-color:var(--red);animation:shakeWrong .4s}
+  .option.wrong .key{background:var(--red);color:#450a0a}
+  .option:disabled{cursor:default}
+  @keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @keyframes shakeWrong{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  .feedback{margin-top:12px;padding:16px;border-radius:14px;font-size:.9rem;line-height:1.8;animation:fadeIn .3s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .feedback.ok{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.5)}
+  .feedback.no{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.5)}
+  .feedback .title{font-weight:900;font-size:1rem;margin-bottom:8px;display:block}
+  .feedback.ok .title{color:var(--green)}
+  .feedback.no .title{color:var(--red)}
+  .feedback .exp{padding:12px 14px;background:rgba(0,0,0,.3);border-radius:10px;margin:8px 0;font-size:.9rem;line-height:1.7;direction:rtl}
+  .feedback .exp b{color:var(--gold)}
+  .feedback .motive{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.2);color:#fef3c7;font-weight:700;font-size:.9rem}
+
+  .combo-banner{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    font-size:2rem;font-weight:900;color:#fbbf24;
+    text-shadow:0 0 30px rgba(251,191,36,.8),0 0 60px rgba(251,191,36,.4);
+    pointer-events:none;z-index:2000;
+    transition:transform .4s cubic-bezier(0.175,0.885,0.32,1.275),opacity .4s;
+    opacity:0;text-align:center;direction:rtl;
+  }
+  .combo-banner.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+
+  .confetti-particle{
+    position:fixed;width:10px;height:10px;pointer-events:none;z-index:1500;
+    border-radius:50%;animation:fallConfetti 1.2s ease-out forwards;
+  }
+  @keyframes fallConfetti{
+    0%{transform:translate(0,0) rotate(0deg);opacity:1}
+    100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}
+  }
+
+  .ring-wrap{display:grid;place-items:center;margin:6px 0 16px}
+  .ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) 0deg,rgba(255,255,255,.1) 0deg);transition:background .7s ease}
+  .ring-inner{width:100px;height:100px;border-radius:50%;background:#221a4d;border:1px solid var(--line);display:grid;place-items:center;font-size:1.3rem;font-weight:900;color:var(--gold)}
+  .result-title{text-align:center;font-size:1.3rem;font-weight:900;margin-bottom:6px}
+  .result-msg{text-align:center;color:#c7d2fe;line-height:1.8;margin-bottom:12px;font-size:.9rem}
+  .score-line{text-align:center;font-size:1rem;margin-bottom:12px;color:#c7d2fe}
+  .score-line b{color:var(--gold);font-size:1.1rem}
+  .time-line{text-align:center;font-size:.85rem;margin-bottom:18px;color:#a5b4fc}
+  .time-line b{color:var(--gold)}
+
+  .breakdown{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+  .breakdown h3{font-size:.85rem;font-weight:800;margin-bottom:12px;color:#c7d2fe}
+  .bd-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;font-weight:600;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.1)}
+  .bd-row:last-child{border-bottom:none}
+  .bd-section{flex:none;min-width:45px;direction:ltr;background:rgba(167,139,250,.18);color:#c4b5fd;padding:2px 6px;border-radius:6px;font-weight:800;font-size:.7rem;text-align:center}
+  .bd-title{flex:1;font-size:.8rem}
+  .bd-bar{flex:none;width:80px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+  .bd-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#fbbf24,#34d399)}
+  .bd-score{flex:none;min-width:40px;text-align:center;font-weight:800;font-size:.8rem}
+
+  .review-list{max-height:60vh;overflow-y:auto;padding-left:4px;margin-bottom:16px}
+  .review-list::-webkit-scrollbar{width:5px}
+  .review-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:9px}
+  .review-item{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .review-section{display:inline-block;background:rgba(167,139,250,.18);color:#c4b5fd;padding:2px 8px;border-radius:6px;font-weight:800;font-size:.7rem;direction:ltr;margin-bottom:8px}
+  .review-en{font-weight:800;font-size:.95rem;line-height:1.5;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap}
+  .review-ar{font-size:.8rem;color:#a5b4fc;margin-bottom:8px}
+  .review-answer{font-size:.85rem;color:#6ee7b7;font-weight:700;background:rgba(52,211,153,.1);padding:6px 10px;border-radius:6px;margin-bottom:8px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+  .review-exp{font-size:.8rem;color:#cbd5e1;line-height:1.7;background:rgba(0,0,0,.2);padding:8px 12px;border-radius:8px}
+  .review-exp b{color:var(--gold)}
+
+  #toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120%);background:#fbbf24;color:#2a1a00;font-weight:800;padding:10px 20px;border-radius:12px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.3s;z-index:999;text-align:center;max-width:90vw}
+  #toast.show{transform:translate(-50%,0)}
+
+  #print-area{display:none}
+  @media print{
+    @page{margin:12mm;size:A4}
+    html,body{background:#fff!important;color:#000!important;display:block!important;padding:0!important}
+    .app,#toast,#error-box,.combo-banner{display:none!important}
+    #print-area{display:block!important;padding:0}
+    .p-header{border-bottom:2px solid #333;padding-bottom:10px;margin-bottom:16px}
+    .p-header h1{font-size:18px;margin-bottom:4px;color:#111}
+    .p-header .p-meta{font-size:11px;color:#555}
+    .p-section-title{font-size:14px;background:#ede9fe;padding:6px 10px;border-radius:6px;margin:14px 0 8px;color:#4c1d95;page-break-after:avoid}
+    .p-q{page-break-inside:avoid;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #ddd}
+    .p-q .p-q-num{font-weight:800;font-size:13px;margin-bottom:2px;color:#111;direction:ltr;text-align:left;white-space:pre-wrap}
+    .p-q .p-q-ar{font-size:10px;color:#666;margin-bottom:4px}
+    .p-q .p-answer{font-size:12px;color:#0a7a3b;font-weight:700;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+    .p-q .p-exp{font-size:11.5px;color:#333;background:#f5f5f5;padding:6px 8px;border-radius:4px;line-height:1.6}
+    .p-q .p-exp b{color:#b45309}
+    .p-footer{margin-top:16px;padding-top:8px;border-top:1px solid #ccc;font-size:9px;color:#888;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<div id="error-box" class="hidden" style="background:red;color:white;padding:15px;border-radius:10px;margin-bottom:10px;font-weight:bold;z-index:9999;position:relative;"></div>
+
+<div class="combo-banner" id="combo-banner"></div>
+
+<div class="app">
+  <section id="screen-home" class="card">
+    <div class="badge">🧮 Linear Algebra · Midterm Prep (1.1 → 2.3)</div>
+    <h1>لعبة <span>الجبر الخطي</span> — استعد للاختبار</h1>
+    <p class="sub">أسئلة شاملة تغطي المنهج المطلوب فقط (بدون المحددات).</p>
+    <div style="background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.35);border-radius:12px;padding:10px 14px;margin-bottom:20px;font-size:.85rem;color:#c4b5fd;line-height:1.7">
+      🔊 <b>أصوات تفاعلية</b> — تصفيق عند الإجابة الصحيحة.<br>
+      🔥 <b>عدّاد السلاسل (Streak)</b> — كل 3 إجابات صحيحة متتالية = مكافأة!<br>
+      ⏱ <b>مؤقت لكل سؤال</b> + مؤقت شامل (105 دقيقة).
+    </div>
+    <button class="btn btn-primary" id="btn-start">ابدأ المهمة 🚀</button>
+    <button class="btn btn-ghost" id="btn-review" style="margin-top:10px">📖 مراجعة شاملة</button>
+    <button class="btn btn-ghost" id="btn-pdf" style="margin-top:10px">📄 تصدير الأسئلة PDF</button>
+    <div class="hint">إجمالي الأسئلة: <b id="q-count">0</b></div>
+  </section>
+
+  <section id="screen-quiz" class="card hidden">
+    <div class="topbar">
+      <span id="counter">السؤال 1 من 1</span>
+      <span id="section-pill">Section 1.1</span>
+      <span id="streak-pill">🔥 0</span>
+      <span id="global-timer" class="timer-pill">⏱ 105:00</span>
+      <span id="score-pill">⭐ 0</span>
+      <button id="sound-btn" title="الصوت">🔊</button>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    
+    <div id="question-en" class="q-en"></div>
+    <div id="question-ar" class="q-ar"></div>
+
+    <div class="q-timer-wrap">
+      <span class="q-timer-label">⏳ <span id="q-timer-text">60s</span></span>
+      <div class="q-timer-bar"><div id="q-timer-fill" class="q-timer-fill"></div></div>
+    </div>
+    
+    <div id="options"></div>
+    
+    <div id="feedback" class="feedback hidden"></div>
+    <button class="btn btn-primary hidden" id="btn-next" style="margin-top:12px">السؤال التالي ←</button>
+    <button class="btn btn-primary hidden" id="btn-finish" style="margin-top:12px">عرض النتيجة 🏁</button>
+  </section>
+
+  <section id="screen-result" class="card hidden">
+    <div class="ring-wrap">
+      <div class="ring" id="ring"><div class="ring-inner" id="result-pct">0%</div></div>
+    </div>
+    <div class="result-title" id="result-title">—</div>
+    <p class="result-msg" id="result-msg">—</p>
+    <p class="score-line">النتيجة: <b id="result-score">0 / 0</b></p>
+    <p class="time-line">⏱ الوقت المستغرق: <b id="result-time">—</b></p>
+    <p class="time-line">🔥 أطول سلسلة: <b id="result-streak">0</b></p>
+    <div class="breakdown" id="breakdown"></div>
+    <button class="btn btn-primary" id="btn-retry">إعادة المحاولة الكاملة 🔁</button>
+    <button class="btn btn-ghost" id="btn-review-wrong" style="margin-top:8px">🎯 مراجعة الأخطاء فقط</button>
+    <button class="btn btn-ghost" id="btn-review-full" style="margin-top:8px">📖 مراجعة شاملة</button>
+    <button class="btn btn-ghost" id="btn-pdf-result" style="margin-top:8px">📄 تصدير النتيجة PDF</button>
+    <button class="btn btn-ghost" id="btn-back-portal" style="margin-top:8px">↩ العودة للبوابة</button>
+  </section>
+
+  <section id="screen-review" class="card hidden">
+    <h1 style="font-size:1.2rem;margin-bottom:6px">📖 <span id="review-title">مراجعة</span></h1>
+    <div id="review-list" class="review-list"></div>
+    <button class="btn btn-ghost" id="btn-review-pdf-2">📄 تصدير المراجعة PDF</button>
+    <button class="btn btn-ghost" id="btn-review-back" style="margin-top:8px">← رجوع</button>
+  </section>
+</div>
+
+<div id="print-area"></div>
+<div id="toast"></div>
+
+<script>
+window.onerror = function(msg, url, line) {
+  const errBox = document.getElementById('error-box');
+  if(errBox) {
+    errBox.classList.remove('hidden');
+    errBox.innerHTML = "⚠️ خطأ: " + msg + "<br>السطر: " + line;
+  }
+  return false;
+};
+
+/* ============ نظام الأصوات (Web Audio API) ============ */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio(){
+  if(!audioCtx){
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTone(freq, duration, type='sine', volume=0.25, delay=0){
+  if(!soundEnabled || !audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.start(t); osc.stop(t + duration + 0.05);
+}
+function sfxCorrect(){ playTone(523.25,0.15,'sine',0.3,0); playTone(659.25,0.15,'sine',0.3,0.1); playTone(783.99,0.35,'sine',0.3,0.2); }
+function sfxWrong(){ playTone(220,0.2,'sawtooth',0.2,0); playTone(165,0.35,'sawtooth',0.2,0.15); }
+function sfxStart(){ playTone(392,0.1,'sine',0.25,0); playTone(523.25,0.1,'sine',0.25,0.08); playTone(659.25,0.2,'sine',0.25,0.16); }
+function sfxTick(){ playTone(880,0.04,'square',0.12,0); }
+function sfxCombo(){ playTone(659.25,0.1,'square',0.25,0); playTone(880,0.1,'square',0.25,0.1); playTone(1046.5,0.25,'square',0.25,0.2); }
+function sfxWin(){ [523.25,659.25,783.99,1046.5,1318.51].forEach((f,i)=>playTone(f,0.25,'sine',0.3,i*0.13)); }
+function sfxLose(){ playTone(392,0.2,'sine',0.2,0); playTone(329.63,0.2,'sine',0.2,0.15); playTone(261.63,0.4,'sine',0.2,0.3); }
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+  if(soundEnabled) initAudio();
+}
+
+/* ============ التأثيرات البصرية ============ */
+function showCombo(text){
+  const b = document.getElementById('combo-banner');
+  b.textContent = text;
+  b.classList.add('show');
+  sfxCombo();
+  setTimeout(()=>b.classList.remove('show'), 1200);
+}
+
+function spawnConfetti(x, y){
+  const colors = ['#fbbf24','#a78bfa','#34d399','#60a5fa','#f472b6'];
+  for(let i=0; i<18; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const angle = (Math.PI*2*i/18) + Math.random()*0.5;
+    const dist = 80 + Math.random()*120;
+    p.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1300);
+  }
+}
+
+const COMBO_MESSAGES = ["🔥 سلسلة نارية!","⚡ أنت في القمة!","🌟 لا يمكن إيقافك!","💎 أداء أسطوري!","🚀 انطلق بقوة!"];
+
+/* ============ بيانات الأسئلة ============ */
+const SECTION_TITLES = {
+  "1.1":"Systems of Linear Equations",
+  "1.2":"Gaussian Elimination",
+  "2.1":"Operations with Matrices",
+  "2.2":"Properties of Matrix Operations",
+  "2.3":"The Inverse of a Matrix"
+};
+
+const QUESTIONS = [
+  /* ================== Section 1.1 ================== */
+  {s:"1.1", t:45, en:"What is the general form of a linear equation in n variables?", ar:"ما هي الصيغة العامة للمعادلة الخطية في n متغير؟",
+   o:["a1x1 + a2x2 + ... + anxn = b","a1x1^2 + a2x2 = b","x1*x2 + x3 = b","sin(x1) + x2 = b"],c:0,
+   e:"<b>لماذا؟</b> المعادلة الخطية يجب أن تكون كل متغيراتها للقوة الأولى فقط، بلا حاصل ضرب بين المتغيرات ولا جذور ولا دوال مثلثية أو أسية."},
+  {s:"1.1", t:45, en:"Which of the following is NOT a linear equation?", ar:"أي من المعادلات التالية ليست خطية؟",
+   o:["3x + 2y = 7","xy + z = 2","(1/2)x + y - pi*z = sqrt(2)","(sin pi)x1 - 4x2 = e^2"],c:1,
+   e:"<b>لماذا؟</b> الحد xy هو حاصل ضرب متغيرين، وهذا ممنوع. أما (sin pi) فهو ثابت عددي."},
+  {s:"1.1", t:45, en:"A linear system with at least one solution is called:", ar:"النظام الخطي الذي له حل واحد على الأقل يُسمى:",
+   o:["Inconsistent","Consistent","Homogeneous","Singular"],c:1,
+   e:"<b>لماذا؟</b> Consistent = له حل. Inconsistent = لا حل."},
+  {s:"1.1", t:45, en:"How many types of solution sets can a linear system have?", ar:"كم نوعاً من الحلول يمكن أن يكون للنظام الخطي؟",
+   o:["Exactly one type only","One solution, infinitely many, or no solution","Only none or one","Only infinitely many"],c:1,
+   e:"<b>لماذا؟</b> نظرية: إما حل وحيد، أو لا نهائي، أو لا حل."},
+  {s:"1.1", t:60, en:"Which method solves a system already in row-echelon form?", ar:"ما الطريقة المستخدمة لحل نظام في الصورة الصفية الدرجية؟",
+   o:["Cramer's rule","Back-substitution","Matrix inversion","Gram-Schmidt"],c:1,
+   e:"<b>لماذا؟</b> نبدأ من المعادلة الأخيرة ثم نصعد للأعلى (Back-substitution)."},
+  {s:"1.1", t:45, en:"Row-echelon form is characterized by:", ar:"الصورة الصفية الدرجية تتميز بأن المعامل الأول غير الصفري في كل صف:",
+   o:["Every leading entry is 0","A stair-step pattern of leading 1's","All entries equal to 1","Only the last row is nonzero"],c:1,
+   e:"<b>لماذا؟</b> كل صف يبدأ بـ 1 (leading 1)."},
+  {s:"1.1", t:60, en:"To represent the solutions of one linear equation in two variables, we use:", ar:"لتمثيل حلول معادلة خطية واحدة في متغيرين نستخدم:",
+   o:["A parametric representation","Cramer's rule","Gaussian elimination","Diagonalization"],c:0,
+   e:"<b>لماذا؟</b> نعبّر عنها بـ parametric representation بمتغير حر."},
+  {s:"1.1", t:45, en:"Two linear systems are equivalent when:", ar:"نظامان خطيان متكافئان عندما:",
+   o:["They have the same coefficient matrix","They have the same solution set","They have the same number of equations","They have the same determinant"],c:1,
+   e:"<b>لماذا؟</b> التكافؤ يعني: same solution set."},
+  {s:"1.1", t:45, en:"Which operation does NOT produce an equivalent system?", ar:"أي عملية لا تنتج نظاماً مكافئاً؟",
+   o:["Interchange two equations","Multiply an equation by a nonzero constant","Add a multiple of one equation to another","Multiply an equation by zero"],c:3,
+   e:"<b>لماذا؟</b> الضرب في صفر يفقد المعلومة."},
+  {s:"1.1", t:45, en:"Rewriting a linear system into row-echelon form is called:", ar:"عملية إعادة كتابة نظام خطي إلى الصورة الصفية الدرجية تُسمى:",
+   o:["Gauss-Jordan elimination","Gaussian elimination","Cramer's rule","Diagonalization"],c:1,
+   e:"<b>لماذا؟</b> Gaussian elimination تتوقف عند row-echelon."},
+
+  /* ================== Section 1.2 ================== */
+  {s:"1.2", t:45, en:"A matrix with m rows and n columns has size:", ar:"المصفوفة التي لها m صف و n عمود يكون حجمها:",
+   o:["m x n","n x m","m + n","m*n"],c:0,
+   e:"<b>لماذا؟</b> الحجم يُكتب دائماً rows x columns."},
+  {s:"1.2", t:45, en:"Which of the following is NOT an elementary row operation?", ar:"أي مما يلي ليس عملية صفية أولية؟",
+   o:["Interchange two rows","Multiply a row by a nonzero constant","Add a multiple of one row to another","Add a constant to every entry of a row"],c:3,
+   e:"<b>لماذا؟</b> إضافة ثابت لكل عناصر الصف تغيّر النظام."},
+  {s:"1.2", t:45, en:"In row-echelon form, rows of zeros must appear:", ar:"في الصورة الصفية الدرجية، الصفوف المكونة من أصفار بالكامل يجب أن تكون:",
+   o:["At the top","At the bottom","Anywhere","Only in odd positions"],c:1,
+   e:"<b>لماذا؟</b> الشرط الأول: All-zero rows occur at the bottom."},
+  {s:"1.2", t:60, en:"The key difference between row-echelon and reduced is:", ar:"الفرق الرئيسي بين row-echelon و reduced row-echelon هو:",
+   o:["No difference","In reduced form, zeros above AND below leading 1","Reduced form is smaller","Reduced form has negative entries"],c:1,
+   e:"<b>لماذا؟</b> reduced: أصفار فوق وتحت الـ leading 1."},
+  {s:"1.2", t:60, en:"Gauss-Jordan elimination continues until reaching:", ar:"Gauss-Jordan elimination تستمر حتى الوصول إلى:",
+   o:["Row-echelon form","Reduced row-echelon form","Triangular form","Parametric form"],c:1,
+   e:"<b>لماذا؟</b> تكمل Gaussian إلى reduced row-echelon."},
+  {s:"1.2", t:60, en:"An augmented matrix consists of:", ar:"المصفوفة المعززة (augmented matrix) تتكون من:",
+   o:["Only the coefficient matrix","Coefficient matrix adjoined with constants column","Only constants","Transpose of the coefficient matrix"],c:1,
+   e:"<b>لماذا؟</b> [A | b]."},
+  {s:"1.2", t:45, en:"A homogeneous system is always:", ar:"النظام المتجانس (homogeneous) يكون دائماً:",
+   o:["Inconsistent","Consistent","Has only trivial solution","Singular"],c:1,
+   e:"<b>لماذا؟</b> الحل الصفري يحقق النظام دائماً."},
+  {s:"1.2", t:60, en:"A homogeneous system with fewer equations than variables:", ar:"النظام المتجانس الذي عدد معادلاته أقل من عدد متغيراته:",
+   o:["Has only the trivial solution","Has no solution","Has infinitely many solutions","Is inconsistent"],c:2,
+   e:"<b>لماذا؟</b> نظرية 1.1: له عدد لا نهائي من الحلول."},
+  {s:"1.2", t:45, en:"Two matrices are row-equivalent when:", ar:"مصفوفتان تكونان متكافئتين صفياً عندما:",
+   o:["They have the same determinant","One can be obtained from the other by elementary row operations","They have identical entries","They are the same size only"],c:1,
+   e:"<b>لماذا؟</b> علاقة تسلسل العمليات الصفية."},
+  {s:"1.2", t:45, en:"The first nonzero entry in each nonzero row must be:", ar:"الرقم الأول غير الصفري في كل صف يجب أن يكون:",
+   o:["Any number","1","-1","0"],c:1,
+   e:"<b>لماذا؟</b> يسمى leading 1."},
+
+  /* ================== Section 2.1 ================== */
+  {s:"2.1", t:45, en:"Two matrices are equal when:", ar:"مصفوفتان متساويتان عندما:",
+   o:["They have the same size only","Same size and corresponding entries equal","They have the same determinant","They have the same trace"],c:1,
+   e:"<b>لماذا؟</b> نفس الحجم وكل عنصر متساوٍ."},
+  {s:"2.1", t:45, en:"Matrix addition A + B is defined only when:", ar:"جمع مصفوفتين A + B معرّف فقط عندما:",
+   o:["Same number of rows","Same size","They are square","Same determinant"],c:1,
+   e:"<b>لماذا؟</b> نجمع aij + bij."},
+  {s:"2.1", t:45, en:"When multiplying a matrix by a scalar, we multiply:", ar:"عند ضرب مصفوفة بعدد ثابت (scalar)، نضرب:",
+   o:["Only the first row","Only the main diagonal","Every entry by the scalar","Only the last column"],c:2,
+   e:"<b>لماذا؟</b> كل عنصر يُضرب في c."},
+  {s:"2.1", t:60, en:"For the product AB to be defined:", ar:"لكي يكون حاصل الضرب AB معرّفاً:",
+   o:["A and B must be square","#columns of A = #rows of B","#rows of A = #columns of B","A = B"],c:1,
+   e:"<b>لماذا؟</b> عدد أعمدة A = عدد صفوف B."},
+  {s:"2.1", t:60, en:"If A is m x n and B is n x p, then AB has size:", ar:"إذا كانت A بحجم m x n و B بحجم n x p فإن AB بحجم:",
+   o:["n x n","m x n","m x p","p x m"],c:2,
+   e:"<b>لماذا؟</b> الأبعاد الخارجية."},
+  {s:"2.1", t:45, en:"A matrix with 1's on main diagonal and 0's elsewhere:", ar:"المصفوفة التي لها 1 على القطر الرئيسي و 0 في كل مكان آخر:",
+   o:["Zero matrix","Identity matrix","Diagonal matrix","Transpose matrix"],c:1,
+   e:"<b>لماذا؟</b> In = identity matrix."},
+  {s:"2.1", t:45, en:"The transpose A^T is obtained by:", ar:"منقول المصفوفة (transpose) A^T يتم الحصول عليه بـ:",
+   o:["Multiplying all entries","Writing rows as columns","Taking reciprocals","Squaring entries"],c:1,
+   e:"<b>لماذا؟</b> الصف i يصبح العمود i."},
+  {s:"2.1", t:60, en:"If A is m x n, then A^T has size:", ar:"إذا كانت A بحجم m x n، فإن A^T بحجم:",
+   o:["m x n","n x m","n x n","m x m"],c:1,
+   e:"<b>لماذا؟</b> صفوف A تصبح أعمدة A^T."},
+  {s:"2.1", t:45, en:"The trace of a matrix is:", ar:"أثر المصفوفة (trace) هو:",
+   o:["Product of diagonal entries","Sum of main diagonal entries","Determinant","Largest entry"],c:1,
+   e:"<b>لماذا؟</b> Tr(A) = مجموع القطر."},
+  {s:"2.1", t:60, en:"The system Ax = b is written with:", ar:"النظام Ax = b يُكتب بمصفوفة حيث:",
+   o:["A = coefficient matrix, x = unknowns, b = constants","A = augmented matrix","A = identity matrix","A = transpose of coefficient matrix"],c:0,
+   e:"<b>لماذا؟</b> A معاملات، x مجاهل، b ثوابت."},
+
+  /* ================== Section 2.2 ================== */
+  {s:"2.2", t:45, en:"Matrix addition is:", ar:"جمع المصفوفات يكون:",
+   o:["Not commutative","Commutative","Associative but not commutative","Only for square matrices"],c:1,
+   e:"<b>لماذا؟</b> A + B = B + A."},
+  {s:"2.2", t:45, en:"Matrix multiplication is generally:", ar:"ضرب المصفوفات عموماً:",
+   o:["Commutative","Not commutative","Only for square matrices","Always AB = BA"],c:1,
+   e:"<b>لماذا؟</b> AB != BA عموماً."},
+  {s:"2.2", t:45, en:"Which property holds for matrix multiplication?", ar:"أي خاصية تنطبق على ضرب المصفوفات؟",
+   o:["Commutative","Associative","Cancellation always valid","Distributive only for square matrices"],c:1,
+   e:"<b>لماذا؟</b> A(BC) = (AB)C."},
+  {s:"2.2", t:45, en:"The property A(B + C) = AB + AC is called:", ar:"الخاصية A(B + C) = AB + AC تُسمى:",
+   o:["Commutative","Associative","Distributive","Identity"],c:2,
+   e:"<b>لماذا؟</b> توزيع الضرب."},
+  {s:"2.2", t:60, en:"If AC = BC, can we conclude A = B?", ar:"إذا كانت AC = BC، هل يمكن استنتاج أن A = B؟",
+   o:["Yes, always","Only if A, B, C are nonzero","Only if C is invertible","Only if C is square"],c:2,
+   e:"<b>لماذا؟</b> تُشترط C invertible."},
+  {s:"2.2", t:60, en:"The transpose (AB)^T equals:", ar:"منقول حاصل الضرب (AB)^T يساوي:",
+   o:["A^T B^T","B^T A^T","AB","BA"],c:1,
+   e:"<b>لماذا؟</b> (AB)^T = B^T A^T."},
+  {s:"2.2", t:45, en:"A + O = ?", ar:"A + O = ؟",
+   o:["O","A","I","-A"],c:1,
+   e:"<b>لماذا؟</b> O محايد للجمع."},
+  {s:"2.2", t:45, en:"A * In = ?", ar:"A * In = ؟",
+   o:["In","A","O","A^-1"],c:1,
+   e:"<b>لماذا؟</b> In محايد للضرب."},
+  {s:"2.2", t:60, en:"A symmetric matrix satisfies:", ar:"المصفوفة المتماثلة (symmetric) تحقق:",
+   o:["A = -A","A = A^T","A = A^-1","A = I"],c:1,
+   e:"<b>لماذا؟</b> A = A^T."},
+  {s:"2.2", t:60, en:"A skew-symmetric matrix satisfies:", ar:"المصفوفة المنحرفة التماثل تحقق:",
+   o:["A = A^T","A = -A^T","A = I","A = O"],c:1,
+   e:"<b>لماذا؟</b> A^T = -A."},
+
+  /* ================== Section 2.3 ================== */
+  {s:"2.3", t:60, en:"A square matrix A is invertible if:", ar:"المصفوفة المربعة A قابلة للعكس إذا:",
+   o:["det(A) = 0","There exists B with AB = BA = I","A is diagonal","A has a zero row"],c:1,
+   e:"<b>لماذا؟</b> يوجد B بحيث AB = BA = In."},
+  {s:"2.3", t:45, en:"If A is invertible, its inverse is:", ar:"إذا كانت A قابلة للعكس فإن معكوسها:",
+   o:["Not unique","Unique","Always A itself","Always -A"],c:1,
+   e:"<b>لماذا؟</b> نظرية 2.7: المعكوس وحيد."},
+  {s:"2.3", t:60, en:"A 2x2 matrix is invertible iff:", ar:"المصفوفة 2x2 تكون قابلة للعكس إذا وفقط إذا:",
+   o:["ad - bc = 0","ad - bc != 0","a + d != 0","ab - cd != 0"],c:1,
+   e:"<b>لماذا؟</b> الشرط: det(A) != 0."},
+  {s:"2.3", t:60, en:"Best method to find inverse of n x n matrix:", ar:"أفضل طريقة لإيجاد معكوس مصفوفة n x n:",
+   o:["Cramer's rule","Gauss-Jordan on [A | I]","Diagonalization","Transpose"],c:1,
+   e:"<b>لماذا؟</b> نختزل [A | I] إلى [I | A^-1]."},
+  {s:"2.3", t:90, en:"(AB)^-1 equals:", ar:"(AB)^-1 يساوي:",
+   o:["A^-1 B^-1","B^-1 A^-1","AB","BA"],c:1,
+   e:"<b>لماذا؟</b> (AB)^-1 = B^-1 A^-1."},
+  {s:"2.3", t:60, en:"(A^T)^-1 equals:", ar:"(A^T)^-1 يساوي:",
+   o:["A^-1","(A^-1)^T","A^T","-A^-1"],c:1,
+   e:"<b>لماذا؟</b> (A^T)^-1 = (A^-1)^T."},
+  {s:"2.3", t:60, en:"If c != 0, (cA)^-1 equals:", ar:"إذا كان c != 0، فإن (cA)^-1 يساوي:",
+   o:["c*A^-1","(1/c)*A^-1","c^2*A^-1","-c*A^-1"],c:1,
+   e:"<b>لماذا؟</b> (cA)^-1 = (1/c)A^-1."},
+  {s:"2.3", t:45, en:"A matrix with no inverse is called:", ar:"المصفوفة التي لا معكوس لها تُسمى:",
+   o:["Identity","Nonsingular","Singular","Symmetric"],c:2,
+   e:"<b>لماذا؟</b> Singular = noninvertible."},
+  {s:"2.3", t:60, en:"If A is invertible, the solution to Ax = b is:", ar:"إذا كانت A قابلة للعكس، فإن حل Ax = b هو:",
+   o:["x = Ab","x = A^-1 b","x = b A^-1","x = b - A"],c:1,
+   e:"<b>لماذا؟</b> x = A^-1 b."},
+  {s:"2.3", t:60, en:"When can we use cancellation AC = BC => A = B?", ar:"متى نستخدم الإلغاء AC = BC => A = B؟",
+   o:["Always","Only when C is invertible","Only when A, B invertible","Never"],c:1,
+   e:"<b>لماذا؟</b> يجب أن تكون C قابلة للعكس."},
+
+  /* ================== من الصور ================== */
+  {s:"1.1", t:120, en:"What is the solution set of the system:\nx - y = 0\nx - y = 2", ar:"ما هي مجموعة حلول النظام: x - y = 0 و x - y = 2؟",
+   o:["x=0, y=0","x=2, y=-2","Infinitely many solutions","No solution"],c:3,
+   e:"<b>لماذا؟</b> المعادلتان تمثلان خطين متوازيين. لا يمكن أن يكون الفرق 0 و 2 في نفس الوقت."},
+  {s:"2.3", t:90, en:"If A = [ 1  1 ]\n       [ 1  2 ], then (A^T)^-1 = ?", ar:"إذا كانت A = [[1, 1], [1, 2]]، فإن (A^T)^-1 = ؟",
+   o:["[ 2 -1 ]\n[-1  1 ]","[ 1  1 ]\n[ 2  2 ]","[ 1  2 ]\n[ 1  2 ]","A is noninvertible"],c:0,
+   e:"<b>لماذا؟</b> A متماثلة، لذا (A^T)^-1 = A^-1. المحدد = 1."},
+  {s:"2.2", t:45, en:"If A and B are matrices, then (AB)^T = ?", ar:"إذا كانت A و B مصفوفتين، فإن (AB)^T = ؟",
+   o:["BA","B^T A^T","A^T B^T","AB"],c:1,
+   e:"<b>لماذا؟</b> نظرية 2.6: (AB)^T = B^T A^T."},
+  {s:"2.1", t:90, en:"If C = [ 1  2 ]  and  D = [ 1  3 ]\n       [-2  3 ]            [-1  4 ], then 2C - 4D = ?", ar:"إذا كانت C = [[1, 2], [-2, 3]] و D = [[1, 3], [-1, 4]]، فإن 2C - 4D = ؟",
+   o:["[ -2 -8 ]\n[  0 -10]","[ 2  8 ]\n[ 0 10 ]","[ 6 16 ]\n[-6 22 ]","[ -2 -8 ]\n[  0 10]"],c:0,
+   e:"<b>لماذا؟</b> 2C = [[2, 4], [-4, 6]]، 4D = [[4, 12], [-4, 16]]. الطرح يعطي [[-2, -8], [0, -10]]."},
+  {s:"2.1", t:90, en:"If A = [ 1  2  3 ]\n       [ 6 -1  4 ], then A^T = ?", ar:"إذا كانت A = [[1, 2, 3], [6, -1, 4]]، فإن A^T = ؟",
+   o:["[ 1  2  3 ]\n[ 6 -1  4 ]","[ 6 -1  4 ]\n[ 1  2  3 ]","[ 1  6 ]\n[ 2 -1 ]\n[ 3  4 ]","[ 3  4 ]\n[ 2 -1 ]\n[ 1  6 ]"],c:2,
+   e:"<b>لماذا؟</b> الصفوف تصبح أعمدة."},
+  {s:"1.2", t:90, en:"The augmented matrix of the system:\n2x + 3y - z = 10\n2y + 3z = 5\nx + 6y = -1\nis:", ar:"المصفوفة المعززة للنظام: 2x + 3y - z = 10، 2y + 3z = 5، x + 6y = -1 هي:",
+   o:["[ 2  3 -1 | 10 ]\n[ 0  2  3 |  5 ]\n[ 1  6  0 | -1 ]","[ 2  3 -1 | 10 ]\n[ 0  2  3 |  5 ]\n[ 1  6  6 | -1 ]","[ 1  3 -1 | 10 ]\n[ 0  2  3 |  5 ]\n[ 1  6  0 | -1 ]","[ 2  3 -1 | 10 ]\n[ 0  2  3 |  5 ]\n[ 1  6  0 | -1 ]"],c:0,
+   e:"<b>لماذا؟</b> نأخذ معاملات x, y, z ثم الثوابت. المعادلة الثالثة ليس بها z لذا معاملها 0."},
+  {s:"1.2", t:120, en:"If the augmented matrix is\n[ 1  1  0 | 0 ]\n[ 0  1  1 | 0 ]\n[ 0  0  k | m ],\nwhat are k and m for a non-trivial solution?", ar:"إذا كانت المصفوفة المعززة [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, k, m]]، فما قيم k و m ليكون للنظام حل غير تافه؟",
+   o:["k = m = 0","k = m != 0","k = 0, m != 0","k != 0, m = 0"],c:1,
+   e:"<b>لماذا؟</b> لحل غير تافه، نحتاج متغير حر. الصف الأخير k*z = m يجب أن يكون 0=0 (صف أصفار)."},
+  {s:"1.1", t:60, en:"Which of the following equations is linear?", ar:"أي من المعادلات التالية تعتبر خطية؟",
+   o:["xy + z = 2","e^x - 2y = 4","sin(x1) + 2x2 - 3x3 = 0","(sin pi)x1 - 4x2 = e^2"],c:3,
+   e:"<b>لماذا؟</b> الخطية تتطلب عدم وجود ضرب متغيرات أو دوال مثلثية/أسية. (sin pi) ثابت."},
+  {s:"1.1", t:90, en:"To represent the solutions of x1 + 2x2 = 4 parametrically (using t = x2), the solution is:", ar:"لتمثيل حلول المعادلة x1 + 2x2 = 4 بارامترياً (باستخدام t = x2)، يكون الحل:",
+   o:["x1 = 4 - 2t, x2 = t","x1 = t, x2 = 2 - t","x1 = 2t, x2 = 4 - t","x1 = 4 + 2t, x2 = -t"],c:0,
+   e:"<b>لماذا؟</b> x1 = 4 - 2x2. نعوض x2 = t."},
+  {s:"1.1", t:45, en:"If a linear system contains two parallel equations, the system is:", ar:"إذا كان النظام الخطي يحتوي على معادلتين متوازيتين، فإن النظام:",
+   o:["Consistent","Inconsistent","Has infinitely many solutions","Has a unique solution"],c:1,
+   e:"<b>لماذا؟</b> الخطوط المتوازية لا تتقاطع، فلا يوجد حل."},
+  {s:"1.1", t:60, en:"Which of the following operations preserves the solution set of a linear system?", ar:"أي من العمليات التالية تحافظ على مجموعة الحلول لنظام خطي؟",
+   o:["Multiply equation by zero","Add a constant to both sides","Interchange two equations","Multiply equation by exponential function"],c:2,
+   e:"<b>لماذا؟</b> العمليات المكافئة: تبديل، ضرب بثابت غير صفري، جمع مضاعف."},
+  {s:"1.1", t:60, en:"What is the unique solution to the system:\nx + y = 3\nx - y = 1", ar:"ما هو الحل الوحيد للنظام: x + y = 3 و x - y = 1؟",
+   o:["x=2, y=1","x=1, y=2","x=3, y=0","x=0, y=3"],c:0,
+   e:"<b>لماذا؟</b> بالجمع: 2x = 4 => x=2. بالتعويض y=1."},
+  {s:"1.2", t:45, en:"If matrix A has size 3x4, what is its size?", ar:"إذا كانت المصفوفة A بحجم 3x4، فما هو حجمها؟",
+   o:["3 rows and 4 columns","4 rows and 3 columns","3 columns and 4 rows","Square matrix"],c:0,
+   e:"<b>لماذا؟</b> التدوين m x n يعني m صف و n عمود."},
+  {s:"1.2", t:45, en:"Which elementary row operation is NOT allowed?", ar:"أي عملية صفية أولية غير مسموح بها؟",
+   o:["Interchange two rows","Multiply row by non-zero constant","Add a multiple of one row to another","Multiply row by zero"],c:3,
+   e:"<b>لماذا؟</b> الضرب في صفر يمحو الصف ويفقد المعلومة."},
+  {s:"1.2", t:45, en:"Row-echelon form requires the first nonzero entry in each row to be:", ar:"الشكل الصفي الدرجي يتطلب أن يكون الرقم الأول غير الصفري في كل صف:",
+   o:["Any number","1","-1","0"],c:1,
+   e:"<b>لماذا؟</b> يسمى leading 1."},
+  {s:"1.2", t:60, en:"In reduced row-echelon form, it must be true that:", ar:"في الشكل الصفي الدرجي المختزل، يجب أن يكون:",
+   o:["All rows contain 1","Zeros above and below leading 1","Only diagonal matrix","All elements are zeros"],c:1,
+   e:"<b>لماذا؟</b> الشكل المختزل يتطلب أصفار فوق وتحت الـ leading 1."},
+  {s:"1.2", t:45, en:"Is a homogeneous system always consistent?", ar:"هل النظام المتجانس (Homogeneous) دائماً متسق (Consistent)؟",
+   o:["Yes, because trivial solution works","No, it can be inconsistent","Only if square","Only if det != 0"],c:0,
+   e:"<b>لماذا؟</b> تعيين كل المتغيرات للصفر يحقق المعادلات دائماً."},
+  {s:"1.2", t:60, en:"If we have a homogeneous system with fewer equations than variables, the system:", ar:"إذا كان لدينا نظام متجانس فيه عدد المعادلات أقل من عدد المتغيرات، فإن النظام:",
+   o:["Has unique solution","Has no solution","Has infinitely many solutions","Must be solved by determinants"],c:2,
+   e:"<b>لماذا؟</b> سيكون لديه متغير حر واحد على الأقل."},
+  {s:"1.2", t:60, en:"To solve a system using Gaussian elimination with back-substitution, the matrix must first reach:", ar:"لحل نظام باستخدام الحذف الجاوسي مع التعويض الخلفي، يجب أن تصل المصفوفة أولاً إلى:",
+   o:["Row-echelon form","Reduced row-echelon form","Diagonal matrix","Identity matrix"],c:0,
+   e:"<b>لماذا؟</b> Gaussian تتوقف عند row-echelon ثم نستخدم back-substitution."},
+  {s:"1.2", t:45, en:"If the augmented matrix ends with the row [ 0  0  0 | 5 ], the system is:", ar:"إذا كانت المصفوفة المعززة تنتهي بصف [0 0 0 | 5]، فهذا يعني أن النظام:",
+   o:["Consistent","Inconsistent","Has infinitely many solutions","Has unique solution"],c:1,
+   e:"<b>لماذا؟</b> المعادلة 0 = 5 مستحيلة، لذا لا يوجد حل."},
+  {s:"2.1", t:45, en:"When can two matrices A and B be added?", ar:"متى يمكن جمع مصفوفتين A و B؟",
+   o:["When they have the same size","When they are square","When they have the same determinant","When they are invertible"],c:0,
+   e:"<b>لماذا؟</b> الجمع يتم عنصراً بعنصر، فيجب تساوي الأبعاد."},
+  {s:"2.1", t:60, en:"In matrix multiplication AB, the basic condition for the product to be defined is:", ar:"في ضرب المصفوفات AB، الشرط الأساسي لتعريف الضرب هو:",
+   o:["#rows of A = #columns of B","#columns of A = #rows of B","A and B must be square","A = B"],c:1,
+   e:"<b>لماذا؟</b> عدد أعمدة A = عدد صفوف B."},
+  {s:"2.1", t:60, en:"If A is 2x3 and B is 3x4, the size of AB is:", ar:"إذا كانت A بحجم 2x3 و B بحجم 3x4، فإن حجم AB هو:",
+   o:["2x3","3x4","2x4","4x2"],c:2,
+   e:"<b>لماذا؟</b> الأبعاد الخارجية (2 و 4)."},
+  {s:"2.1", t:60, en:"What is the product of matrix A and the zero matrix O?", ar:"ما هو حاصل ضرب المصفوفة A في المصفوفة الصفرية O؟",
+   o:["A","O","I","Undefined"],c:1,
+   e:"<b>لماذا؟</b> كل العناصر ستكون أصفاراً."},
+  {s:"2.1", t:60, en:"If A = [ 1  2 ]\n       [ 3  4 ], the trace of A is:", ar:"إذا كانت A = [[1, 2], [3, 4]]، فإن الأثر (Trace) للمصفوفة A هو:",
+   o:["10","5","7","4"],c:1,
+   e:"<b>لماذا؟</b> الأثر = مجموع القطر = 1 + 4 = 5."},
+  {s:"2.1", t:45, en:"The identity matrix I3 is a matrix:", ar:"مصفوفة الوحدة I3 هي مصفوفة:",
+   o:["All elements are 1","Main diagonal is 1, others 0","Main diagonal is 0, others 1","Has a zero row"],c:1,
+   e:"<b>لماذا؟</b> عناصر القطر 1 والباقي صفر."},
+  {s:"2.2", t:45, en:"Which property is true for matrix addition?", ar:"أي من الخصائص التالية صحيحة بالنسبة لجمع المصفوفات؟",
+   o:["Associative","Non-commutative","Non-associative","Undefined"],c:0,
+   e:"<b>لماذا؟</b> الجمع تبادلي وتجميعي."},
+  {s:"2.2", t:45, en:"Regarding matrix multiplication, which statement is true?", ar:"بالنسبة لضرب المصفوفات، أي جملة صحيحة؟",
+   o:["Always commutative","Not commutative generally","Commutative only for square","Undefined for diagonal"],c:1,
+   e:"<b>لماذا؟</b> AB لا يساوي BA عموماً."},
+  {s:"2.2", t:45, en:"The property A(B + C) = AB + AC is called:", ar:"الخاصية A(B + C) = AB + AC تسمى:",
+   o:["Commutative","Associative","Distributive","Identity"],c:2,
+   e:"<b>لماذا؟</b> توزيع الضرب على الجمع."},
+  {s:"2.2", t:60, en:"If C is invertible and AC = BC, then:", ar:"إذا كانت C قابلة للعكس، وكان AC = BC، فإن:",
+   o:["A = B","A != B","Cannot be concluded","A and B are zero"],c:0,
+   e:"<b>لماذا؟</b> نضرب في C^-1 (خاصية الإلغاء)."},
+  {s:"2.2", t:60, en:"The transpose (A^T)^T equals:", ar:"منقول المصفوفة (A^T)^T يساوي:",
+   o:["A","A^T","A^-1","I"],c:0,
+   e:"<b>لماذا؟</b> المنقول مرتين يعيد الأصل."},
+  {s:"2.2", t:60, en:"If A is symmetric, it means:", ar:"إذا كانت A متماثلة (Symmetric)، فهذا يعني:",
+   o:["A = A^-1","A = -A","A = A^T","A = I"],c:2,
+   e:"<b>لماذا؟</b> المتماثلة تساوي منقولها."},
+  {s:"2.2", t:60, en:"The transpose of a sum (A + B)^T equals:", ar:"منقول مجموع مصفوفتين (A + B)^T يساوي:",
+   o:["A^T + B^T","A^T - B^T","AB","A^T B^T"],c:0,
+   e:"<b>لماذا؟</b> المنقول يتوزع على الجمع."},
+  {s:"2.3", t:60, en:"Matrix A is invertible if and only if:", ar:"المصفوفة A قابلة للعكس إذا وفقط إذا:",
+   o:["det(A) = 0","det(A) != 0","It is diagonal","It is symmetric"],c:1,
+   e:"<b>لماذا؟</b> محددها لا يساوي صفر."},
+  {s:"2.3", t:90, en:"The inverse of a 2x2 matrix [ a  b ]\n                            [ c  d ] is given by:", ar:"معكوس المصفوفة (2x2) [[a, b], [c, d]] يعطى بالصيغة:",
+   o:["(1/det) * [ d -b ]\n          [-c  a ]","(1/det) * [ a  b ]\n          [ c  d ]","(1/det) * [ d  b ]\n          [ c  a ]","(1/det) * [ -a -b ]\n          [ -c -d ]"],c:0,
+   e:"<b>لماذا؟</b> نبدل القطر، نغير إشارة الآخرين، ونقسم على المحدد."},
+  {s:"2.3", t:60, en:"To find the inverse of a 3x3 matrix using Gauss-Jordan, we:", ar:"لإيجاد معكوس مصفوفة 3x3 باستخدام Gauss-Jordan، نقوم بـ:",
+   o:["Multiply matrix by itself","Put identity beside A and reduce [A | I] to [I | A^-1]","Calculate determinant only","Take transpose"],c:1,
+   e:"<b>لماذا؟</b> خوارزمية [A | I] -> [I | A^-1]."},
+  {s:"2.3", t:90, en:"If A and B are invertible, (AB)^-1 equals:", ar:"إذا كانت A و B قابلتين للعكس، فإن (AB)^-1 يساوي:",
+   o:["A^-1 B^-1","B^-1 A^-1","AB","BA"],c:1,
+   e:"<b>لماذا؟</b> نعكس الترتيب."},
+  {s:"2.3", t:60, en:"If A is invertible, (A^T)^-1 equals:", ar:"إذا كانت A قابلة للعكس، فإن (A^T)^-1 يساوي:",
+   o:["A^-1","(A^-1)^T","A^T","-A^-1"],c:1,
+   e:"<b>لماذا؟</b> منقول المعكوس = معكوس المنقول."},
+  {s:"2.3", t:60, en:"To solve Ax = b using matrices (when A is invertible):", ar:"لحل النظام Ax = b باستخدام المصفوفات (عندما تكون A قابلة للعكس):",
+   o:["x = b A^-1","x = A^-1 b","x = b/A","x = A/b"],c:1,
+   e:"<b>لماذا؟</b> نضرب الطرفين في A^-1."},
+  {s:"2.3", t:60, en:"If A is a diagonal matrix with diagonal (2, 4), its inverse A^-1 has diagonal:", ar:"إذا كانت A مصفوفة قطرية عناصر قطرها (2, 4)، فإن معكوسها A^-1 عناصر قطرها:",
+   o:["(2, 4)","(-2, -4)","(1/2, 1/4)","(4, 2)"],c:2,
+   e:"<b>لماذا؟</b> معكوس القطر هو مقلوب كل عنصر."},
+  {s:"1.2", t:120, en:"The values of k for which the homogeneous system\n(k-2)x - y = 0\n-3x + ky = 0\nhas a nonzero non-trivial solution are:", ar:"ما قيم المعامل k التي تجعل النظام المتجانس (k-2)x - y = 0 و -3x + ky = 0 يمتلك حلاً غير تافه؟",
+   o:["k = 0, 2","k = 1, -3","k = 0, -2","k = -1, 3"],c:3,
+   e:"<b>لماذا؟</b> المحدد = (k-2)k - 3 = k^2 - 2k - 3 = 0 => (k-3)(k+1)=0 => k=3 or k=-1."},
+  {s:"2.2", t:90, en:"If A = [ 1  0 ]\n       [ 0  2 ]\n       [-2 -1 ], the product matrix AA^T is:", ar:"إذا كانت المصفوفة A = [[1, 0], [0, 2], [-2, -1]]، فإن AA^T هي:",
+   o:["A symmetric matrix","A triangular matrix","Not a square matrix","A diagonal matrix"],c:0,
+   e:"<b>لماذا؟</b> حاصل ضرب أي مصفوفة في منقولها ينتج مصفوفة متماثلة."},
+  {s:"2.1", t:120, en:"If A = [ 3  4  5 ] and B = [ -1  0  1 ]\n                         [  0  1 -2 ]\n                         [  3 -1  1 ], then AB is:", ar:"إذا كانت A = [3, 4, 5] و B = [[-1, 0, 1], [0, 1, -2], [3, -1, 1]]، فإن AB هو:",
+   o:["[ 12 -1  0 ]","[ 12 -1  8 ]","[ 12  4 16 ]","[ 15 -1  0 ]"],c:0,
+   e:"<b>لماذا؟</b> AB = [3(-1)+4(0)+5(3), 3(0)+4(1)+5(-1), 3(1)+4(-2)+5(1)] = [12, -1, 0]."},
+  {s:"1.1", t:120, en:"The linear system:\nx - 2y + 3z = 9\n-x + 3y = -4\n2x - 5y + 5z = 17\nhas the solution (x, y, z) = ...", ar:"النظام الخطي: x - 2y + 3z = 9، -x + 3y = -4، 2x - 5y + 5z = 17. الحل هو:",
+   o:["(1, -1, 2)","(1, 2, -1)","(-1, 2, 1)","(1, 1, 2)"],c:0,
+   e:"<b>لماذا؟</b> بالتعويض: 1 - 2(-1) + 3(2) = 9. -1 + 3(-1) = -4. 2(1) - 5(-1) + 5(2) = 17."},
+  {s:"2.1", t:60, en:"If A is matrix size 5x2 and the product AB has the size 5x4, then B is matrix of size:", ar:"إذا كانت A مصفوفة بحجم 5x2 وكان حاصل الضرب AB بحجم 5x4، فإن B مصفوفة بحجم:",
+   o:["4 x 2","5 x 4","2 x 4","4 x 5"],c:2,
+   e:"<b>لماذا؟</b> أعمدة A = صفوف B (2). الناتج 5x4 يعني أعمدة B = 4. إذن B هي 2x4."},
+  {s:"2.2", t:120, en:"If A = [ 1 -1 ]  and B = [ 1  4 ]\n       [ 4 -3 ]            [ x -3 ],\nthen A = B^T if x = ...", ar:"إذا كانت A = [[1, -1], [4, -3]] و B = [[1, 4], [x, -3]]، فإن A = B^T عندما x = ؟",
+   o:["1","-3","-1","4"],c:2,
+   e:"<b>لماذا؟</b> B^T = [[1, x], [4, -3]]. بمساواة A نجد أن x = -1."},
+  {s:"2.3", t:90, en:"If A, B are two square matrices with same size n x n, then (BA)^-1 = ...", ar:"إذا كانت A و B مصفوفتين مربعتين لهما نفس الحجم n x n، فإن (BA)^-1 = ؟",
+   o:["B^-1 + A^-1","B^-1 A^-1","A^-1 B^-1","B^-1 - A^-1"],c:2,
+   e:"<b>لماذا؟</b> نعكس الترتيب: (BA)^-1 = A^-1 B^-1."},
+  {s:"2.3", t:120, en:"If the matrix B is inverse of matrix A and A = [ 3  0 ]\n                                          [ -9 -1 ], then B = ...", ar:"إذا كانت B هي معكوس A، وكانت A = [[3, 0], [-9, -1]]، فإن B = ؟",
+   o:["[ -1  0 ]\n[  9  3 ]","[ 1/3  0 ]\n[ -3  -1 ]","[ -1 -9 ]\n[  0  3 ]","[ 1/3  0 ]\n[ -3   1 ]"],c:1,
+   e:"<b>لماذا؟</b> المحدد = -3. B = (-1/3)*[[-1, 0], [9, 3]] = [[1/3, 0], [-3, -1]]."},
+  {s:"1.1", t:120, en:"If u = (4, -1, 1, 0), v = (5, 0, 1, 1) and w = (-1, 2, 0, 1), find x = -3u + (2v + w):", ar:"إذا كانت u = (4, -1, 1, 0)، v = (5, 0, 1, 1)، w = (-1, 2, 0, 1). أوجد x = -3u + (2v + w):",
+   o:["(-1, 5, 0, 1)","(-3, 5, -1, 3)","(-1, 2, 0, 9)","(-3, 7, 11, 4)"],c:1,
+   e:"<b>لماذا؟</b> -3u = (-12, 3, -3, 0). 2v+w = (9, 2, 2, 3). الجمع = (-3, 5, -1, 3)."},
+  {s:"2.1", t:90, en:"The coefficient matrix of the linear system:\nx + y + z = 3\n-2x + 5y + 2z = -1\n-x + z = -9\nis:", ar:"مصفوفة المعاملات للنظام الخطي x + y + z = 3، -2x + 5y + 2z = -1، -x + z = -9 هي:",
+   o:["[ 1  5  0 ]\n[ 2 -2  1 ]\n[ 1  1  0 ]","[ 1  1  1 ]\n[-2  5  2 ]\n[-1  0  1 ]","[ 2  1  5 ]\n[ 3  9 -3 ]\n[-3  1  0 ]","[ 1  2  3 ]\n[ 2  3  5 ]\n[ 1  1  0 ]"],c:1,
+   e:"<b>لماذا؟</b> نأخذ معاملات x, y, z. الثالثة لا تحتوي y فمعاملها 0."},
+  {s:"1.2", t:90, en:"The matrix in the row echelon form is:", ar:"أي من المصفوفات التالية تقع في الشكل الصفي الدرجي (row echelon form)؟",
+   o:["[ 1  2 -1  4 ]\n[ 0  1  0  3 ]\n[ 0  0  2  0 ]","[ 1 -5  2 -1 ]\n[ 0  0  2  3 ]\n[ 0  0  0  1 ]","[ 1  2 -3  4 ]\n[ 0  1  1 -1 ]\n[ 0  0  1 -3 ]","[ 2  0  0  4 ]\n[ 0  1  0  3 ]\n[ 0  0  1  0 ]"],c:2,
+   e:"<b>لماذا؟</b> يجب أن يكون الـ leading entry 1 ومتدرجاً. الخيار C يحقق ذلك."},
+  {s:"1.2", t:120, en:"Solve by Gaussian elimination:\nx + z = -5\nx - 3y - z = -1\n3x - y + z = -10", ar:"باستخدام الحذف الجاوسي، حل النظام: x + z = -5، x - 3y - z = -1، 3x - y + z = -10.",
+   o:["(-9/4, 1/2, -11/4)","(11, -5, 2)","(1, -1, 2)","(0, 1, -5)"],c:0,
+   e:"<b>لماذا؟</b> بالاختزال نجد الحل (-9/4, 1/2, -11/4)."},
+  {s:"2.3", t:120, en:"Find the inverse of the matrix A = [ 1  1 -2 ]\n                                [-2  0  4 ]\n                                [ 0  0  1 ]", ar:"ما هو معكوس المصفوفة A = [[1, 1, -2], [-2, 0, 4], [0, 0, 1]]؟",
+   o:["[ 0 -1/2  2 ]\n[ 1  1/2  0 ]\n[ 0   0   1 ]","[ 1  0  0 ]\n[ 0  1  0 ]\n[ 0  0  1 ]","[-2  1  4 ]\n[ 1  0 -2 ]\n[ 0  0  1 ]","[ 0  1  2 ]\n[-1 1/2 0 ]\n[ 0  0 -1 ]"],c:0,
+   e:"<b>لماذا؟</b> باستخدام [A|I] والاختزال الجاوسي نصل للخيار A."}
+];
+
+const PHRASES = [
+  "أنت أقوى مما تظن، استمر! 💪", "كل دقيقة مراجعة تقرّبك من هدفك ⏳",
+  "الثقة بالنفس نصف النجاح ✨", "لا تقارن بدايتك بنهاية غيرك 🌱",
+  "تعب اليوم راحة الغد 🌟", "أنت قادر… فقط ابدأ 🚀",
+  "النجاح خطوات صغيرة تتكرر كل يوم 🔥", "الخطأ فرصة لتتعلم شيئًا جديدًا 📚",
+  "ركّز على التقدم لا على الكمال 🎯", "اقتربت كثيرًا، لا تتوقف الآن! 🏆"
+];
+
+const QUIZ_TOTAL_SECONDS = 105 * 60;
+
+const $ = id => document.getElementById(id);
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]];} return b; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const AR_KEYS = ['A','B','C','D'];
+const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+let toastTimer;
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+let playList = [];
+let idx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let locked = false;
+let wrongQuestions = [];
+let resultsBySection = {};
+
+let globalTimeLeft = QUIZ_TOTAL_SECONDS;
+let questionTimeLeft = 60;
+let currentQuestionTime = 60;
+let globalTimerId = null;
+let questionTimerId = null;
+let quizStartTime = 0;
+let elapsedSeconds = 0;
+
+function show(id){
+  ['screen-home','screen-quiz','screen-result','screen-review'].forEach(s=>$(s).classList.toggle('hidden', s!==id));
+  window.scrollTo(0,0);
+}
+
+function updateGlobalDisplay(){
+  const el = $('global-timer');
+  el.textContent = '⏱ ' + fmtTime(globalTimeLeft);
+  el.classList.remove('warn','danger');
+  if(globalTimeLeft <= 60) el.classList.add('danger');
+  else if(globalTimeLeft <= 300) el.classList.add('warn');
+}
+
+function startGlobalTick(){
+  if(globalTimerId) return;
+  globalTimerId = setInterval(()=>{
+    globalTimeLeft--;
+    updateGlobalDisplay();
+    if(globalTimeLeft <= 0){
+      clearInterval(globalTimerId); globalTimerId = null;
+      onGlobalTimeout();
+    }
+  },1000);
+}
+
+function pauseGlobalTick(){
+  if(globalTimerId){ clearInterval(globalTimerId); globalTimerId = null; }
+}
+
+function startQuestionTick(){
+  questionTimeLeft = currentQuestionTime;
+  updateQuestionDisplay();
+  if(questionTimerId) clearInterval(questionTimerId);
+  questionTimerId = setInterval(()=>{
+    questionTimeLeft--;
+    updateQuestionDisplay();
+    if(questionTimeLeft <= 5 && questionTimeLeft > 0) sfxTick();
+    if(questionTimeLeft <= 0){
+      clearInterval(questionTimerId); questionTimerId = null;
+      if(!locked) revealAnswer(-1, true);
+    }
+  },1000);
+}
+
+function stopQuestionTick(){
+  if(questionTimerId){ clearInterval(questionTimerId); questionTimerId = null; }
+}
+
+function updateQuestionDisplay(){
+  $('q-timer-text').textContent = questionTimeLeft + 's';
+  const fill = $('q-timer-fill');
+  const pct = (questionTimeLeft / currentQuestionTime) * 100;
+  fill.style.width = pct + '%';
+  fill.classList.remove('warn','danger');
+  if(questionTimeLeft <= 10) fill.classList.add('danger');
+  else if(questionTimeLeft <= 20) fill.classList.add('warn');
+}
+
+function onGlobalTimeout(){
+  stopQuestionTick();
+  toast('⏰ انتهى الوقت الإجمالي!');
+  sfxLose();
+  if(!$('screen-quiz').classList.contains('hidden')) showResult();
+}
+
+function startGame(source){
+  initAudio();
+  sfxStart();
+  const src = source || QUESTIONS;
+  playList = shuffle(src.map(q => ({...q, o:[...q.o]})));
+  idx = 0; score = 0; locked = false; streak = 0; bestStreak = 0;
+  wrongQuestions = [];
+  resultsBySection = {};
+  playList.forEach(q => {
+    if(!resultsBySection[q.s]) resultsBySection[q.s] = {correct:0, total:0};
+    resultsBySection[q.s].total++;
+  });
+  $('score-pill').textContent = '⭐ 0';
+  $('streak-pill').textContent = '🔥 0';
+  $('streak-pill').classList.remove('active');
+  globalTimeLeft = QUIZ_TOTAL_SECONDS;
+  updateGlobalDisplay();
+  quizStartTime = Date.now();
+  elapsedSeconds = 0;
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const q = playList[idx];
+  currentQuestionTime = q.t || 60;
+  $('counter').textContent = `السؤال ${idx+1} من ${playList.length}`;
+  $('section-pill').textContent = `Section ${q.s}`;
+  $('progress-fill').style.width = (idx / playList.length * 100) + '%';
+  $('question-en').textContent = q.en;
+  $('question-ar').textContent = q.ar;
+  const box = $('options'); box.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="key">${AR_KEYS[i]}</span><span>${escapeHtml(opt)}</span>`;
+    btn.addEventListener('click', function(e) { e.preventDefault(); revealAnswer(i, false); });
+    box.appendChild(btn);
+  });
+  const fb = $('feedback'); fb.className='feedback hidden'; fb.innerHTML='';
+  $('btn-next').classList.add('hidden');
+  $('btn-finish').classList.add('hidden');
+  startQuestionTick();
+  startGlobalTick();
+}
+
+function revealAnswer(chosenIdx, isTimeout){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  const q = playList[idx];
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[q.c]) all[q.c].classList.add('correct');
+  const fb = $('feedback');
+  const phrase = pick(PHRASES);
+  const isCorrect = !isTimeout && chosenIdx === q.c;
+
+  if(isCorrect){
+    score++;
+    streak++;
+    if(streak > bestStreak) bestStreak = streak;
+    resultsBySection[q.s].correct++;
+    $('score-pill').textContent = '⭐ ' + score;
+    $('streak-pill').textContent = '🔥 ' + streak;
+    $('streak-pill').classList.toggle('active', streak >= 3);
+    sfxCorrect();
+    const rect = all[q.c].getBoundingClientRect();
+    spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+    if(streak > 0 && streak % 3 === 0){
+      setTimeout(()=>showCombo(pick(COMBO_MESSAGES) + ' ' + streak), 200);
+    }
+    fb.className = 'feedback ok';
+    fb.innerHTML = `<span class="title">✅ إجابة صحيحة! ${streak>=3?'🔥 سلسلة '+streak:''}</span><div class="exp">${q.e}</div><span class="motive">${phrase}</span>`;
+  } else {
+    if(chosenIdx !== null && chosenIdx >= 0 && all[chosenIdx]) all[chosenIdx].classList.add('wrong');
+    wrongQuestions.push(q);
+    streak = 0;
+    $('streak-pill').textContent = '🔥 0';
+    $('streak-pill').classList.remove('active');
+    sfxWrong();
+    fb.className = 'feedback no';
+    const title = isTimeout ? '⏰ انتهى وقت السؤال!' : '❌ إجابة خاطئة';
+    fb.innerHTML = `<span class="title">${title}</span><div class="exp"><b>الإجابة الصحيحة:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(q.o[q.c])}</span><br><br>${q.e}</div><span class="motive">${phrase}</span>`;
+  }
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function nextQuestion() { idx++; renderQuestion(); }
+
+function showResult(){
+  stopQuestionTick(); pauseGlobalTick();
+  elapsedSeconds = Math.round((Date.now() - quizStartTime)/1000);
+  const total = playList.length;
+  const pct = total ? Math.round(score / total * 100) : 0;
+  $('result-score').textContent = `${score} / ${total}`;
+  $('result-pct').textContent = pct + '%';
+  $('ring').style.background = `conic-gradient(var(--gold) ${pct*3.6}deg, rgba(255,255,255,.1) 0deg)`;
+  $('result-time').textContent = fmtTime(elapsedSeconds);
+  $('result-streak').textContent = bestStreak;
+  let title, msg;
+  if(pct === 100){ title='مذهل! 🏆'; msg='إجابات كاملة! أنت جاهز تمامًا للاختبار.'; sfxWin(); }
+  else if(pct >= 70){ title='أداء ممتاز! 🌟'; msg='أنت على الطريق الصحيح.'; sfxWin(); }
+  else if(pct >= 40){ title='بداية جيدة 💪'; msg='تحتاج إلى مراجعة إضافية.'; }
+  else { title='لا بأس، ابدأ من هنا 🌱'; msg='راجع الأساسيات وأعد المحاولة.'; sfxLose(); }
+  $('result-title').textContent = title;
+  $('result-msg').textContent = msg;
+  const bd = $('breakdown');
+  const sections = Object.keys(resultsBySection).sort();
+  bd.innerHTML = `<h3>📊 تحليل الأداء</h3>` + sections.map(sec => {
+    const r = resultsBySection[sec];
+    const p = r.total ? Math.round(r.correct/r.total*100) : 0;
+    return `<div class="bd-row"><span class="bd-section">${sec}</span><span class="bd-title">${SECTION_TITLES[sec]}</span><span class="bd-bar"><i style="width:${p}%"></i></span><span class="bd-score">${r.correct}/${r.total}</span></div>`;
+  }).join('');
+  $('btn-review-wrong').style.display = wrongQuestions.length ? 'block' : 'none';
+  show('screen-result');
+}
+
+function renderReview(){
+  $('review-title').textContent = 'مراجعة شاملة';
+  const list = $('review-list');
+  const bySec = {};
+  QUESTIONS.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  let html = '';
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div style="margin:6px 0 12px"><span class="review-section">${sec}</span> <span style="color:#c7d2fe;font-size:.8rem;font-weight:700">${SECTION_TITLES[sec]}</span></div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="review-item"><div class="review-en">${i+1}. ${escapeHtml(q.en)}</div><div class="review-ar">${escapeHtml(q.ar)}</div><div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="review-exp">${q.e}</div></div>`;
+    });
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function renderWrongReview(){
+  $('review-title').textContent = 'مراجعة الأخطاء';
+  const list = $('review-list');
+  if(!wrongQuestions.length){
+    list.innerHTML = '<p style="text-align:center;color:#6ee7b7;padding:30px;font-size:1.1rem">🎉 لا توجد أخطاء! أداء ممتاز.</p>';
+    show('screen-review');
+    return;
+  }
+  let html = `<div style="margin:6px 0 12px"><span class="review-section" style="background:rgba(248,113,113,.2);color:#f87171">الأخطاء</span> <span style="color:#c7d2fe;font-size:.8rem;font-weight:700">${wrongQuestions.length} سؤال</span></div>`;
+  wrongQuestions.forEach((q,i)=>{
+    html += `<div class="review-item" style="border-color:rgba(248,113,113,.4)"><div class="review-en">${i+1}. ${escapeHtml(q.en)}</div><div class="review-ar">${escapeHtml(q.ar)}</div><div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="review-exp">${q.e}</div></div>`;
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function buildPrintHTML(opts){
+  const { includeScore = false, onlyWrong = false } = opts || {};
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('ar-SA');
+  const list = onlyWrong ? wrongQuestions : QUESTIONS;
+  const title = onlyWrong ? '📚 مراجعة الأخطاء' : '📚 مراجعة شاملة';
+  let html = `<div class="p-header"><h1>${title} — الجبر الخطي</h1><div class="p-meta">تاريخ: ${dateStr}`;
+  if (includeScore) {
+    const pct = playList.length ? Math.round(score/playList.length*100) : 0;
+    html += ` · <b>النتيجة: ${score} / ${playList.length} (${pct}%)</b>`;
+  }
+  html += `</div></div>`;
+  const bySec = {};
+  list.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div class="p-section-title">Section ${sec} — ${SECTION_TITLES[sec]}</div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="p-q"><div class="p-q-num">${i+1}. ${escapeHtml(q.en)}</div><div class="p-q-ar">${escapeHtml(q.ar)}</div><div class="p-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="p-exp">${q.e}</div></div>`;
+    });
+  });
+  html += `<div class="p-footer">Total: ${list.length} questions</div>`;
+  return html;
+}
+
+function exportPDF(opts){
+  const area = $('print-area');
+  area.innerHTML = buildPrintHTML(opts);
+  setTimeout(()=>{ window.print(); }, 150);
+}
+
+$('btn-start').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-review').addEventListener('click', e => { e.preventDefault(); renderReview(); });
+$('btn-pdf').addEventListener('click', e => { e.preventDefault(); exportPDF({}); });
+$('btn-next').addEventListener('click', e => { e.preventDefault(); nextQuestion(); });
+$('btn-finish').addEventListener('click', e => { e.preventDefault(); showResult(); });
+$('btn-retry').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-review-wrong').addEventListener('click', e => { e.preventDefault(); renderWrongReview(); });
+$('btn-review-full').addEventListener('click', e => { e.preventDefault(); renderReview(); });
+$('btn-pdf-result').addEventListener('click', e => { e.preventDefault(); exportPDF({includeScore:true}); });
+$('btn-back-portal').addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.html'; });
+$('btn-review-pdf-2').addEventListener('click', e => {
+  e.preventDefault();
+  const isWrong = $('review-title').textContent.includes('الأخطاء');
+  exportPDF({onlyWrong: isWrong});
+});
+$('btn-review-back').addEventListener('click', e => { e.preventDefault(); show('screen-result'); });
+$('sound-btn').addEventListener('click', e => { e.preventDefault(); toggleSound(); });
+
+$('q-count').textContent = QUESTIONS.length;
+updateGlobalDisplay();
+</script>
+</body>
+</html>

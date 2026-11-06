@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="google" content="notranslate">
+<title>🎮 بوابة الأبطال — المستوى الخامس</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --hot-pink:#F472B6;
+  --neon-cyan:#22D3EE;
+  --lemon:#FDE047;
+  --lime:#A3E635;
+  --orange:#FB923C;
+  --purple:#C084FC;
+  --text-main:#FFFFFF;
+  --text-muted:#D8B4FE;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
+
+body{
+  font-family:'Cairo',system-ui,sans-serif;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(192,132,252,0.22) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(244,114,182,0.20) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(34,211,238,0.10) 0%, transparent 50%),
+    linear-gradient(180deg, #140a26 0%, #0a0612 100%);
+  background-attachment:fixed;
+  color:var(--text-main);
+  padding:20px 12px 40px;
+  position:relative;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'✨';
+  position:fixed;
+  top:15%; left:8%;
+  font-size:2.5rem;
+  opacity:0.12;
+  animation:float 7s ease-in-out infinite;
+  pointer-events:none;
+  z-index:0;
+}
+body::after{
+  content:'🎯';
+  position:fixed;
+  bottom:25%; right:6%;
+  font-size:3rem;
+  opacity:0.10;
+  animation:float 9s ease-in-out infinite reverse;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-25px) rotate(12deg);}
+}
+
+.app{width:100%;max-width:900px;margin:0 auto;position:relative;z-index:1;}
+
+.portal-header{text-align:center;margin-bottom:35px;padding:20px 0;}
+.mascot{font-size:4.5rem;display:inline-block;animation:bounce 2s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(192,132,252,0.7));margin-bottom:8px;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.portal-header h1{
+  font-size:clamp(1.9rem,6vw,2.9rem);
+  font-weight:900;
+  line-height:1.3;
+  background:linear-gradient(135deg,#FDE047 0%,#F472B6 50%,#C084FC 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 40px rgba(244,114,182,0.3);
+  margin-bottom:8px;
+}
+.champion-line{
+  display:inline-block;
+  font-size:clamp(0.95rem,3vw,1.15rem);
+  font-weight:800;
+  color:#FDE047;
+  background:rgba(253,224,71,0.10);
+  border:1.5px solid rgba(253,224,71,0.35);
+  padding:8px 20px;
+  border-radius:99px;
+  margin:10px 0 14px;
+  letter-spacing:0.3px;
+  text-shadow:0 0 20px rgba(253,224,71,0.4);
+  box-shadow:0 0 25px rgba(253,224,71,0.15),inset 0 0 15px rgba(253,224,71,0.05);
+  animation:shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%,100%{box-shadow:0 0 25px rgba(253,224,71,0.15),inset 0 0 15px rgba(253,224,71,0.05);}
+  50%{box-shadow:0 0 35px rgba(253,224,71,0.30),inset 0 0 20px rgba(253,224,71,0.10);}
+}
+.portal-header p{color:var(--text-muted);font-size:1.05rem;font-weight:600;letter-spacing:0.3px;}
+
+.subjects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+}
+.subject-card{
+  border-radius:24px;
+  padding:24px 22px;
+  cursor:pointer;
+  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  display:flex;
+  flex-direction:column;
+  min-height:210px;
+  border:2px solid rgba(255,255,255,0.15);
+  position:relative;
+  overflow:hidden;
+  color:#fff;
+  text-decoration:none;
+}
+.subject-card:active{transform:scale(0.96);}
+.subject-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);
+  transition:left 0.6s;
+}
+.subject-card:hover::before{left:100%;}
+.subject-card::after{
+  content:'';
+  position:absolute;
+  top:-50%;right:-50%;
+  width:150%;height:150%;
+  background:radial-gradient(circle,rgba(255,255,255,0.18) 0%,transparent 60%);
+  pointer-events:none;
+}
+.card-badge{
+  position:absolute;
+  top:15px;left:15px;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.35);
+  padding:4px 12px;
+  border-radius:99px;
+  font-size:0.75rem;
+  font-weight:800;
+  backdrop-filter:blur(10px);
+  z-index:3;
+}
+.subject-icon{
+  font-size:3.2rem;
+  margin-bottom:12px;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  line-height:1;
+}
+.subject-title{
+  font-size:1.35rem;
+  font-weight:900;
+  margin-bottom:6px;
+  position:relative;
+  z-index:2;
+}
+.subject-desc{
+  font-size:0.85rem;
+  opacity:0.85;
+  margin-bottom:12px;
+  position:relative;
+  z-index:2;
+  direction:ltr;
+  text-align:right;
+}
+.card-footer{
+  margin-top:auto;
+  font-size:0.9rem;
+  font-weight:800;
+  padding-top:10px;
+  border-top:1px dashed rgba(255,255,255,0.3);
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.card-footer span:last-child{
+  font-size:1.1rem;
+  transition:transform 0.3s;
+}
+.subject-card:hover .card-footer span:last-child{
+  transform:translateX(-8px);
+}
+
+.bg-math {background:linear-gradient(135deg,#A78BFA 0%,#7C3AED 50%,#4C1D95 100%);box-shadow:0 12px 35px rgba(124,58,237,0.45);}
+.bg-stats{background:linear-gradient(135deg,#34D399 0%,#059669 50%,#064E3B 100%);box-shadow:0 12px 35px rgba(5,150,105,0.45);}
+.bg-os   {background:linear-gradient(135deg,#FB7185 0%,#DC2626 50%,#7F1D1D 100%);box-shadow:0 12px 35px rgba(220,38,38,0.45);}
+.bg-oop  {background:linear-gradient(135deg,#60A5FA 0%,#2563EB 50%,#1E3A8A 100%);box-shadow:0 12px 35px rgba(37,99,235,0.45);}
+.bg-micro{background:linear-gradient(135deg,#FBBF24 0%,#D97706 50%,#78350F 100%);box-shadow:0 12px 35px rgba(217,119,6,0.45);}
+.bg-ds   {background:linear-gradient(135deg,#F472B6 0%,#DB2777 50%,#831843 100%);box-shadow:0 12px 35px rgba(219,39,119,0.45);}
+
+.modal-overlay{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(10,6,18,0.92);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  padding:20px;
+}
+.modal-overlay.active{display:flex;}
+.modal-content{
+  background:linear-gradient(180deg,#2D1B69 0%,#1a0f3d 100%);
+  border:2px solid rgba(192,132,252,0.5);
+  border-radius:28px;
+  padding:32px 22px 22px;
+  width:100%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 25px 70px rgba(192,132,252,0.35),0 0 120px rgba(244,114,182,0.20);
+  position:relative;
+  animation:popIn 0.45s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes popIn{
+  0%{transform:scale(0.7);opacity:0;}
+  100%{transform:scale(1);opacity:1;}
+}
+.close-btn{
+  position:absolute;
+  top:12px;left:12px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  color:#fff;
+  width:36px;height:36px;
+  border-radius:50%;
+  font-size:1.4rem;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:0.25s;
+  font-family:'Cairo',sans-serif;
+}
+.close-btn:hover{background:rgba(255,255,255,0.25);transform:rotate(90deg);}
+.modal-title{
+  font-size:1.5rem;
+  font-weight:900;
+  margin-bottom:6px;
+  background:linear-gradient(135deg,#FDE047,#F472B6);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.modal-subtitle{
+  color:var(--text-muted);
+  font-size:0.92rem;
+  margin-bottom:22px;
+  font-weight:700;
+}
+.menu-btn{
+  display:block;
+  width:100%;
+  padding:16px 18px;
+  margin-bottom:12px;
+  border-radius:16px;
+  text-decoration:none;
+  font-weight:800;
+  font-size:1rem;
+  cursor:pointer;
+  transition:0.25s;
+  border:2px solid;
+  color:#fff;
+  text-align:right;
+  font-family:'Cairo',sans-serif;
+}
+.menu-btn.mid1{
+  border-color:rgba(96,165,250,0.6);
+  background:linear-gradient(135deg,rgba(96,165,250,0.18),rgba(37,99,235,0.10));
+}
+.menu-btn.mid2{
+  border-color:rgba(251,146,60,0.6);
+  background:linear-gradient(135deg,rgba(251,146,60,0.18),rgba(234,88,12,0.10));
+}
+.menu-btn.final{
+  border-color:rgba(253,224,71,0.7);
+  background:linear-gradient(135deg,rgba(253,224,71,0.22),rgba(244,114,182,0.15));
+  color:#FDE047;
+  box-shadow:0 0 20px rgba(253,224,71,0.2);
+}
+.menu-btn:hover{transform:translateX(-6px);box-shadow:0 6px 20px rgba(0,0,0,0.4);}
+.menu-btn:active{transform:scale(0.97);}
+
+.footer{
+  text-align:center;
+  margin-top:45px;
+  padding-top:20px;
+  border-top:1px solid rgba(192,132,252,0.2);
+  color:#8B7CA9;
+  font-size:0.85rem;
+  font-weight:600;
+}
+.footer span{color:var(--hot-pink);}
+
+@media (max-width:400px){
+  .subject-card{min-height:190px;padding:20px 18px;}
+  .subject-icon{font-size:2.8rem;}
+  .subject-title{font-size:1.2rem;}
+  .portal-header h1{font-size:1.7rem;}
+  .champion-line{font-size:0.85rem;padding:6px 14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="portal-header">
+    <div class="mascot">🚀</div>
+    <h1>مرحباً يا بطل!</h1>
+    <div class="champion-line">🎓 طالب العلم المجتهد يستحق الأفضل</div>
+    <p>✨ اختر مادتك وانطلق في رحلة المراجعة ✨</p>
+  </div>
+
+  <div class="subjects-grid">
+
+    <div class="subject-card bg-math" onclick="openMenu('math', '🧮 الجبر الخطي')">
+      <div class="card-badge">⚡ متوسط</div>
+      <div class="subject-icon">🧮</div>
+      <div class="subject-title">الجبر الخطي</div>
+      <div class="subject-desc">Linear Algebra</div>
+      <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
+    </div>
+
+    <div class="subject-card bg-stats" onclick="openMenu('stats', '📊 إحصاء واحتمالات')">
+      <div class="card-badge">🔥 تحدي</div>
+      <div class="subject-icon">📊</div>
+      <div class="subject-title">إحصاء واحتمالات</div>
+      <div class="subject-desc">Stats & Probability</div>
+      <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
+    </div>
+
+    <div class="subject-card bg-os" onclick="openMenu('os', '💻 نظم التشغيل')">
+      <div class="card-badge">🌟 مميز</div>
+      <div class="subject-icon">💻</div>
+      <div class="subject-title">نظم التشغيل</div>
+      <div class="subject-desc">Operating Systems</div>
+      <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
+    </div>
+
+    <div class="subject-card bg-oop" onclick="openMenu('oop', '🧊 برمجة شيئية')">
+      <div class="card-badge">⚡ متوسط</div>
+      <div class="subject-icon">🧊</div>
+      <div class="subject-title">برمجة شيئية</div>
+      <div class="subject-desc">OOP</div>
+      <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
+    </div>
+
+    <div class="subject-card bg-micro" onclick="openMenu('micro', '⚙️ معالجات دقيقة')">
+      <div class="card-badge">🔥 تحدي</div>
+      <div class="subject-icon">⚙️</div>
+      <div class="subject-title">معالجات دقيقة</div>
+      <div class="subject-desc">Microprocessors</div>
+      <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
+    </div>
+
+    <div class="subject-card bg-ds" onclick="openMenu('ds', '🌐 هياكل البيانات')">
+      <div class="card-badge">🌟 مميز</div>
+      <div class="subject-icon">🌐</div>
+      <div class="subject-title">هياكل البيانات</div>
+      <div class="subject-desc">Data Structures</div>
+      <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="menuModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeMenu()">×</button>
+    <div class="modal-title" id="modalTitle">اسم المادة</div>
+    <div class="modal-subtitle">🎯 اختر مهمتك</div>
+
+    <a href="#" id="btn-mid1" class="menu-btn mid1">⚔️ جولة الميد</a>
+    <a href="#" id="btn-mid2" class="menu-btn mid2">🔥 جولة الميد الثاني</a>
+    <a href="#" id="btn-final" class="menu-btn final">👑 التحدي الكبير (Final)</a>
+  </div>
+</div>
+
+<div class="footer">
+  Made with <span>💜</span> for Level 5 Champions
+</div>
+
+<script>
+function openMenu(subjectKey, subjectName){
+  document.getElementById('modalTitle').innerText = subjectName;
+
+  const btnMid1 = document.getElementById('btn-mid1');
+  const btnMid2 = document.getElementById('btn-mid2');
+  const btnFinal = document.getElementById('btn-final');
+
+  btnMid1.style.display = 'block';
+  btnMid2.style.display = 'block';
+  btnFinal.style.display = 'block';
+
+  btnMid1.innerHTML = '⚔️ جولة الميد';
+  btnMid1.href = '#';
+  btnMid1.onclick = (e) => { e.preventDefault(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
+
+  btnMid2.innerHTML = '🔥 جولة الميد الثاني';
+  btnMid2.href = '#';
+  btnMid2.onclick = (e) => { e.preventDefault(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
+
+  btnFinal.innerHTML = '👑 التحدي الكبير (Final)';
+  btnFinal.href = '#';
+  btnFinal.onclick = (e) => { e.preventDefault(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
+
+  if(subjectKey === 'math'){
+    btnMid1.innerHTML = '⚔️ جولة الميد الأول';
+    btnMid1.href = 'math1.html';
+    btnMid1.onclick = null;
+  }
+  else if(subjectKey === 'stats'){
+    btnMid1.innerHTML = '⚔️ جولة الميد الأول';
+  }
+  else if(subjectKey === 'os'){
+    btnMid2.style.display = 'none';
+    btnMid1.innerHTML = '⚔️ جولة الميد';
+    btnMid1.href = 'os.html';
+    btnMid1.onclick = null;
+  }
+  else if(subjectKey === 'oop'){
+    btnMid2.style.display = 'none';
+    btnMid1.innerHTML = '⚔️ جولة الميد';
+    btnMid1.href = 'oop.html';
+    btnMid1.onclick = null;
+  }
+  else{
+    btnMid2.style.display = 'none';
+    btnMid1.innerHTML = '⚔️ جولة الميد';
+  }
+
+  document.getElementById('menuModal').classList.add('active');
+}
+
+function closeMenu(){
+  document.getElementById('menuModal').classList.remove('active');
+}
+
+document.getElementById('menuModal').addEventListener('click', function(e){
+  if(e.target === this) closeMenu();
+});
+</script>
+
+</body>
+</html>

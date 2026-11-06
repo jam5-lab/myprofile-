@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="google" content="notranslate">
+<title>🧊 OOP — Midterm Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#60a5fa; --cyan:#22d3ee; --green:#34d399; --red:#f87171;
+    --purple:#a78bfa; --bg-card:#0f172a; --line:rgba(96,165,250,0.25);
+    --gold:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:'Cairo',system-ui,sans-serif;min-height:100vh;
+    background:linear-gradient(135deg,#0c1424,#0f172a 45%,#1e1b4b);
+    color:#fff;display:block;padding:20px 12px;overflow-x:hidden;
+  }
+  body::before{
+    content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+    background:radial-gradient(circle at 15% 20%,rgba(96,165,250,0.15),transparent 45%),
+               radial-gradient(circle at 85% 80%,rgba(34,211,238,0.12),transparent 45%);
+    pointer-events:none;z-index:0;
+  }
+  .app{width:100%;max-width:820px;margin:0 auto;position:relative;z-index:1;}
+  .card{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:24px;
+    padding:24px 20px;box-shadow:0 10px 30px rgba(0,0,0,0.5),0 0 60px rgba(96,165,250,0.08);
+    position:relative;z-index:10;
+  }
+  .hidden{display:none!important}
+  h1{font-size:clamp(1.3rem,4vw,2rem);font-weight:900;line-height:1.4;margin-bottom:10px}
+  h1 span{background:linear-gradient(135deg,#60a5fa,#22d3ee);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+  .sub{color:#bfdbfe;line-height:1.8;font-size:.95rem;margin-bottom:20px}
+  .badge{
+    display:inline-block;font-size:.8rem;font-weight:700;
+    background:rgba(96,165,250,.18);border:1px solid rgba(96,165,250,.5);
+    color:#93c5fd;padding:6px 14px;border-radius:99px;margin-bottom:16px;
+  }
+  .btn{font-family:inherit;font-size:1rem;font-weight:700;border:none;border-radius:14px;padding:14px 20px;cursor:pointer;transition:.2s;touch-action:manipulation;width:100%}
+  .btn-primary{background:linear-gradient(135deg,#60a5fa,#22d3ee);color:#0c1424;box-shadow:0 6px 20px rgba(96,165,250,.4)}
+  .btn-primary:active{transform:scale(0.98)}
+  .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}
+  .btn-ghost:active{background:rgba(255,255,255,.2)}
+  .btn-skip{background:rgba(167,139,250,.18);color:#c4b5fd;border:1px solid rgba(167,139,250,.45)}
+  .btn-skip:active{background:rgba(167,139,250,.3)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .hint{margin-top:16px;text-align:center;font-size:.85rem;color:#a5b4fc}
+  .hint b{color:var(--blue)}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:.8rem;color:#bfdbfe;font-weight:600;flex-wrap:wrap;margin-bottom:12px}
+  #score-pill{background:rgba(96,165,250,.18);border:1px solid rgba(96,165,250,.45);color:#93c5fd;padding:4px 10px;border-radius:99px}
+  #streak-pill{background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.5);color:#fbbf24;padding:4px 10px;border-radius:99px;font-weight:800;transition:transform .2s}
+  #streak-pill.active{transform:scale(1.08);box-shadow:0 0 15px rgba(251,191,36,.5)}
+  #section-pill{background:rgba(167,139,250,.2);border:1px solid rgba(167,139,250,.55);color:#c4b5fd;padding:4px 10px;border-radius:99px;direction:rtl;font-size:.75rem}
+  .timer-pill{background:rgba(52,211,153,.16);border:1px solid rgba(52,211,153,.4);color:#6ee7b7;padding:4px 10px;border-radius:99px;direction:ltr;font-variant-numeric:tabular-nums;font-weight:800;font-size:.8rem;transition:all .3s}
+  .timer-pill.warn{background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.4);color:#fbbf24}
+  .timer-pill.danger{background:rgba(248,113,113,.16);border-color:rgba(248,113,113,.4);color:#f87171}
+  #sound-btn{background:rgba(255,255,255,.08);border:1px solid var(--line);color:#fff;padding:4px 10px;border-radius:99px;font-size:.9rem;cursor:pointer;font-family:inherit}
+
+  .progress{height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin:10px 0 16px}
+  .progress-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#60a5fa,#22d3ee,#a78bfa);transition:width .3s ease}
+
+  .q-en{font-size:1.15rem;font-weight:800;line-height:1.5;direction:ltr;text-align:left;margin-bottom:8px;color:#fff;white-space:pre-wrap}
+  .q-ar{font-size:0.85rem;color:#a5b4fc;line-height:1.5;margin-bottom:16px;border-right:2px solid rgba(96,165,250,.5);padding-right:8px}
+
+  .q-timer-wrap{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .q-timer-label{font-size:.75rem;color:#a5b4fc;font-weight:700;min-width:45px;direction:ltr;text-align:left}
+  .q-timer-bar{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+  .q-timer-fill{height:100%;background:linear-gradient(90deg,#34d399,#fbbf24);border-radius:99px;transition:width 1s linear,background .3s}
+  .q-timer-fill.warn{background:linear-gradient(90deg,#fbbf24,#f87171)}
+  .q-timer-fill.danger{background:#f87171}
+
+  .option{
+    display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;direction:ltr;
+    font-family:'Courier New',monospace;font-size:1rem;font-weight:600;color:#fff;
+    background:rgba(255,255,255,.06);border:1.5px solid rgba(96,165,250,.25);
+    border-radius:12px;padding:14px 16px;cursor:pointer;transition:.15s;margin-bottom:10px;
+    touch-action:manipulation;white-space:pre-wrap;line-height:1.4;
+  }
+  .option:active:not(:disabled){background:rgba(96,165,250,.2);border-color:rgba(96,165,250,.7);transform:scale(0.99);}
+  .option .key{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(96,165,250,.3);font-weight:800;font-size:.85rem;font-family:'Cairo',sans-serif}
+  .option.correct{background:rgba(52,211,153,.2);border-color:var(--green);animation:popCorrect .5s}
+  .option.correct .key{background:var(--green);color:#053b28}
+  .option.wrong{background:rgba(248,113,113,.2);border-color:var(--red);animation:shakeWrong .4s}
+  .option.wrong .key{background:var(--red);color:#450a0a}
+  .option:disabled{cursor:default}
+  @keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @keyframes shakeWrong{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  .feedback{margin-top:12px;padding:16px;border-radius:14px;font-size:.9rem;line-height:1.8;animation:fadeIn .3s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .feedback.ok{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.5)}
+  .feedback.no{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.5)}
+  .feedback.skip{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.5)}
+  .feedback .title{font-weight:900;font-size:1rem;margin-bottom:8px;display:block}
+  .feedback.ok .title{color:var(--green)}
+  .feedback.no .title{color:var(--red)}
+  .feedback.skip .title{color:#c4b5fd}
+  .feedback .exp{padding:12px 14px;background:rgba(0,0,0,.3);border-radius:10px;margin:8px 0;font-size:.9rem;line-height:1.7;direction:rtl}
+  .feedback .exp b{color:var(--blue)}
+  .feedback .motive{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.2);color:#fef3c7;font-weight:700;font-size:.9rem}
+
+  .combo-banner{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    font-size:2rem;font-weight:900;color:#fbbf24;text-shadow:0 0 30px rgba(251,191,36,.8),0 0 60px rgba(251,191,36,.4);
+    pointer-events:none;z-index:2000;transition:transform .4s cubic-bezier(0.175,0.885,0.32,1.275),opacity .4s;
+    opacity:0;text-align:center;direction:rtl;
+  }
+  .combo-banner.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+
+  .confetti-particle{
+    position:fixed;width:10px;height:10px;pointer-events:none;z-index:1500;
+    border-radius:50%;animation:fallConfetti 1.2s ease-out forwards;
+  }
+  @keyframes fallConfetti{
+    0%{transform:translate(0,0) rotate(0deg);opacity:1}
+    100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}
+  }
+
+  .ring-wrap{display:grid;place-items:center;margin:6px 0 16px}
+  .ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--blue) 0deg,rgba(255,255,255,.1) 0deg);transition:background .7s ease}
+  .ring-inner{width:100px;height:100px;border-radius:50%;background:#1e293b;border:1px solid var(--line);display:grid;place-items:center;font-size:1.3rem;font-weight:900;color:var(--blue)}
+  .result-title{text-align:center;font-size:1.3rem;font-weight:900;margin-bottom:6px}
+  .result-msg{text-align:center;color:#bfdbfe;line-height:1.8;margin-bottom:12px;font-size:.9rem}
+  .score-line{text-align:center;font-size:1rem;margin-bottom:12px;color:#bfdbfe}
+  .score-line b{color:var(--blue);font-size:1.1rem}
+  .time-line{text-align:center;font-size:.85rem;margin-bottom:18px;color:#a5b4fc}
+  .time-line b{color:var(--blue)}
+
+  .breakdown{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+  .breakdown h3{font-size:.85rem;font-weight:800;margin-bottom:12px;color:#bfdbfe}
+  .bd-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;font-weight:600;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.1)}
+  .bd-row:last-child{border-bottom:none}
+  .bd-section{flex:none;min-width:45px;direction:ltr;background:rgba(96,165,250,.22);color:#93c5fd;padding:2px 6px;border-radius:6px;font-weight:800;font-size:.7rem;text-align:center}
+  .bd-title{flex:1;font-size:.8rem}
+  .bd-bar{flex:none;width:80px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+  .bd-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#60a5fa,#34d399)}
+  .bd-score{flex:none;min-width:40px;text-align:center;font-weight:800;font-size:.8rem}
+
+  .review-list{max-height:60vh;overflow-y:auto;padding-left:4px;margin-bottom:16px}
+  .review-list::-webkit-scrollbar{width:5px}
+  .review-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:9px}
+  .review-item{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .review-section{display:inline-block;background:rgba(96,165,250,.22);color:#93c5fd;padding:2px 8px;border-radius:6px;font-weight:800;font-size:.7rem;direction:ltr;margin-bottom:8px}
+  .review-en{font-weight:800;font-size:.95rem;line-height:1.5;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap}
+  .review-ar{font-size:.8rem;color:#a5b4fc;margin-bottom:8px}
+  .review-answer{font-size:.85rem;color:#6ee7b7;font-weight:700;background:rgba(52,211,153,.1);padding:6px 10px;border-radius:6px;margin-bottom:8px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+  .review-exp{font-size:.8rem;color:#cbd5e1;line-height:1.7;background:rgba(0,0,0,.2);padding:8px 12px;border-radius:8px}
+  .review-exp b{color:var(--blue)}
+
+  #toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120%);background:linear-gradient(135deg,#60a5fa,#22d3ee);color:#0c1424;font-weight:800;padding:10px 20px;border-radius:12px;font-size:.85rem;box-shadow:0 10px 30px rgba(96,165,250,.5);transition:.3s;z-index:999;text-align:center;max-width:90vw}
+  #toast.show{transform:translate(-50%,0)}
+
+  #print-area{display:none}
+  @media print{
+    @page{margin:12mm;size:A4}
+    html,body{background:#fff!important;color:#000!important;display:block!important;padding:0!important}
+    .app,#toast,#error-box{display:none!important}
+    #print-area{display:block!important;padding:0}
+    .p-header{border-bottom:2px solid #333;padding-bottom:10px;margin-bottom:16px}
+    .p-header h1{font-size:18px;margin-bottom:4px;color:#111}
+    .p-header .p-meta{font-size:11px;color:#555}
+    .p-section-title{font-size:14px;background:#dbeafe;padding:6px 10px;border-radius:6px;margin:14px 0 8px;color:#1e40af;page-break-after:avoid}
+    .p-q{page-break-inside:avoid;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #ddd}
+    .p-q .p-q-num{font-weight:800;font-size:13px;margin-bottom:2px;color:#111;direction:ltr;text-align:left;white-space:pre-wrap}
+    .p-q .p-q-ar{font-size:10px;color:#666;margin-bottom:4px}
+    .p-q .p-answer{font-size:12px;color:#0a7a3b;font-weight:700;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+    .p-q .p-exp{font-size:11.5px;color:#333;background:#f5f5f5;padding:6px 8px;border-radius:4px;line-height:1.6}
+    .p-q .p-exp b{color:#b45309}
+    .p-footer{margin-top:16px;padding-top:8px;border-top:1px solid #ccc;font-size:9px;color:#888;text-align:center}
+  }
+</style>
+</head>
+<body>
+
+<div id="error-box" class="hidden" style="background:red;color:white;padding:15px;border-radius:10px;margin-bottom:10px;font-weight:bold;z-index:9999;position:relative;"></div>
+
+<div class="combo-banner" id="combo-banner"></div>
+
+<div class="app">
+  <!-- الشاشة الرئيسية -->
+  <section id="screen-home" class="card">
+    <div class="badge">🧊 Object-Oriented Programming · Midterm</div>
+    <h1>لعبة <span>البرمجة الشيئية</span> — استعد للميد</h1>
+    <p class="sub">أسئلة شاملة من ملفات د. أسماء العوفي — تركيز على الميد (Constructors, Inheritance, Static, Composition).</p>
+    <div style="background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.35);border-radius:12px;padding:10px 14px;margin-bottom:20px;font-size:.85rem;color:#93c5fd;line-height:1.7">
+      🔊 <b>أصوات تفاعلية</b> — تصفيق عند الإجابة الصحيحة.<br>
+      🔥 <b>عدّاد السلاسل (Streak)</b> — كل 3 إجابات صحيحة متتالية = مكافأة!<br>
+      ⏱ <b>مؤقت لكل سؤال</b> + مؤقت شامل.
+    </div>
+    <button class="btn btn-primary" id="btn-start">ابدأ المهمة 🚀</button>
+    <div class="hint">إجمالي الأسئلة: <b id="q-count">0</b></div>
+  </section>
+
+  <!-- شاشة الاختبار -->
+  <section id="screen-quiz" class="card hidden">
+    <div class="topbar">
+      <span id="counter">السؤال 1 من 1</span>
+      <span id="section-pill">MID</span>
+      <span id="streak-pill">🔥 0</span>
+      <span id="global-timer" class="timer-pill">⏱ 00:00</span>
+      <span id="score-pill">⭐ 0</span>
+      <button id="sound-btn" title="الصوت">🔊</button>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    
+    <div id="question-en" class="q-en"></div>
+    <div id="question-ar" class="q-ar"></div>
+
+    <div class="q-timer-wrap">
+      <span class="q-timer-label">⏳ <span id="q-timer-text">60s</span></span>
+      <div class="q-timer-bar"><div id="q-timer-fill" class="q-timer-fill"></div></div>
+    </div>
+    
+    <div id="options"></div>
+    
+    <div id="feedback" class="feedback hidden"></div>
+    <button class="btn btn-skip" id="btn-skip" style="margin-top:10px">⏭ تخطي السؤال</button>
+    <button class="btn btn-primary hidden" id="btn-next" style="margin-top:12px">السؤال التالي ←</button>
+    <button class="btn btn-primary hidden" id="btn-finish" style="margin-top:12px">عرض النتيجة 🏁</button>
+  </section>
+
+  <!-- شاشة النتيجة -->
+  <section id="screen-result" class="card hidden">
+    <div class="ring-wrap">
+      <div class="ring" id="ring"><div class="ring-inner" id="result-pct">0%</div></div>
+    </div>
+    <div class="result-title" id="result-title">—</div>
+    <p class="result-msg" id="result-msg">—</p>
+    <p class="score-line">النتيجة: <b id="result-score">0 / 0</b></p>
+    <p class="time-line">⏱ الوقت المستغرق: <b id="result-time">—</b></p>
+    <p class="time-line">🔥 أطول سلسلة: <b id="result-streak">0</b></p>
+    <p class="time-line">⏭ الأسئلة المتخطاة: <b id="result-skipped">0</b></p>
+    <div class="breakdown" id="breakdown"></div>
+    
+    <button class="btn btn-primary" id="btn-retry">إعادة المحاولة 🔁</button>
+    <button class="btn btn-ghost" id="btn-review-wrong" style="margin-top:8px">🎯 مراجعة الأخطاء فقط</button>
+    <button class="btn btn-ghost" id="btn-review-full" style="margin-top:8px">📖 مراجعة شاملة</button>
+    <button class="btn btn-ghost" id="btn-pdf-result" style="margin-top:8px">📄 تصدير الأسئلة PDF</button>
+    <button class="btn btn-ghost" id="btn-back-portal" style="margin-top:8px">↩ العودة للبوابة</button>
+  </section>
+
+  <!-- شاشة المراجعة -->
+  <section id="screen-review" class="card hidden">
+    <h1 style="font-size:1.2rem;margin-bottom:6px">📖 <span id="review-title">مراجعة</span></h1>
+    <div id="review-list" class="review-list"></div>
+    <button class="btn btn-ghost" id="btn-review-pdf">📄 تصدير المراجعة PDF</button>
+    <button class="btn btn-ghost" id="btn-review-back" style="margin-top:8px">← رجوع للنتيجة</button>
+  </section>
+</div>
+
+<div id="print-area"></div>
+<div id="toast"></div>
+
+<script>
+window.onerror = function(msg, url, line) {
+  const errBox = document.getElementById('error-box');
+  if(errBox) {
+    errBox.classList.remove('hidden');
+    errBox.innerHTML = "⚠️ خطأ: " + msg + "<br>السطر: " + line;
+  }
+  return false;
+};
+
+/* ============ نظام الأصوات (Web Audio API) ============ */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio(){
+  if(!audioCtx){
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e){ console.warn('Audio not supported'); }
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTone(freq, duration, type='sine', volume=0.25, delay=0){
+  if(!soundEnabled || !audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.start(t);
+  osc.stop(t + duration + 0.05);
+}
+
+function sfxCorrect(){
+  playTone(523.25, 0.15, 'sine', 0.3, 0);
+  playTone(659.25, 0.15, 'sine', 0.3, 0.1);
+  playTone(783.99, 0.35, 'sine', 0.3, 0.2);
+}
+function sfxWrong(){
+  playTone(220, 0.2, 'sawtooth', 0.2, 0);
+  playTone(165, 0.35, 'sawtooth', 0.2, 0.15);
+}
+function sfxSkip(){
+  playTone(440, 0.08, 'triangle', 0.2, 0);
+  playTone(330, 0.12, 'triangle', 0.2, 0.08);
+}
+function sfxStart(){
+  playTone(392, 0.1, 'sine', 0.25, 0);
+  playTone(523.25, 0.1, 'sine', 0.25, 0.08);
+  playTone(659.25, 0.2, 'sine', 0.25, 0.16);
+}
+function sfxTick(){
+  playTone(880, 0.04, 'square', 0.12, 0);
+}
+function sfxCombo(){
+  playTone(659.25, 0.1, 'square', 0.25, 0);
+  playTone(880, 0.1, 'square', 0.25, 0.1);
+  playTone(1046.50, 0.25, 'square', 0.25, 0.2);
+}
+function sfxWin(){
+  [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((f,i)=>{
+    playTone(f, 0.25, 'sine', 0.3, i*0.13);
+  });
+}
+function sfxLose(){
+  playTone(392, 0.2, 'sine', 0.2, 0);
+  playTone(329.63, 0.2, 'sine', 0.2, 0.15);
+  playTone(261.63, 0.4, 'sine', 0.2, 0.3);
+}
+
+/* ============ التأثيرات البصرية ============ */
+function showCombo(text){
+  const banner = document.getElementById('combo-banner');
+  banner.textContent = text;
+  banner.classList.add('show');
+  sfxCombo();
+  setTimeout(()=>banner.classList.remove('show'), 1200);
+}
+
+function spawnConfetti(x, y){
+  const colors = ['#60a5fa','#22d3ee','#34d399','#fbbf24','#a78bfa','#f472b6'];
+  for(let i=0; i<18; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const angle = (Math.PI*2*i/18) + Math.random()*0.5;
+    const dist = 80 + Math.random()*120;
+    p.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1300);
+  }
+}
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+  if(soundEnabled) initAudio();
+}
+
+/* ============ بيانات الأسئلة ============ */
+const SECTION_TITLES = {
+  "MID": "أسئلة الميد (Mid OOP)",
+  "AO": "د. أسماء العوفي (أساسيات OOP)",
+  "CL": "تجميعات OOP"
+};
+
+const QUESTIONS = [
+  /* ========== قسم الميد (MID) — من ملف Mid OOP ========== */
+  {s:"MID", t:45, en:"A constructor is a method of a class that is automatically called when a new object is instantiated from the class.", ar:"الـ constructor هو دالة في الفئة تُستدعى تلقائياً عند إنشاء كائن جديد من الفئة.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> الـ constructor يُستدعى تلقائياً عند استخدام new لإنشاء كائن، لتهيئة حالته."},
+  {s:"MID", t:45, en:"To access a static variable of a class, we must first create an object.", ar:"للوصول لمتغير static في فئة، يجب أولاً إنشاء كائن.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> المتغيرات static يمكن الوصول إليها مباشرة عبر اسم الفئة (ClassName.var) دون إنشاء كائن."},
+  {s:"MID", t:45, en:"Composition represents which type of relationship?", ar:"التركيب (Composition) يمثل أي نوع من العلاقات؟",
+   o:["IS-A relationship","HAS-A relationship","USES-A relationship","PART-OF-A relationship"],c:1,
+   e:"<b>لماذا؟</b> Composition = HAS-A، مثل Student has-a Date."},
+  {s:"MID", t:45, en:"Inheritance represents which type of relationship?", ar:"الوراثة تمثل أي نوع من العلاقات؟",
+   o:["IS-A relationship","HAS-A relationship","USES-A relationship","PART-OF-A relationship"],c:0,
+   e:"<b>لماذا؟</b> Inheritance = IS-A، مثل BMW is-a Car."},
+  {s:"MID", t:45, en:"Given: class Car {} class BMW extends Car {} class GMC extends Car {} — What kind of inheritance does this represent?", ar:"بالنظر إلى الكود: Car ثم BMW extends Car و GMC extends Car — ما نوع الوراثة؟",
+   o:["Single inheritance","Multilevel inheritance","Hierarchical inheritance","Multiple inheritance"],c:2,
+   e:"<b>لماذا؟</b> Hierarchical = عدة فئات فرعية ترث من فئة أب واحدة (BMW و GMC كلاهما يرث Car)."},
+  {s:"MID", t:60, en:"What is the output? class A { private int a=5; A(){ a=a+5;} A(int a){ this.a=a;} int returnA(){ return a; } } main: A a1=new A(); A a2=new A(15); System.out.println(a1.returnA()+\",\"+a2.returnA());", ar:"ما ناتج الكود الذي يُنشئ a1 بـ default constructor و a2 بقيمة 15؟",
+   o:["5,15","10,15","10,5","15,10"],c:1,
+   e:"<b>لماذا؟</b> a1: a=5 ثم a=a+5=10. a2: this.a=15. الناتج: 10,15."},
+  {s:"MID", t:45, en:"If a class has a static member and we create two objects, then two copies of the member will be created.", ar:"إذا كانت الفئة تحتوي على static member وأنشأنا كائنين، فسيتم إنشاء نسختين من العضو.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> static member مشترك بين كل الكائنات، هناك نسخة واحدة فقط."},
+  {s:"MID", t:45, en:"Which keyword is used in Java when a subclass constructor calls a superclass constructor?", ar:"أي كلمة مفتاحية تُستخدم عندما يستدعي constructor الفئة الفرعية constructor الفئة الأم؟",
+   o:["this","super","parent","extends"],c:1,
+   e:"<b>لماذا؟</b> super() تستدعي constructor الفئة الأم."},
+  {s:"MID", t:45, en:"A _______ is a method in a class that has the same name as the class name.", ar:"الـ _______ هو دالة في الفئة لها نفس اسم الفئة.",
+   o:["method","constructor","variable","package"],c:1,
+   e:"<b>لماذا؟</b> Constructor = دالة بنفس اسم الفئة، ولا تملك return type."},
+  {s:"MID", t:45, en:"Java supports multiple inheritance through classes.", ar:"جافا تدعم multiple inheritance عبر الفئات.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> جافا لا تدعم multiple inheritance عبر الفئات، فقط عبر interfaces."},
+  {s:"MID", t:60, en:"Given: A a1 = new A(1,\"Taif\"); A a2 = new A(2,\"Mecca\"); where city is static. What does a1.getCity() return?", ar:"بالنظر: a1 أنشئ بـ Taif ثم a2 بـ Mecca، و city هو static. ماذا ترجع a1.getCity()؟",
+   o:["Taif","Mecca","null","Error"],c:1,
+   e:"<b>لماذا؟</b> city static، فعندما عيّنها a2 إلى Mecca تغيرت للجميع. الناتج: Mecca."},
+  {s:"MID", t:60, en:"After: a1.setCity(\"Madinah\") on the same code above, what does a2.getCity() return?", ar:"بعد تنفيذ a1.setCity(\"Madinah\") و city static، ماذا ترجع a2.getCity()؟",
+   o:["Taif","Mecca","Madinah","null"],c:2,
+   e:"<b>لماذا؟</b> city static، فأي تعديل من أي كائن يؤثر على القيمة المشتركة. الناتج: Madinah."},
+  {s:"MID", t:60, en:"In the UML class Account with attributes accNo and balance, which statement creates a1 with accNo=1 and balance=500?", ar:"في فئة Account، أي statement ينشئ a1 بـ accNo=1 و balance=500؟",
+   o:["Account a1 = new Account();","Account a1 = new Account(1);","Account a1 = new Account(1, 500);","Account a1 = Account(1, 500);"],c:2,
+   e:"<b>لماذا؟</b> الصيغة الصحيحة: Account a1 = new Account(1, 500); تمرير كل الوسائط."},
+  {s:"MID", t:45, en:"In the Account class, which statement deposits 100 into a1?", ar:"في فئة Account، أي استدعاء لإيداع 100 في الحساب a1؟",
+   o:["a1.deposit(100);","deposit(a1, 100);","a1.balance = 100;","Account.deposit(100);"],c:0,
+   e:"<b>لماذا؟</b> deposit هي instance method، تُستدعى عبر الكائن: a1.deposit(100);"},
+  {s:"MID", t:45, en:"In UML where Student has a Date Bdate, the relationship between Student and Date is:", ar:"في UML حيث Student يملك Date Bdate، العلاقة بين Student و Date هي:",
+   o:["IS-A","HAS-A","PART-OF","Multiple"],c:1,
+   e:"<b>لماذا؟</b> Student has-a Date (composition via Bdate field)."},
+  {s:"MID", t:45, en:"In UML where CSSStudent extends Student, the relationship between CSSStudent and Student is:", ar:"في UML حيث CSSStudent يرث Student، العلاقة بينهما هي:",
+   o:["IS-A","HAS-A","PART-OF","None"],c:0,
+   e:"<b>لماذا؟</b> CSSStudent IS-A Student (inheritance)."},
+  {s:"MID", t:45, en:"For B b1 = new B(); (class B has fields x,y,z), which constructor is called?", ar:"لـ B b1 = new B(); أي constructor يُستدعى؟",
+   o:["B(int x, int y, int z)","B(int x)","B()","B(int x, int y)"],c:2,
+   e:"<b>لماذا؟</b> لا وسائط → default constructor B()."},
+  {s:"MID", t:45, en:"To create B b3 = new B(1, 2);, we need a constructor:", ar:"لإنشاء B b3 = new B(1, 2); نحتاج constructor:",
+   o:["B()","B(int x)","B(int x, int y)","B(int x, int y, int z)"],c:2,
+   e:"<b>لماذا؟</b> وسيطان → B(int x, int y)."},
+  {s:"MID", t:60, en:"Which statement about overloaded constructors is correct?", ar:"أي مما يلي صحيح عن overloaded constructors؟",
+   o:["They must have different return types","They must have different parameter lists","They must be private","They must be static"],c:1,
+   e:"<b>لماذا؟</b> Overloading يعتمد على اختلاف parameter list (عدد/نوع/ترتيب)."},
+  {s:"MID", t:45, en:"What is the default value of a String attribute in a class?", ar:"ما القيمة الافتراضية لحقل String في فئة؟",
+   o:["Empty string \"\"","null","0","undefined"],c:1,
+   e:"<b>لماذا؟</b> reference types (مثل String) تُهيأ افتراضياً بـ null."},
+  {s:"MID", t:45, en:"Which of the following is a valid constructor declaration for class Student?", ar:"أي مما يلي تعريف constructor صحيح لفئة Student؟",
+   o:["public void Student() {}","public Student() {}","public int Student() {}","void Student() {}"],c:1,
+   e:"<b>لماذا؟</b> Constructor = اسم الفئة + بدون return type، مع access modifier."},
+  {s:"MID", t:45, en:"Which statement about copy constructors is TRUE?", ar:"أي مما يلي صحيح عن copy constructors؟",
+   o:["They take a reference to another object of the same class","They are automatically provided by the compiler","They return a new object","They cannot be overloaded"],c:0,
+   e:"<b>لماذا؟</b> Copy constructor يستقبل كائن آخر من نفس الفئة لإنشاء نسخة."},
+  {s:"MID", t:45, en:"Composition allows:", ar:"الـ Composition تسمح بـ:",
+   o:["A class to contain references to other class objects","A class to extend multiple classes","A class to be abstract","A class to have only static members"],c:0,
+   e:"<b>لماذا؟</b> Composition = has-a عبر reference fields."},
+  {s:"MID", t:60, en:"In Java, which of the following is TRUE about instance variables?", ar:"في جافا، أي مما يلي صحيح عن instance variables؟",
+   o:["They are shared among all objects","Each object has its own copy","They must be static","They cannot have default values"],c:1,
+   e:"<b>لماذا؟</b> Instance variables = نسخة لكل كائن، عكس static."},
+  {s:"MID", t:45, en:"Which method is used to initialize an object when it is created?", ar:"أي دالة تُستخدم لتهيئة الكائن عند إنشائه؟",
+   o:["main()","finalize()","Constructor","toString()"],c:2,
+   e:"<b>لماذا؟</b> Constructor هو المسؤول عن التهيئة."},
+
+  /* ========== قسم د. أسماء العوفي (AO) — أساسيات OOP ========== */
+  {s:"AO", t:45, en:"What does OOP stand for?", ar:"ماذا يعني OOP؟",
+   o:["Object-Oriented Programming","Open Operational Platform","Object-Oriented Process","Optimal Output Programming"],c:0,
+   e:"<b>لماذا؟</b> OOP = Object-Oriented Programming."},
+  {s:"AO", t:45, en:"Java was originally created by which company?", ar:"من الشركة التي أنشأت جافا أصلاً؟",
+   o:["Microsoft","Sun Microsystems","IBM","Oracle"],c:1,
+   e:"<b>لماذا؟</b> جافا أنشأتها Sun Microsystems."},
+  {s:"AO", t:45, en:"The Java compiler translates source code into:", ar:"مترجم جافا يحول الكود المصدري إلى:",
+   o:["Machine code","Bytecode","Assembly code","HTML"],c:1,
+   e:"<b>لماذا؟</b> مترجم جافا ينتج bytecode."},
+  {s:"AO", t:45, en:"What executes Java bytecode?", ar:"ما الذي ينفذ bytecode في جافا؟",
+   o:["Java compiler","Bytecode verifier only","JVM (Java Virtual Machine)","Operating system directly"],c:2,
+   e:"<b>لماذا؟</b> JVM ينفذ bytecode."},
+  {s:"AO", t:45, en:"The file extension of Java source code is:", ar:"امتداد ملف الكود المصدري لجافا هو:",
+   o:[".class",".java",".exe",".txt"],c:1,
+   e:"<b>لماذا؟</b> الكود المصدري = .java"},
+  {s:"AO", t:45, en:"The file extension of compiled Java bytecode is:", ar:"امتداد ملف bytecode المترجم هو:",
+   o:[".java",".class",".byte",".jvm"],c:1,
+   e:"<b>لماذا؟</b> المترجم ينتج .class"},
+  {s:"AO", t:45, en:"Which type of error is detected by the compiler?", ar:"أي نوع من الأخطاء يكتشفه المترجم؟",
+   o:["Syntax error","Logic error","Runtime error","Semantic error"],c:0,
+   e:"<b>لماذا؟</b> المترجم يكتشف syntax errors."},
+  {s:"AO", t:45, en:"Trying to divide by zero causes which type of error?", ar:"محاولة القسمة على صفر تسبب:",
+   o:["Syntax error","Compile-time error","Runtime error","Logical error only"],c:2,
+   e:"<b>لماذا؟</b> القسمة على صفر = runtime error."},
+  {s:"AO", t:45, en:"Which is the correct signature of main method?", ar:"أي مما يلي التوقيع الصحيح لدالة main؟",
+   o:["public void main(String[] args)","public static void main(String[] args)","static main(String args)","public static main()"],c:1,
+   e:"<b>لماذا؟</b> main: public static void main(String[] args)."},
+  {s:"AO", t:45, en:"The escape sequence \\n represents:", ar:"التسلسل \\n يمثل:",
+   o:["Newline","Tab","Backslash","Double quote"],c:0,
+   e:"<b>لماذا؟</b> \\n = newline."},
+  {s:"AO", t:45, en:"The escape sequence \\t represents:", ar:"التسلسل \\t يمثل:",
+   o:["Newline","Horizontal tab","Carriage return","Backspace"],c:1,
+   e:"<b>لماذا؟</b> \\t = tab."},
+  {s:"AO", t:45, en:"The format specifier %d is used for:", ar:"محدد الصيغة %d يستخدم لـ:",
+   o:["String","Decimal integer","Double","Boolean"],c:1,
+   e:"<b>لماذا؟</b> %d = decimal integer."},
+  {s:"AO", t:45, en:"The format specifier %s is used for:", ar:"محدد الصيغة %s يستخدم لـ:",
+   o:["String","Integer","Float","Char"],c:0,
+   e:"<b>لماذا؟</b> %s = String."},
+  {s:"AO", t:60, en:"What is the range of the int primitive type in Java?", ar:"ما مدى النوع int في جافا؟",
+   o:["-128 to 127","-32768 to 32767","-2,147,483,648 to 2,147,483,647","-9.2e18 to +9.2e18"],c:2,
+   e:"<b>لماذا؟</b> int 32-bit، مداها من -2,147,483,648 إلى +2,147,483,647."},
+  {s:"AO", t:45, en:"The Scanner class is located in which package?", ar:"فئة Scanner موجودة في أي حزمة؟",
+   o:["java.lang","java.util","java.io","java.awt"],c:1,
+   e:"<b>لماذا؟</b> Scanner في java.util."},
+  {s:"AO", t:45, en:"Which Scanner method reads an integer value?", ar:"أي دالة تقرأ integer؟",
+   o:["nextLine()","next()","nextInt()","nextDouble()"],c:2,
+   e:"<b>لماذا؟</b> nextInt()."},
+  {s:"AO", t:45, en:"A public class must be stored in a file named:", ar:"الفئة public يجب أن تُحفظ في ملف باسم:",
+   o:["Any name with .java","Same as class name with .java extension","Same as main method with .java","Any name with .class"],c:1,
+   e:"<b>لماذا؟</b> اسم الفئة = اسم الملف."},
+  {s:"AO", t:45, en:"The keyword 'new' in Java is used to:", ar:"الكلمة 'new' تُستخدم لـ:",
+   o:["Create a new object","Declare a variable","Import a package","Define a method"],c:0,
+   e:"<b>لماذا؟</b> new تحجز ذاكرة وتستدعي constructor."},
+  {s:"AO", t:45, en:"The private access modifier means the member is:", ar:"محدد الوصول private يعني أن العضو:",
+   o:["Accessible from anywhere","Accessible only within its class","Accessible only in subclasses","Accessible only in same package"],c:1,
+   e:"<b>لماذا؟</b> private = داخل الفئة نفسها فقط."},
+  {s:"AO", t:45, en:"The public access modifier means the member is:", ar:"محدد الوصول public يعني أن العضو:",
+   o:["Accessible from anywhere","Accessible only within its class","Accessible only in subclasses","Not accessible at all"],c:0,
+   e:"<b>لماذا؟</b> public = متاح من أي مكان."},
+  {s:"AO", t:60, en:"Encapsulation in OOP means:", ar:"Encapsulation في OOP تعني:",
+   o:["Wrapping data and methods and hiding implementation details","Creating many objects","Using inheritance only","Overloading methods"],c:0,
+   e:"<b>لماذا؟</b> Encapsulation = تغليف وإخفاء التفاصيل."},
+  {s:"AO", t:45, en:"The 'this' keyword refers to:", ar:"الكلمة 'this' تشير إلى:",
+   o:["The current object","The parent class","The main method","The package"],c:0,
+   e:"<b>لماذا؟</b> this = الكائن الحالي."},
+  {s:"AO", t:45, en:"A static variable is:", ar:"المتغير static هو:",
+   o:["Unique to each object","Shared by all objects of the class","Only accessible in main","Always private"],c:1,
+   e:"<b>لماذا؟</b> static = مشترك بين كل الكائنات."},
+  {s:"AO", t:45, en:"Can a static method use the 'this' reference?", ar:"هل يمكن لدالة static استخدام 'this'؟",
+   o:["Yes, always","No, it cannot","Only in main","Only if public"],c:1,
+   e:"<b>لماذا؟</b> static لا تملك this."},
+  {s:"AO", t:45, en:"Which of the following is a static method?", ar:"أي مما يلي دالة static؟",
+   o:["main()","toString()","equals()","getBalance()"],c:0,
+   e:"<b>لماذا؟</b> main هي static."},
+  {s:"AO", t:45, en:"The toString() method returns:", ar:"الدالة toString() ترجع:",
+   o:["A numeric value","A String representation of the object","A boolean","An object"],c:1,
+   e:"<b>لماذا؟</b> toString() ترجع String."},
+  {s:"AO", t:45, en:"The equals() method is used to:", ar:"الدالة equals() تستخدم لـ:",
+   o:["Compare two objects for equality","Convert to String","Clone objects","Print objects"],c:0,
+   e:"<b>لماذا؟</b> equals() تقارن."},
+  {s:"AO", t:45, en:"The package declaration must appear:", ar:"إعلان الحزمة يجب أن يظهر:",
+   o:["At the top of the source file","At the bottom","Inside main only","Inside any method"],c:0,
+   e:"<b>لماذا؟</b> package في أعلى الملف."},
+  {s:"AO", t:45, en:"Which statement handles exceptions in Java?", ar:"أي عبارة تتعامل مع الاستثناءات؟",
+   o:["if-else","switch-case","try-catch","for-loop"],c:2,
+   e:"<b>لماذا؟</b> try-catch."},
+  {s:"AO", t:45, en:"In UML class diagrams, the minus sign (-) before a member indicates:", ar:"في UML، الإشارة (-) تعني:",
+   o:["public","private","static","final"],c:1,
+   e:"<b>لماذا؟</b> - = private."},
+  {s:"AO", t:45, en:"In UML class diagrams, the plus sign (+) before a member indicates:", ar:"في UML، الإشارة (+) تعني:",
+   o:["public","private","static","final"],c:0,
+   e:"<b>لماذا؟</b> + = public."},
+  {s:"AO", t:60, en:"Which access modifier allows access within the same package and to subclasses in other packages?", ar:"أي محدد وصول يسمح بالوصول داخل الحزمة وللفئات الفرعية؟",
+   o:["public","private","protected","default"],c:2,
+   e:"<b>لماذا؟</b> protected."},
+  {s:"AO", t:45, en:"Which keyword is used to throw an exception?", ar:"أي كلمة تُستخدم لرمي استثناء؟",
+   o:["throws","throw","raise","catch"],c:1,
+   e:"<b>لماذا؟</b> throw."},
+  {s:"AO", t:45, en:"How many significant digits does a float type provide?", ar:"كم رقمًا معنويًا يوفر float؟",
+   o:["7","15","32","64"],c:0,
+   e:"<b>لماذا؟</b> float = 7 أرقام."},
+  {s:"AO", t:45, en:"How many significant digits does a double type provide?", ar:"كم رقمًا معنويًا يوفر double؟",
+   o:["7","15","32","64"],c:1,
+   e:"<b>لماذا؟</b> double = 15 رقمًا."},
+  {s:"AO", t:45, en:"Which of the following is a primitive type?", ar:"أي مما يلي نوع primitive؟",
+   o:["String","Integer","int","Date"],c:2,
+   e:"<b>لماذا؟</b> int = primitive."},
+  {s:"AO", t:45, en:"When does an object become eligible for garbage collection?", ar:"متى يصبح الكائن مؤهلاً للـ garbage collection؟",
+   o:["Immediately after creation","When there are no more references to it","When main ends only","When it is printed"],c:1,
+   e:"<b>لماذا؟</b> عند انتهاء المراجع."},
+  {s:"AO", t:45, en:"Which of the following is NOT an IDE for Java?", ar:"أي مما يلي ليس IDE لجافا؟",
+   o:["Eclipse","NetBeans","JBuilder","JVM"],c:3,
+   e:"<b>لماذا؟</b> JVM = منفّذ."},
+
+  /* ========== تجميعات (CL) ========== */
+  {s:"CL", t:45, en:"What does JVM stand for?", ar:"ماذا يعني JVM؟",
+   o:["Java Virtual Machine","Java Verified Module","Java Variable Method","Just Virtual Machine"],c:0,
+   e:"<b>لماذا؟</b> JVM = Java Virtual Machine."},
+  {s:"CL", t:45, en:"What does JDK stand for?", ar:"ماذا يعني JDK؟",
+   o:["Java Development Kit","Java Data Kit","Java Design Kit","Just Development Kit"],c:0,
+   e:"<b>لماذا؟</b> JDK = Java Development Kit."},
+  {s:"CL", t:45, en:"What does JRE stand for?", ar:"ماذا يعني JRE؟",
+   o:["Java Runtime Environment","Java Run Engine","Java Read Environment","Just Runtime Engine"],c:0,
+   e:"<b>لماذا؟</b> JRE = Java Runtime Environment."},
+  {s:"CL", t:45, en:"Which of the following contains JRE plus development tools?", ar:"أي مما يلي يحتوي JRE + أدوات التطوير؟",
+   o:["JVM","JRE","JDK","JIT"],c:2,
+   e:"<b>لماذا؟</b> JDK."},
+  {s:"CL", t:45, en:"The classloader is a subsystem of JVM that:", ar:"الـ classloader هو نظام فرعي في JVM:",
+   o:["Compiles Java code","Loads classes and interfaces","Executes bytecode","Verifies bytecode"],c:1,
+   e:"<b>لماذا؟</b> classloader يحمّل الفئات."},
+  {s:"CL", t:45, en:"The Java platform is:", ar:"منصة جافا هي:",
+   o:["Hardware-based","Software-based","Firmware-based","Hybrid"],c:1,
+   e:"<b>لماذا؟</b> برمجية."},
+  {s:"CL", t:45, en:"What does JIT stand for?", ar:"ماذا يعني JIT؟",
+   o:["Java Intermediate Translator","Just-In-Time compiler","Java Internal Tool","Just Integrated Testing"],c:1,
+   e:"<b>لماذا؟</b> Just-In-Time compiler."},
+  {s:"CL", t:45, en:"In a typical Java development environment, the order is:", ar:"ترتيب المراحل هو:",
+   o:["Compile → Edit → Load → Verify → Execute","Edit → Compile → Load → Verify → Execute","Load → Edit → Compile → Verify → Execute","Verify → Edit → Compile → Load → Execute"],c:1,
+   e:"<b>لماذا؟</b> Edit → Compile → Load → Verify → Execute."},
+  {s:"CL", t:45, en:"All communication between objects in OOP is done via:", ar:"كل التواصل بين الكائنات يتم عبر:",
+   o:["Messages (method calls)","Global variables","Files","Headers"],c:0,
+   e:"<b>لماذا؟</b> Messages."},
+  {s:"CL", t:45, en:"The process of creating an object from a class is called:", ar:"إنشاء كائن من فئة يُسمى:",
+   o:["Inheritance","Instantiation","Encapsulation","Abstraction"],c:1,
+   e:"<b>لماذا؟</b> Instantiation."},
+  {s:"CL", t:45, en:"Object state is defined by:", ar:"حالة الكائن تُعرّف بـ:",
+   o:["Instance variables","Instance methods","Constructor","Package"],c:0,
+   e:"<b>لماذا؟</b> State = instance variables."},
+  {s:"CL", t:45, en:"Object behavior is defined by:", ar:"سلوك الكائن يُعرّف بـ:",
+   o:["Instance variables","Instance methods","Constructor","Package"],c:1,
+   e:"<b>لماذا؟</b> Behavior = instance methods."},
+  {s:"CL", t:45, en:"A static method can be invoked:", ar:"الدالة static يمكن استدعاؤها:",
+   o:["Only after creating an object","Without creating an object","Only from main","Only from subclasses"],c:1,
+   e:"<b>لماذا؟</b> بدون instance."},
+  {s:"CL", t:45, en:"A class can extend:", ar:"الفئة يمكن أن extend:",
+   o:["Multiple classes","Only one class","No class","Only interfaces"],c:1,
+   e:"<b>لماذا؟</b> class واحد فقط."},
+  {s:"CL", t:45, en:"A class can implement:", ar:"الفئة يمكن أن implement:",
+   o:["Only one interface","Multiple interfaces","No interface","Only abstract classes"],c:1,
+   e:"<b>لماذا؟</b> عدة interfaces."},
+  {s:"CL", t:45, en:"Which keyword is used for class inheritance?", ar:"أي كلمة لوراثة الفئات؟",
+   o:["implements","extends","inherits","super"],c:1,
+   e:"<b>لماذا؟</b> extends."},
+  {s:"CL", t:45, en:"Which keyword is used to implement an interface?", ar:"أي كلمة لتنفيذ interface؟",
+   o:["extends","implements","inherits","interface"],c:1,
+   e:"<b>لماذا؟</b> implements."},
+  {s:"CL", t:45, en:"In a subclass constructor, what is called first?", ar:"في constructor الفئة الفرعية، ما يُستدعى أولاً؟",
+   o:["Subclass body","Superclass constructor","main method","Instance methods"],c:1,
+   e:"<b>لماذا؟</b> super() أولاً."},
+  {s:"CL", t:45, en:"this() inside a constructor is used to:", ar:"this() داخل constructor تُستخدم لـ:",
+   o:["Call another constructor in the same class","Call the superclass constructor","Create an object","Access static members"],c:0,
+   e:"<b>لماذا؟</b> this() = constructor chaining."},
+  {s:"CL", t:45, en:"Can you use this() and super() together in the same constructor?", ar:"هل يمكن استخدام this() و super() معًا؟",
+   o:["Yes","No","Only in main","Only in interfaces"],c:1,
+   e:"<b>لماذا؟</b> كلاهما أول statement، لا يمكن جمعهما."},
+  {s:"CL", t:45, en:"An abstract class:", ar:"الفئة abstract:",
+   o:["Can be instantiated","Cannot be instantiated","Must be final","Cannot have subclasses"],c:1,
+   e:"<b>لماذا؟</b> لا يمكن إنشاؤها."},
+  {s:"CL", t:45, en:"If a subclass does NOT implement all abstract methods of its parent, it must be:", ar:"إذا لم تنفذ الفئة الفرعية كل abstract methods، يجب أن تكون:",
+   o:["final","static","abstract","private"],c:2,
+   e:"<b>لماذا؟</b> abstract."},
+  {s:"CL", t:45, en:"A deep copy means:", ar:"Deep copy تعني:",
+   o:["Copying references only","Copying all data including nested objects","Shallow copy","Copying only primitives"],c:1,
+   e:"<b>لماذا؟</b> نسخة كاملة مستقلة."},
+  {s:"CL", t:45, en:"What does UML stand for?", ar:"ماذا يعني UML؟",
+   o:["Unified Modeling Language","Universal Method Language","Unified Method Logic","Universal Modeling Logic"],c:0,
+   e:"<b>لماذا؟</b> UML = Unified Modeling Language."},
+  {s:"CL", t:45, en:"The finally block in Java:", ar:"الكتلة finally في جافا:",
+   o:["Executes only if exception occurs","Executes only if no exception","Executes always","Never executes"],c:2,
+   e:"<b>لماذا؟</b> finally دائمًا."},
+  {s:"CL", t:45, en:"What exception is thrown when dividing by zero?", ar:"استثناء القسمة على صفر هو:",
+   o:["NullPointerException","ArithmeticException","ArrayIndexOutOfBoundsException","ClassCastException"],c:1,
+   e:"<b>لماذا؟</b> ArithmeticException."},
+  {s:"CL", t:45, en:"The class that enables a program to read data from many sources is:", ar:"الفئة التي تقرأ من مصادر متعددة:",
+   o:["Math","System","Scanner","String"],c:2,
+   e:"<b>لماذا؟</b> Scanner."},
+  {s:"CL", t:45, en:"Math.PI cannot be changed because it is:", ar:"Math.PI لا يمكن تغييرها لأنها:",
+   o:["Static field","Final field","Protected field","Private field"],c:1,
+   e:"<b>لماذا؟</b> final."},
+  {s:"CL", t:45, en:"The escape sequence \\r represents:", ar:"التسلسل \\r يمثل:",
+   o:["Newline","Carriage return","Tab","Backspace"],c:1,
+   e:"<b>لماذا؟</b> carriage return."},
+  {s:"CL", t:45, en:"A method that performs a task for a class itself is called:", ar:"الدالة التي تؤدي مهمة للفئة نفسها:",
+   o:["protected method","private method","public method","static method"],c:3,
+   e:"<b>لماذا؟</b> static."},
+  {s:"CL", t:45, en:"Local variables have default values.", ar:"المتغيرات المحلية لها قيم افتراضية.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> لا تحصل على default."},
+  {s:"CL", t:45, en:"String in Java is a primitive data type.", ar:"String في جافا نوع primitive.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> reference type."},
+  {s:"CL", t:45, en:"Java is case-sensitive.", ar:"جافا حساسة لحالة الأحرف.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> a1 و A1 مختلفان."},
+  {s:"CL", t:45, en:"Java bytecode is machine code.", ar:"bytecode في جافا هو machine code.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> ليس machine code."},
+  {s:"CL", t:45, en:"A Java source file can have multiple package declarations.", ar:"ملف جافا يمكن أن يحتوي عدة package declarations.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> واحد فقط."},
+  {s:"CL", t:45, en:"A final variable can be reassigned after initialization.", ar:"متغير final يمكن إعادة تعيينه.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> final = ثابت."},
+  {s:"CL", t:45, en:"Java supports multiple inheritance through classes.", ar:"جافا تدعم multiple inheritance عبر الفئات.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> لا تدعمها."},
+  {s:"CL", t:45, en:"The Scanner class can be used without an import statement.", ar:"Scanner يمكن استخدامها بدون import.",
+   o:["True","False"],c:1,
+   e:"<b>لماذا؟</b> يجب استيرادها."},
+  {s:"CL", t:45, en:"String and System classes are in which package?", ar:"فئتا String و System في أي حزمة؟",
+   o:["java.util","java.lang","java.io","java.awt"],c:1,
+   e:"<b>لماذا؟</b> java.lang."},
+  {s:"CL", t:45, en:"The return address of a calling method is pushed onto the:", ar:"return address للدالة المستدعية يُدفع إلى:",
+   o:["Method-call queue","Method-call stack","Heap","Register"],c:1,
+   e:"<b>لماذا؟</b> stack."},
+  {s:"CL", t:45, en:"The dot operator connects (left to right):", ar:"نقطة الوصول تربط:",
+   o:["A class member and a class object","A class object and a class","A class object and a member of that class","None of the above"],c:2,
+   e:"<b>لماذا؟</b> object.member."},
+  {s:"CL", t:45, en:"What is the prototype of the default constructor for class Test?", ar:"ما prototype للـ default constructor لفئة Test؟",
+   o:["Test()","Test(void)","none","public Test(void)"],c:0,
+   e:"<b>لماذا؟</b> Test()."},
+  {s:"CL", t:45, en:"When a class has reference to objects of other classes as members, this is:", ar:"عندما تحتوي فئة على كائنات كأعضاء:",
+   o:["has-a relationship","is-a relationship","uses-a relationship","part-of relationship"],c:0,
+   e:"<b>لماذا؟</b> has-a = composition."},
+  {s:"CL", t:45, en:"A method's name + number, types, and order of parameters is known as:", ar:"اسم الدالة + parameters يُعرف بـ:",
+   o:["header","signature","body","prototype"],c:1,
+   e:"<b>لماذا؟</b> signature."},
+  {s:"CL", t:45, en:"The Java compiler creates a default constructor:", ar:"المترجم يُنشئ default constructor:",
+   o:["Always","Only if no constructor is declared","Only if constructor is private","Never"],c:1,
+   e:"<b>لماذا؟</b> فقط عند عدم وجود constructor."},
+  {s:"CL", t:45, en:"What is the output of: System.out.println(\"Hello\" + 1 + 2);", ar:"ما ناتج: println(\"Hello\" + 1 + 2);",
+   o:["Hello3","Hello12","3Hello","Hello 1 2"],c:1,
+   e:"<b>لماذا؟</b> String + int = concatenation → Hello12."},
+  {s:"CL", t:45, en:"What is the output of: System.out.println(1 + 2 + \"Hello\");", ar:"ما ناتج: println(1 + 2 + \"Hello\");",
+   o:["Hello3","3Hello","12Hello","Hello 1 2"],c:1,
+   e:"<b>لماذا؟</b> 1+2=3 ثم 3+Hello = 3Hello."},
+  {s:"CL", t:45, en:"Which is the correct way to create object myObj of MyClass?", ar:"الطريقة الصحيحة لإنشاء كائن MyClass؟",
+   o:["class MyClass = new myObj","class myObj = new MyClass","new myObj = MyClass","MyClass myObj = new MyClass"],c:3,
+   e:"<b>لماذا؟</b> MyClass myObj = new MyClass;"},
+  {s:"CL", t:45, en:"A method declared as private:", ar:"الدالة private:",
+   o:["Can be overridden","Cannot be overridden","Must be static","Must be final"],c:1,
+   e:"<b>لماذا؟</b> private لا تُورَّث."},
+  {s:"CL", t:45, en:"If class A extends B, what relationship is created?", ar:"إذا A extends B، ما العلاقة؟",
+   o:["A is B","B is A","A has B","B has A"],c:0,
+   e:"<b>لماذا؟</b> A is-a B."},
+  {s:"CL", t:45, en:"Concrete superclasses can be used to instantiate objects.", ar:"الفئات superclass العادية يمكن استخدامها لإنشاء كائنات.",
+   o:["True","False"],c:0,
+   e:"<b>لماذا؟</b> concrete = يمكن إنشاؤها."},
+];
+
+const PHRASES = [
+  "أنت أقوى مما تظن! 💪", "كل دقيقة مراجعة تقرّبك من هدفك ⏳",
+  "الثقة بالنفس نصف النجاح ✨", "لا تقارن بدايتك بنهاية غيرك 🌱",
+  "تعب اليوم راحة الغد 🌟", "أنت قادر… فقط ابدأ 🚀",
+  "النجاح خطوات صغيرة تتكرر كل يوم 🔥", "الخطأ فرصة لتتعلم 📚",
+  "ركّز على التقدم لا على الكمال 🎯", "اقتربت كثيرًا، لا تتوقف! 🏆"
+];
+
+const COMBO_MESSAGES = [
+  "🔥 سلسلة نارية!",
+  "⚡ أنت في القمة!",
+  "🌟 لا يمكن إيقافك!",
+  "💎 أداء أسطوري!",
+  "🚀 انطلق بقوة!"
+];
+
+const QUIZ_TOTAL_SECONDS = 90 * 60;
+const $ = id => document.getElementById(id);
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]];} return b; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const AR_KEYS = ['A','B','C','D'];
+const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+let toastTimer;
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+let playList = [];
+let idx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let locked = false;
+let wrongQuestions = [];
+let skippedCount = 0;
+let resultsBySection = {};
+let reviewReturnTo = 'screen-result';
+
+let globalTimeLeft = QUIZ_TOTAL_SECONDS;
+let questionTimeLeft = 60;
+let currentQuestionTime = 60;
+let globalTimerId = null;
+let questionTimerId = null;
+let quizStartTime = 0;
+let elapsedSeconds = 0;
+
+function show(id){
+  ['screen-home','screen-quiz','screen-result','screen-review'].forEach(s=>$(s).classList.toggle('hidden', s!==id));
+  window.scrollTo(0,0);
+}
+
+function updateGlobalDisplay(){
+  const el = $('global-timer');
+  el.textContent = '⏱ ' + fmtTime(globalTimeLeft);
+  el.classList.remove('warn','danger');
+  if(globalTimeLeft <= 60) el.classList.add('danger');
+  else if(globalTimeLeft <= 300) el.classList.add('warn');
+}
+
+function startGlobalTick(){
+  if(globalTimerId) return;
+  globalTimerId = setInterval(()=>{
+    globalTimeLeft--;
+    updateGlobalDisplay();
+    if(globalTimeLeft <= 0){
+      clearInterval(globalTimerId); globalTimerId = null;
+      onGlobalTimeout();
+    }
+  },1000);
+}
+
+function pauseGlobalTick(){
+  if(globalTimerId){ clearInterval(globalTimerId); globalTimerId = null; }
+}
+
+function startQuestionTick(){
+  questionTimeLeft = currentQuestionTime;
+  updateQuestionDisplay();
+  if(questionTimerId) clearInterval(questionTimerId);
+  questionTimerId = setInterval(()=>{
+    questionTimeLeft--;
+    updateQuestionDisplay();
+    if(questionTimeLeft <= 5 && questionTimeLeft > 0) sfxTick();
+    if(questionTimeLeft <= 0){
+      clearInterval(questionTimerId); questionTimerId = null;
+      if(!locked) revealAnswer(-1, true);
+    }
+  },1000);
+}
+
+function stopQuestionTick(){
+  if(questionTimerId){ clearInterval(questionTimerId); questionTimerId = null; }
+}
+
+function updateQuestionDisplay(){
+  $('q-timer-text').textContent = questionTimeLeft + 's';
+  const fill = $('q-timer-fill');
+  const pct = (questionTimeLeft / currentQuestionTime) * 100;
+  fill.style.width = pct + '%';
+  fill.classList.remove('warn','danger');
+  if(questionTimeLeft <= 10) fill.classList.add('danger');
+  else if(questionTimeLeft <= 20) fill.classList.add('warn');
+}
+
+function onGlobalTimeout(){
+  stopQuestionTick();
+  toast('⏰ انتهى الوقت الإجمالي!');
+  sfxLose();
+  if(!$('screen-quiz').classList.contains('hidden')) showResult();
+}
+
+function startGame(source){
+  initAudio();
+  sfxStart();
+  const src = source || QUESTIONS;
+  playList = shuffle(src.map(q => ({...q, o:[...q.o]})));
+  idx = 0; score = 0; locked = false; streak = 0; bestStreak = 0;
+  wrongQuestions = [];
+  skippedCount = 0;
+  resultsBySection = {};
+  playList.forEach(q => {
+    if(!resultsBySection[q.s]) resultsBySection[q.s] = {correct:0, total:0};
+    resultsBySection[q.s].total++;
+  });
+  $('score-pill').textContent = '⭐ 0';
+  $('streak-pill').textContent = '🔥 0';
+  globalTimeLeft = QUIZ_TOTAL_SECONDS;
+  updateGlobalDisplay();
+  quizStartTime = Date.now();
+  elapsedSeconds = 0;
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const q = playList[idx];
+  currentQuestionTime = q.t || 60;
+  $('counter').textContent = `السؤال ${idx+1} من ${playList.length}`;
+  $('section-pill').textContent = SECTION_TITLES[q.s] || q.s;
+  $('progress-fill').style.width = (idx / playList.length * 100) + '%';
+  $('question-en').textContent = q.en;
+  $('question-ar').textContent = q.ar;
+  const box = $('options'); box.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="key">${AR_KEYS[i]}</span><span>${escapeHtml(opt)}</span>`;
+    btn.addEventListener('click', function(e) { e.preventDefault(); revealAnswer(i, false); });
+    box.appendChild(btn);
+  });
+  const fb = $('feedback'); fb.className='feedback hidden'; fb.innerHTML='';
+  $('btn-next').classList.add('hidden');
+  $('btn-finish').classList.add('hidden');
+  $('btn-skip').classList.remove('hidden');
+  $('btn-skip').disabled = false;
+  startQuestionTick();
+  startGlobalTick();
+}
+
+function revealAnswer(chosenIdx, isTimeout){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  $('btn-skip').classList.add('hidden');
+  const q = playList[idx];
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[q.c]) all[q.c].classList.add('correct');
+  const fb = $('feedback');
+  const phrase = pick(PHRASES);
+  const isCorrect = !isTimeout && chosenIdx === q.c;
+  if(isCorrect){
+    score++;
+    streak++;
+    if(streak > bestStreak) bestStreak = streak;
+    resultsBySection[q.s].correct++;
+    $('score-pill').textContent = '⭐ ' + score;
+    $('streak-pill').textContent = '🔥 ' + streak;
+    $('streak-pill').classList.toggle('active', streak >= 3);
+    sfxCorrect();
+    // Confetti
+    const rect = all[q.c].getBoundingClientRect();
+    spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+    // Combo message
+    if(streak > 0 && streak % 3 === 0){
+      setTimeout(()=>showCombo(pick(COMBO_MESSAGES) + ' ' + streak), 200);
+    }
+    fb.className = 'feedback ok';
+    fb.innerHTML = `<span class="title">✅ إجابة صحيحة! ${streak>=3?'🔥 سلسلة '+streak:''}</span><div class="exp">${q.e}</div><span class="motive">${phrase}</span>`;
+  } else {
+    if(chosenIdx !== null && chosenIdx >= 0 && all[chosenIdx]) all[chosenIdx].classList.add('wrong');
+    wrongQuestions.push(q);
+    streak = 0;
+    $('streak-pill').textContent = '🔥 0';
+    $('streak-pill').classList.remove('active');
+    sfxWrong();
+    fb.className = 'feedback no';
+    const title = isTimeout ? '⏰ انتهى وقت السؤال!' : '❌ إجابة خاطئة';
+    fb.innerHTML = `<span class="title">${title}</span><div class="exp"><b>الإجابة الصحيحة:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(q.o[q.c])}</span><br><br>${q.e}</div><span class="motive">${phrase}</span>`;
+  }
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function skipQuestion(){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  $('btn-skip').classList.add('hidden');
+  skippedCount++;
+  streak = 0;
+  $('streak-pill').textContent = '🔥 0';
+  $('streak-pill').classList.remove('active');
+  sfxSkip();
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[playList[idx].c]) all[playList[idx].c].classList.add('correct');
+  const fb = $('feedback');
+  fb.className = 'feedback skip';
+  fb.innerHTML = `<span class="title">⏭ تم التخطي</span><div class="exp"><b>الإجابة الصحيحة كانت:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(playList[idx].o[playList[idx].c])}</span></div>`;
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function nextQuestion() { idx++; renderQuestion(); }
+
+function showResult(){
+  stopQuestionTick(); pauseGlobalTick();
+  elapsedSeconds = Math.round((Date.now() - quizStartTime)/1000);
+  const total = playList.length;
+  const pct = total ? Math.round(score / total * 100) : 0;
+  $('result-score').textContent = `${score} / ${total}`;
+  $('result-pct').textContent = pct + '%';
+  $('ring').style.background = `conic-gradient(var(--blue) ${pct*3.6}deg, rgba(255,255,255,.1) 0deg)`;
+  $('result-time').textContent = fmtTime(elapsedSeconds);
+  $('result-streak').textContent = bestStreak;
+  $('result-skipped').textContent = skippedCount;
+  let title, msg;
+  if(pct === 100){ title='مذهل! 🏆'; msg='إجابات كاملة! أنت جاهز تمامًا للميد.'; sfxWin(); }
+  else if(pct >= 70){ title='أداء ممتاز! 🌟'; msg='أنت على الطريق الصحيح. راجع الأخطاء وستكون جاهزًا.'; sfxWin(); }
+  else if(pct >= 40){ title='بداية جيدة 💪'; msg='تحتاج إلى مراجعة إضافية. كل محاولة تصنع فرقًا.'; }
+  else { title='لا بأس، ابدأ من هنا 🌱'; msg='الأخطاء جزء من التعلم. راجع الأساسيات وأعد المحاولة.'; sfxLose(); }
+  $('result-title').textContent = title;
+  $('result-msg').textContent = msg;
+  const bd = $('breakdown');
+  const sections = Object.keys(resultsBySection).sort();
+  bd.innerHTML = `<h3>📊 تحليل الأداء</h3>` + sections.map(sec => {
+    const r = resultsBySection[sec];
+    const p = r.total ? Math.round(r.correct/r.total*100) : 0;
+    return `<div class="bd-row"><span class="bd-section">${sec}</span><span class="bd-title">${SECTION_TITLES[sec]}</span><span class="bd-bar"><i style="width:${p}%"></i></span><span class="bd-score">${r.correct}/${r.total}</span></div>`;
+  }).join('');
+  $('btn-review-wrong').style.display = wrongQuestions.length ? 'block' : 'none';
+  show('screen-result');
+}
+
+function renderReview(){
+  reviewReturnTo = 'screen-result';
+  $('review-title').textContent = 'مراجعة شاملة';
+  const list = $('review-list');
+  const bySec = {};
+  QUESTIONS.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  let html = '';
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div style="margin:6px 0 12px"><span class="review-section">${sec}</span> <span style="color:#bfdbfe;font-size:.8rem;font-weight:700">${SECTION_TITLES[sec]}</span></div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="review-item">
+        <div class="review-en">${i+1}. ${escapeHtml(q.en)}</div>
+        <div class="review-ar">${escapeHtml(q.ar)}</div>
+        <div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div>
+        <div class="review-exp">${q.e}</div>
+      </div>`;
+    });
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function renderWrongReview(){
+  reviewReturnTo = 'screen-result';
+  $('review-title').textContent = 'مراجعة الأخطاء';
+  const list = $('review-list');
+  if(!wrongQuestions.length){
+    list.innerHTML = '<p style="text-align:center;color:#6ee7b7;padding:30px;font-size:1.1rem">🎉 لا توجد أخطاء! أداء ممتاز.</p>';
+    show('screen-review');
+    return;
+  }
+  let html = `<div style="margin:6px 0 12px"><span class="review-section" style="background:rgba(248,113,113,.2);color:#f87171">الأخطاء</span> <span style="color:#bfdbfe;font-size:.8rem;font-weight:700">${wrongQuestions.length} سؤال</span></div>`;
+  wrongQuestions.forEach((q,i)=>{
+    html += `<div class="review-item" style="border-color:rgba(248,113,113,.4)">
+      <div class="review-en">${i+1}. ${escapeHtml(q.en)}</div>
+      <div class="review-ar">${escapeHtml(q.ar)}</div>
+      <div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div>
+      <div class="review-exp">${q.e}</div>
+    </div>`;
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function buildPrintHTML(opts){
+  const { includeScore = false, onlyWrong = false } = opts || {};
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('ar-SA');
+  const list = onlyWrong ? wrongQuestions : QUESTIONS;
+  const title = onlyWrong ? '📚 مراجعة الأخطاء' : '📚 مراجعة شاملة';
+  let html = `<div class="p-header"><h1>${title} — البرمجة الشيئية</h1><div class="p-meta">تاريخ التصدير: ${dateStr}`;
+  if (includeScore) {
+    const pct = playList.length ? Math.round(score/playList.length*100) : 0;
+    html += ` · <b>النتيجة: ${score} / ${playList.length} (${pct}%) · متخطى: ${skippedCount}</b>`;
+  }
+  html += `</div></div>`;
+  const bySec = {};
+  list.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div class="p-section-title">${sec} — ${SECTION_TITLES[sec]}</div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="p-q">
+        <div class="p-q-num">${i+1}. ${escapeHtml(q.en)}</div>
+        <div class="p-q-ar">${escapeHtml(q.ar)}</div>
+        <div class="p-answer">✔ Correct: ${escapeHtml(q.o[q.c])}</div>
+        <div class="p-exp">${q.e}</div>
+      </div>`;
+    });
+  });
+  html += `<div class="p-footer">تم التوليد من لعبة OOP — Total: ${list.length} questions</div>`;
+  return html;
+}
+
+function exportPDF(opts){
+  const area = $('print-area');
+  area.innerHTML = buildPrintHTML(opts);
+  setTimeout(()=>{ window.print(); }, 150);
+}
+
+/* ========== Event Listeners ========== */
+$('btn-start').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-next').addEventListener('click', e => { e.preventDefault(); nextQuestion(); });
+$('btn-finish').addEventListener('click', e => { e.preventDefault(); showResult(); });
+$('btn-skip').addEventListener('click', e => { e.preventDefault(); skipQuestion(); });
+$('btn-retry').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-review-wrong').addEventListener('click', e => { e.preventDefault(); renderWrongReview(); });
+$('btn-review-full').addEventListener('click', e => { e.preventDefault(); renderReview(); });
+$('btn-pdf-result').addEventListener('click', e => { e.preventDefault(); exportPDF({includeScore:true}); });
+$('btn-back-portal').addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.html'; });
+$('btn-review-pdf').addEventListener('click', e => {
+  e.preventDefault();
+  const isWrong = $('review-title').textContent.includes('الأخطاء');
+  exportPDF({onlyWrong: isWrong});
+});
+$('btn-review-back').addEventListener('click', e => { e.preventDefault(); show(reviewReturnTo); });
+$('sound-btn').addEventListener('click', e => { e.preventDefault(); toggleSound(); });
+
+/* ========== Init ========== */
+$('q-count').textContent = QUESTIONS.length;
+updateGlobalDisplay();
+</script>
+</body>
+</html>

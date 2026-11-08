@@ -32,38 +32,43 @@ body{
   padding:20px 12px 40px;
   position:relative;
   overflow-x:hidden;
+  perspective: 1000px; /* للـ 3D effect */
 }
 
-body::before{
-  content:'✨';
-  position:fixed;
-  top:15%; left:8%;
-  font-size:2.5rem;
-  opacity:0.12;
-  animation:float 7s ease-in-out infinite;
-  pointer-events:none;
-  z-index:0;
-}
-body::after{
-  content:'🎯';
-  position:fixed;
-  bottom:25%; right:6%;
-  font-size:3rem;
-  opacity:0.10;
-  animation:float 9s ease-in-out infinite reverse;
-  pointer-events:none;
-  z-index:0;
-}
-@keyframes float{
-  0%,100%{transform:translateY(0) rotate(0deg);}
-  50%{transform:translateY(-25px) rotate(12deg);}
+/* نجوم متحركة في الخلفية */
+#particles-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .app{width:100%;max-width:900px;margin:0 auto;position:relative;z-index:1;}
 
-.portal-header{text-align:center;margin-bottom:35px;padding:20px 0;}
-.mascot{font-size:4.5rem;display:inline-block;animation:bounce 2s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(192,132,252,0.7));margin-bottom:8px;}
+.portal-header{text-align:center;margin-bottom:35px;padding:20px 0; position: relative;}
+.mascot{
+  font-size:4.5rem;display:inline-block;animation:bounce 2s ease-in-out infinite;
+  filter:drop-shadow(0 0 25px rgba(192,132,252,0.7));margin-bottom:8px;
+  cursor: pointer; transition: transform 0.2s;
+}
+.mascot:active { transform: scale(0.8); }
 @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+#sound-btn-main {
+  position: absolute;
+  top: 20px; left: 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 10;
+}
+#sound-btn-main:hover { background: rgba(255,255,255,0.2); }
+
 .portal-header h1{
   font-size:clamp(1.9rem,6vw,2.9rem);
   font-weight:900;
@@ -100,12 +105,13 @@ body::after{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:20px;
+  transform-style: preserve-3d;
 }
 .subject-card{
   border-radius:24px;
   padding:24px 22px;
   cursor:pointer;
-  transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+  transition:all 0.1s ease-out; /* سريع للتفاعل مع الماوس */
   display:flex;
   flex-direction:column;
   min-height:210px;
@@ -114,8 +120,13 @@ body::after{
   overflow:hidden;
   color:#fff;
   text-decoration:none;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
-.subject-card:active{transform:scale(0.96);}
+.subject-card:hover{
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.1) inset;
+}
 .subject-card::before{
   content:'';
   position:absolute;
@@ -144,19 +155,25 @@ body::after{
   font-weight:800;
   backdrop-filter:blur(10px);
   z-index:3;
+  transform: translateZ(30px); /* 3D Effect */
 }
 .subject-icon{
   font-size:3.2rem;
   margin-bottom:12px;
   filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));
   line-height:1;
+  transform: translateZ(40px); /* 3D Effect */
+  transition: transform 0.3s;
 }
+.subject-card:hover .subject-icon { transform: translateZ(50px) scale(1.1); }
+
 .subject-title{
   font-size:1.35rem;
   font-weight:900;
   margin-bottom:6px;
   position:relative;
   z-index:2;
+  transform: translateZ(30px); /* 3D Effect */
 }
 .subject-desc{
   font-size:0.85rem;
@@ -166,6 +183,7 @@ body::after{
   z-index:2;
   direction:ltr;
   text-align:right;
+  transform: translateZ(20px); /* 3D Effect */
 }
 .card-footer{
   margin-top:auto;
@@ -178,15 +196,17 @@ body::after{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  transform: translateZ(25px); /* 3D Effect */
 }
 .card-footer span:last-child{
   font-size:1.1rem;
   transition:transform 0.3s;
 }
 .subject-card:hover .card-footer span:last-child{
-  transform:translateX(-8px);
+  transform:translateX(-8px) scale(1.2);
 }
 
+/* خلفيات البطاقات */
 .bg-math {background:linear-gradient(135deg,#A78BFA 0%,#7C3AED 50%,#4C1D95 100%);box-shadow:0 12px 35px rgba(124,58,237,0.45);}
 .bg-stats{background:linear-gradient(135deg,#34D399 0%,#059669 50%,#064E3B 100%);box-shadow:0 12px 35px rgba(5,150,105,0.45);}
 .bg-os   {background:linear-gradient(135deg,#FB7185 0%,#DC2626 50%,#7F1D1D 100%);box-shadow:0 12px 35px rgba(220,38,38,0.45);}
@@ -194,6 +214,7 @@ body::after{
 .bg-micro{background:linear-gradient(135deg,#FBBF24 0%,#D97706 50%,#78350F 100%);box-shadow:0 12px 35px rgba(217,119,6,0.45);}
 .bg-ds   {background:linear-gradient(135deg,#F472B6 0%,#DB2777 50%,#831843 100%);box-shadow:0 12px 35px rgba(219,39,119,0.45);}
 
+/* النافذة المنبثقة */
 .modal-overlay{
   position:fixed;
   top:0;left:0;
@@ -305,13 +326,26 @@ body::after{
   .portal-header h1{font-size:1.7rem;}
   .champion-line{font-size:0.85rem;padding:6px 14px;}
 }
+
+/* كونفيتي */
+.confetti-particle {
+  position: fixed; width: 10px; height: 10px; pointer-events: none; z-index: 2000;
+  border-radius: 50%; animation: fallConfetti 1.2s ease-out forwards;
+}
+@keyframes fallConfetti {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(720deg); opacity: 0; }
+}
 </style>
 </head>
 <body>
 
+<div id="particles-bg"></div>
+
 <div class="app">
   <div class="portal-header">
-    <div class="mascot">🚀</div>
+    <button id="sound-btn-main" title="تشغيل/إيقاف الصوت">🔊</button>
+    <div class="mascot" id="mascot" title="اضغط علي!">🚀</div>
     <h1>مرحباً يا بطل!</h1>
     <div class="champion-line">🎓 طالب العلم المجتهد يستحق الأفضل</div>
     <p>✨ اختر مادتك وانطلق في رحلة المراجعة ✨</p>
@@ -359,6 +393,7 @@ body::after{
       <div class="card-footer"><span>🎯 ابدأ المهمة</span><span>←</span></div>
     </div>
 
+    <!-- بطاقة هياكل البيانات -->
     <div class="subject-card bg-ds" onclick="openMenu('ds', '🌐 هياكل البيانات')">
       <div class="card-badge">🌟 مميز</div>
       <div class="subject-icon">🌐</div>
@@ -387,33 +422,190 @@ body::after{
 </div>
 
 <script>
+/* ==================================================
+   1. النظام الصوتي (Audio System)
+   ================================================== */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio(){
+  if(!audioCtx){
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTone(freq, duration, type='sine', volume=0.15, delay=0){
+  if(!soundEnabled || !audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.start(t); osc.stop(t + duration + 0.05);
+}
+
+// أصوات مخصصة
+function sfxHover() { playTone(800, 0.05, 'sine', 0.05); } // صوت خفيف جداً عند التمرير
+function sfxClick() { playTone(400, 0.1, 'triangle', 0.2); playTone(600, 0.15, 'triangle', 0.2, 0.05); } // صوت ضغطة
+function sfxModalOpen() { playTone(300, 0.15, 'sine', 0.2); playTone(450, 0.2, 'sine', 0.2, 0.1); }
+function sfxModalClose() { playTone(450, 0.1, 'sine', 0.2); playTone(300, 0.15, 'sine', 0.2, 0.08); }
+function sfxMascot() { 
+  [523.25, 659.25, 783.99, 1046.5].forEach((f,i)=>playTone(f,0.2,'square',0.15,i*0.08)); 
+}
+
+document.getElementById('sound-btn-main').addEventListener('click', function(e) {
+  e.stopPropagation();
+  soundEnabled = !soundEnabled;
+  this.textContent = soundEnabled ? '🔊' : '🔇';
+  if(soundEnabled) { initAudio(); sfxClick(); }
+});
+
+// تفعيل الصوت عند أول تفاعل للمستخدم
+document.body.addEventListener('click', initAudio, { once: true });
+
+
+/* ==================================================
+   2. المؤثرات البصرية (Confetti & Particles)
+   ================================================== */
+function spawnConfetti(x, y, amount = 30){
+  const colors = ['#FDE047','#F472B6','#C084FC','#34D399','#60A5FA'];
+  for(let i=0; i<amount; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const angle = (Math.PI*2*i/amount) + Math.random()*0.5;
+    const dist = 50 + Math.random()*150;
+    p.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1300);
+  }
+}
+
+// الشخصية (الصاروخ) عند الضغط عليها
+document.getElementById('mascot').addEventListener('click', function(e) {
+  initAudio();
+  sfxMascot();
+  const rect = this.getBoundingClientRect();
+  spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2, 40);
+});
+
+// خلفية الجزيئات المتحركة
+function createParticles() {
+  const container = document.getElementById('particles-bg');
+  const particleCount = 20;
+  for(let i=0; i<particleCount; i++) {
+    let p = document.createElement('div');
+    p.style.position = 'absolute';
+    p.style.width = Math.random() * 4 + 'px';
+    p.style.height = p.style.width;
+    p.style.background = 'rgba(255,255,255,' + (Math.random() * 0.3 + 0.1) + ')';
+    p.style.borderRadius = '50%';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.top = Math.random() * 100 + 'vh';
+    p.style.boxShadow = '0 0 ' + (Math.random()*10) + 'px rgba(192,132,252,0.5)';
+    
+    // حركة عشوائية
+    let duration = Math.random() * 20 + 10;
+    let delay = Math.random() * -20;
+    p.style.animation = `floatParticle ${duration}s linear infinite ${delay}s`;
+    
+    container.appendChild(p);
+  }
+}
+
+// إضافة keyframes للجزيئات برمجياً
+const styleSheet = document.createElement("style");
+styleSheet.innerText = `
+  @keyframes floatParticle {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(20px, -30px); }
+    50% { transform: translate(-20px, 20px); }
+    75% { transform: translate(30px, 30px); }
+    100% { transform: translate(0, 0); }
+  }
+`;
+document.head.appendChild(styleSheet);
+createParticles();
+
+
+/* ==================================================
+   3. تأثير 3D Tilt للبطاقات (3D Card Effect)
+   ================================================== */
+const cards = document.querySelectorAll('.subject-card');
+const hasHover = window.matchMedia('(hover: hover)').matches; // فقط للأجهزة التي بها ماوس
+
+if (hasHover) {
+  cards.forEach(card => {
+    card.addEventListener('mousemove', handleTilt);
+    card.addEventListener('mouseleave', resetTilt);
+    card.addEventListener('mouseenter', sfxHover);
+  });
+}
+
+function handleTilt(e) {
+  const card = this;
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left; // x position within the element.
+  const y = e.clientY - rect.top;  // y position within the element.
+  
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+  
+  // حساب زاوية الميل (بحد أقصى 15 درجة)
+  const rotateX = ((y - centerY) / centerY) * -15;
+  const rotateY = ((x - centerX) / centerX) * 15;
+  
+  card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+}
+
+function resetTilt() {
+  this.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+  this.style.transition = `transform 0.5s ease-out`;
+  setTimeout(() => { this.style.transition = `all 0.1s ease-out`; }, 500);
+}
+
+
+/* ==================================================
+   4. منطق القائمة والنوافذ (Menu Logic)
+   ================================================== */
 function openMenu(subjectKey, subjectName){
+  initAudio();
+  sfxClick();
+  
   document.getElementById('modalTitle').innerText = subjectName;
 
   const btnMid1 = document.getElementById('btn-mid1');
   const btnMid2 = document.getElementById('btn-mid2');
   const btnFinal = document.getElementById('btn-final');
 
+  // إعادة تعيين الحالة الافتراضية
   btnMid1.style.display = 'block';
   btnMid2.style.display = 'block';
   btnFinal.style.display = 'block';
 
   btnMid1.innerHTML = '⚔️ جولة الميد';
   btnMid1.href = '#';
-  btnMid1.onclick = (e) => { e.preventDefault(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
+  btnMid1.onclick = (e) => { e.preventDefault(); sfxClick(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
 
   btnMid2.innerHTML = '🔥 جولة الميد الثاني';
   btnMid2.href = '#';
-  btnMid2.onclick = (e) => { e.preventDefault(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
+  btnMid2.onclick = (e) => { e.preventDefault(); sfxClick(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
 
   btnFinal.innerHTML = '👑 التحدي الكبير (Final)';
   btnFinal.href = '#';
-  btnFinal.onclick = (e) => { e.preventDefault(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
+  btnFinal.onclick = (e) => { e.preventDefault(); sfxClick(); alert('🚀 هذا القسم قيد الإعداد، قريباً!'); };
 
+  // تخصيص كل مادة
   if(subjectKey === 'math'){
     btnMid1.innerHTML = '⚔️ جولة الميد الأول';
     btnMid1.href = 'math1.html';
-    btnMid1.onclick = null;
+    btnMid1.onclick = () => sfxClick();
   }
   else if(subjectKey === 'stats'){
     btnMid1.innerHTML = '⚔️ جولة الميد الأول';
@@ -422,13 +614,19 @@ function openMenu(subjectKey, subjectName){
     btnMid2.style.display = 'none';
     btnMid1.innerHTML = '⚔️ جولة الميد';
     btnMid1.href = 'os.html';
-    btnMid1.onclick = null;
+    btnMid1.onclick = () => sfxClick();
   }
   else if(subjectKey === 'oop'){
     btnMid2.style.display = 'none';
     btnMid1.innerHTML = '⚔️ جولة الميد';
     btnMid1.href = 'oop.html';
-    btnMid1.onclick = null;
+    btnMid1.onclick = () => sfxClick();
+  }
+  else if(subjectKey === 'ds'){ // <--- ربط مادة هياكل البيانات هنا
+    btnMid2.style.display = 'none';
+    btnMid1.innerHTML = '⚔️ جولة الميد';
+    btnMid1.href = 'ds.html';
+    btnMid1.onclick = () => sfxClick();
   }
   else{
     btnMid2.style.display = 'none';
@@ -436,17 +634,24 @@ function openMenu(subjectKey, subjectName){
   }
 
   document.getElementById('menuModal').classList.add('active');
+  sfxModalOpen();
 }
 
 function closeMenu(){
+  sfxModalClose();
   document.getElementById('menuModal').classList.remove('active');
 }
 
 document.getElementById('menuModal').addEventListener('click', function(e){
   if(e.target === this) closeMenu();
 });
+
+// إضافة أصوات للـ Hover على أزرار القائمة
+document.querySelectorAll('.menu-btn').forEach(btn => {
+  btn.addEventListener('mouseenter', sfxHover);
+});
+
 </script>
-<a href="/opp">اذهب إلى صفحة opp</a>
-  
+
 </body>
 </html>

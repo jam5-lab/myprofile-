@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="google" content="notranslate">
+<title>🌐 هياكل البيانات — Data Structures Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#22d3ee; 
+    --pink:#f472b6; 
+    --green:#34d399; 
+    --red:#f87171;
+    --purple:#a78bfa; 
+    --gold:#fbbf24;
+    --bg-card:#0f172a; 
+    --line:rgba(255,255,255,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{
+    font-family:'Cairo',system-ui,sans-serif;min-height:100vh;
+    background:radial-gradient(circle at top right, #1e1b4b, #0b0f19 60%);
+    color:#fff;display:block;padding:20px 12px;overflow-x:hidden;
+  }
+  .app{width:100%;max-width:850px;margin:0 auto;}
+  .card{
+    background:rgba(15, 23, 42, 0.85);backdrop-filter:blur(12px);
+    border:1px solid rgba(34, 211, 238, 0.2);border-radius:24px;
+    padding:24px 20px;box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    position:relative;z-index:10;border-top: 4px solid var(--cyan);
+  }
+  .hidden{display:none!important}
+  h1{font-size:clamp(1.3rem,4vw,2rem);font-weight:900;line-height:1.4;margin-bottom:10px}
+  h1 span{color:var(--cyan);text-shadow: 0 0 15px rgba(34,211,238,0.5)}
+  .sub{color:#94a3b8;line-height:1.8;font-size:.95rem;margin-bottom:20px}
+  .badge{
+    display:inline-block;font-size:.8rem;font-weight:700;
+    background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.4);
+    color:var(--cyan);padding:6px 14px;border-radius:99px;margin-bottom:16px;
+  }
+  .btn{font-family:inherit;font-size:1rem;font-weight:700;border:none;border-radius:14px;padding:14px 20px;cursor:pointer;transition:.2s;touch-action:manipulation;width:100%}
+  .btn-primary{background:linear-gradient(135deg,#06b6d4,#3b82f6);color:#fff;box-shadow:0 6px 20px rgba(34,211,238,.3)}
+  .btn-primary:active{transform:scale(0.98)}
+  .btn-ghost{background:rgba(255,255,255,.05);color:#e2e8f0;border:1px solid var(--line)}
+  .btn-ghost:active{background:rgba(255,255,255,.1)}
+  .btn-skip{background:rgba(167,139,250,.15);color:#c4b5fd;border:1px solid rgba(167,139,250,.4)}
+  .btn-skip:active{background:rgba(167,139,250,.25)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .hint{margin-top:16px;text-align:center;font-size:.85rem;color:#94a3b8}
+  .hint b{color:var(--cyan)}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:.8rem;color:#cbd5e1;font-weight:600;flex-wrap:wrap;margin-bottom:12px}
+  #score-pill{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);color:var(--gold);padding:4px 10px;border-radius:99px}
+  #streak-pill{background:rgba(244,114,182,.15);border:1px solid rgba(244,114,182,.4);color:var(--pink);padding:4px 10px;border-radius:99px;font-weight:800;transition:transform .2s}
+  #streak-pill.active{transform:scale(1.08);box-shadow:0 0 15px rgba(244,114,182,.5)}
+  #section-pill{background:rgba(34,211,238,.15);border:1px solid rgba(34,211,238,.4);color:var(--cyan);padding:4px 10px;border-radius:99px;direction:rtl;font-size:.75rem}
+  
+  .timer-pill{
+    background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.4);color:#6ee7b7;
+    padding:4px 10px;border-radius:99px;direction:ltr;
+    font-variant-numeric:tabular-nums;font-weight:800;font-size:.85rem;transition:all .3s;
+  }
+  .timer-pill.warn{background:rgba(251,191,36,.15);border-color:rgba(251,191,36,.4);color:var(--gold)}
+  .timer-pill.danger{background:rgba(248,113,113,.15);border-color:rgba(248,113,113,.4);color:var(--red);animation:pulse-danger 1s infinite}
+  @keyframes pulse-danger { 0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.7); } 50% { box-shadow: 0 0 0 6px rgba(248,113,113,0); } }
+
+  #sound-btn{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#fff;padding:4px 10px;border-radius:99px;font-size:.9rem;cursor:pointer;font-family:inherit}
+
+  .progress{height:6px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden;margin:10px 0 16px}
+  .progress-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#22d3ee,#a78bfa);transition:width .3s ease;box-shadow: 0 0 10px rgba(34,211,238,0.5)}
+
+  .q-en{font-size:1.15rem;font-weight:800;line-height:1.5;direction:ltr;text-align:left;margin-bottom:8px;color:#f8fafc;white-space:pre-wrap}
+  .q-ar{font-size:0.9rem;color:#94a3b8;line-height:1.5;margin-bottom:16px;border-right:3px solid var(--cyan);padding-right:10px;background:rgba(34,211,238,0.05);padding:8px 12px;border-radius:0 8px 8px 0;}
+
+  .q-timer-wrap{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+  .q-timer-label{font-size:.8rem;color:#94a3b8;font-weight:700;min-width:45px;direction:ltr;text-align:left}
+  .q-timer-bar{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+  .q-timer-fill{height:100%;background:linear-gradient(90deg,#34d399,#fbbf24);border-radius:99px;transition:width 1s linear,background .3s}
+  .q-timer-fill.warn{background:linear-gradient(90deg,#fbbf24,#f87171)}
+  .q-timer-fill.danger{background:#f87171;animation:pulse-danger 0.5s infinite}
+
+  .option{
+    display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;direction:ltr;
+    font-family:'Courier New',Courier,monospace;font-size:1rem;font-weight:600;color:#e2e8f0;
+    background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.1);
+    border-radius:12px;padding:14px 16px;cursor:pointer;transition:.15s;margin-bottom:10px;
+    touch-action:manipulation;white-space:pre-wrap;line-height:1.4;
+  }
+  .option:active:not(:disabled){background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.5)}
+  .option .key{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.1);font-weight:800;font-size:.85rem;font-family:'Cairo',sans-serif}
+  .option.correct{background:rgba(52,211,153,.15);border-color:var(--green);animation:popCorrect .5s}
+  .option.correct .key{background:var(--green);color:#053b28}
+  .option.wrong{background:rgba(248,113,113,.15);border-color:var(--red);animation:shakeWrong .4s}
+  .option.wrong .key{background:var(--red);color:#450a0a}
+  .option:disabled{cursor:default}
+  @keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+  @keyframes shakeWrong{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  .feedback{margin-top:12px;padding:16px;border-radius:14px;font-size:.9rem;line-height:1.8;animation:fadeIn .3s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .feedback.ok{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.4)}
+  .feedback.no{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.4)}
+  .feedback.skip{background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.4)}
+  .feedback .title{font-weight:900;font-size:1rem;margin-bottom:8px;display:block}
+  .feedback.ok .title{color:var(--green)}
+  .feedback.no .title{color:var(--red)}
+  .feedback.skip .title{color:#c4b5fd}
+  .feedback .exp{padding:12px 14px;background:rgba(0,0,0,.3);border-radius:10px;margin:8px 0;font-size:.9rem;line-height:1.7;direction:rtl}
+  .feedback .exp b{color:var(--gold)}
+  .feedback .motive{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.1);color:#fef3c7;font-weight:700;font-size:.9rem}
+
+  .combo-banner{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+    font-size:2rem;font-weight:900;color:var(--cyan);
+    text-shadow:0 0 30px rgba(34,211,238,.8),0 0 60px rgba(34,211,238,.4);
+    pointer-events:none;z-index:2000;
+    transition:transform .4s cubic-bezier(0.175,0.885,0.32,1.275),opacity .4s;
+    opacity:0;text-align:center;direction:rtl;
+  }
+  .combo-banner.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+
+  .confetti-particle{
+    position:fixed;width:10px;height:10px;pointer-events:none;z-index:1500;
+    border-radius:50%;animation:fallConfetti 1.2s ease-out forwards;
+  }
+  @keyframes fallConfetti{
+    0%{transform:translate(0,0) rotate(0deg);opacity:1}
+    100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}
+  }
+
+  .ring-wrap{display:grid;place-items:center;margin:6px 0 16px}
+  .ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) 0deg,rgba(255,255,255,.05) 0deg);transition:background .7s ease}
+  .ring-inner{width:100px;height:100px;border-radius:50%;background:#0f172a;border:1px solid var(--line);display:grid;place-items:center;font-size:1.3rem;font-weight:900;color:var(--cyan)}
+  .result-title{text-align:center;font-size:1.4rem;font-weight:900;margin-bottom:6px}
+  .result-msg{text-align:center;color:#94a3b8;line-height:1.8;margin-bottom:12px;font-size:.95rem}
+  .score-line{text-align:center;font-size:1rem;margin-bottom:12px;color:#cbd5e1}
+  .score-line b{color:var(--cyan);font-size:1.2rem}
+  .time-line{text-align:center;font-size:.85rem;margin-bottom:18px;color:#94a3b8}
+  .time-line b{color:var(--cyan)}
+
+  .breakdown{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:18px}
+  .breakdown h3{font-size:.85rem;font-weight:800;margin-bottom:12px;color:#cbd5e1}
+  .bd-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.8rem;font-weight:600;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+  .bd-row:last-child{border-bottom:none}
+  .bd-section{flex:none;min-width:45px;direction:ltr;background:rgba(34,211,238,.1);color:var(--cyan);padding:2px 6px;border-radius:6px;font-weight:800;font-size:.7rem;text-align:center}
+  .bd-title{flex:1;font-size:.8rem}
+  .bd-bar{flex:none;width:80px;height:5px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+  .bd-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#22d3ee,#34d399)}
+  .bd-score{flex:none;min-width:40px;text-align:center;font-weight:800;font-size:.8rem}
+
+  .review-list{max-height:60vh;overflow-y:auto;padding-left:4px;margin-bottom:16px}
+  .review-list::-webkit-scrollbar{width:5px}
+  .review-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px}
+  .review-item{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .review-section{display:inline-block;background:rgba(34,211,238,.1);color:var(--cyan);padding:2px 8px;border-radius:6px;font-weight:800;font-size:.7rem;direction:ltr;margin-bottom:8px}
+  .review-en{font-weight:800;font-size:.95rem;line-height:1.5;margin-bottom:4px;direction:ltr;text-align:left;white-space:pre-wrap}
+  .review-ar{font-size:.8rem;color:#94a3b8;margin-bottom:8px}
+  .review-answer{font-size:.85rem;color:#6ee7b7;font-weight:700;background:rgba(52,211,153,.1);padding:6px 10px;border-radius:6px;margin-bottom:8px;direction:ltr;text-align:left;white-space:pre-wrap;font-family:monospace}
+  .review-exp{font-size:.8rem;color:#cbd5e1;line-height:1.7;background:rgba(0,0,0,.2);padding:8px 12px;border-radius:8px}
+  .review-exp b{color:var(--gold)}
+
+  #toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120%);background:var(--cyan);color:#0f172a;font-weight:800;padding:10px 20px;border-radius:12px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:.3s;z-index:999;text-align:center;max-width:90vw}
+  #toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <section id="screen-home" class="card">
+    <div class="badge">🌐 Data Structures · Final Prep</div>
+    <h1>لعبة <span>هياكل البيانات</span> — التحدي الشامل</h1>
+    <p class="sub">أسئلة شاملة من (د. مها ظفر + التجميعات + الفصول 1-5).</p>
+    <div style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:10px 14px;margin-bottom:20px;font-size:.85rem;color:#93c5fd;line-height:1.7">
+      🔊 <b>مؤثرات صوتية</b> وتنبيهات للوقت.<br>
+      🔥 <b>نظام السلاسل (Streak)</b> — كل 3 إجابات متتالية صحيحة = مكافأة!<br>
+      ⏱ <b>مؤقت ذكي</b> — يوجد صوت "تكات" في آخر 10 ثوانٍ من كل سؤال.<br>
+      ⏭ <b>زر التخطي</b> — يمكنك تخطي أي سؤال.
+    </div>
+    <button class="btn btn-primary" id="btn-start">ابدأ التحدي 🚀</button>
+    <div class="hint">إجمالي الأسئلة: <b id="q-count">0</b></div>
+  </section>
+
+  <section id="screen-quiz" class="card hidden">
+    <div class="topbar">
+      <span id="counter">السؤال 1 من 1</span>
+      <span id="section-pill">CH</span>
+      <span id="streak-pill">🔥 0</span>
+      <span id="global-timer" class="timer-pill">⏱ 120:00</span>
+      <span id="score-pill">⭐ 0</span>
+      <button id="sound-btn" title="الصوت">🔊</button>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+    
+    <div id="question-en" class="q-en"></div>
+    <div id="question-ar" class="q-ar"></div>
+
+    <div class="q-timer-wrap">
+      <span class="q-timer-label">⏳ <span id="q-timer-text">60s</span></span>
+      <div class="q-timer-bar"><div id="q-timer-fill" class="q-timer-fill"></div></div>
+    </div>
+    
+    <div id="options"></div>
+    
+    <div id="feedback" class="feedback hidden"></div>
+    <button class="btn btn-skip" id="btn-skip" style="margin-top:10px">⏭ تخطي السؤال</button>
+    <button class="btn btn-primary hidden" id="btn-next" style="margin-top:12px">السؤال التالي ←</button>
+    <button class="btn btn-primary hidden" id="btn-finish" style="margin-top:12px">عرض النتيجة 🏁</button>
+  </section>
+
+  <section id="screen-result" class="card hidden">
+    <div class="ring-wrap">
+      <div class="ring" id="ring"><div class="ring-inner" id="result-pct">0%</div></div>
+    </div>
+    <div class="result-title" id="result-title">—</div>
+    <p class="result-msg" id="result-msg">—</p>
+    <p class="score-line">النتيجة: <b id="result-score">0 / 0</b></p>
+    <p class="time-line">⏱ الوقت المستغرق: <b id="result-time">—</b></p>
+    <p class="time-line">🔥 أطول سلسلة: <b id="result-streak">0</b></p>
+    <p class="time-line">⏭ الأسئلة المتخطاة: <b id="result-skipped">0</b></p>
+    <div class="breakdown" id="breakdown"></div>
+    <button class="btn btn-primary" id="btn-retry">إعادة المحاولة 🔁</button>
+    <button class="btn btn-ghost" id="btn-review-wrong" style="margin-top:8px">🎯 مراجعة الأخطاء</button>
+    <button class="btn btn-ghost" id="btn-review-full" style="margin-top:8px">📖 مراجعة شاملة</button>
+    <button class="btn btn-ghost" id="btn-back-portal" style="margin-top:8px">↩ العودة للبوابة</button>
+  </section>
+
+  <section id="screen-review" class="card hidden">
+    <h1 style="font-size:1.2rem;margin-bottom:6px">📖 <span id="review-title">مراجعة</span></h1>
+    <div id="review-list" class="review-list"></div>
+    <button class="btn btn-ghost" id="btn-review-back" style="margin-top:8px">← رجوع للنتيجة</button>
+  </section>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============ نظام الأصوات ============ */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio(){
+  if(!audioCtx){
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){}
+  }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playTone(freq, duration, type='sine', volume=0.25, delay=0){
+  if(!soundEnabled || !audioCtx) return;
+  const t = audioCtx.currentTime + delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  gain.gain.setValueAtTime(volume, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.start(t); osc.stop(t + duration + 0.05);
+}
+
+function sfxCorrect(){ playTone(523.25,0.15,'sine',0.3,0); playTone(659.25,0.15,'sine',0.3,0.1); playTone(783.99,0.35,'sine',0.3,0.2); }
+function sfxWrong(){ playTone(220,0.2,'sawtooth',0.2,0); playTone(165,0.35,'sawtooth',0.2,0.15); }
+function sfxSkip(){ playTone(440,0.08,'triangle',0.2,0); playTone(330,0.12,'triangle',0.2,0.08); }
+function sfxStart(){ playTone(392,0.1,'sine',0.25,0); playTone(523.25,0.1,'sine',0.25,0.08); playTone(659.25,0.2,'sine',0.25,0.16); }
+function sfxCombo(){ playTone(659.25,0.1,'square',0.25,0); playTone(880,0.1,'square',0.25,0.1); playTone(1046.5,0.25,'square',0.25,0.2); }
+function sfxWin(){ [523.25,659.25,783.99,1046.5,1318.51].forEach((f,i)=>playTone(f,0.25,'sine',0.3,i*0.13)); }
+function sfxLose(){ playTone(392,0.2,'sine',0.2,0); playTone(329.63,0.2,'sine',0.2,0.15); playTone(261.63,0.4,'sine',0.2,0.3); }
+
+// صوت التكتكة للعد التنازلي
+function sfxTick(){ playTone(1200, 0.05, 'square', 0.15, 0); }
+function sfxTickDanger(){ playTone(1600, 0.08, 'square', 0.25, 0); }
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+  if(soundEnabled) initAudio();
+}
+
+function showCombo(text){
+  const b = document.getElementById('combo-banner');
+  b.textContent = text;
+  b.classList.add('show');
+  sfxCombo();
+  setTimeout(()=>b.classList.remove('show'), 1200);
+}
+
+function spawnConfetti(x, y){
+  const colors = ['#22d3ee','#f472b6','#34d399','#fbbf24','#a78bfa'];
+  for(let i=0; i<18; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    const angle = (Math.PI*2*i/18) + Math.random()*0.5;
+    const dist = 80 + Math.random()*120;
+    p.style.setProperty('--dx', Math.cos(angle)*dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle)*dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 1300);
+  }
+}
+
+const COMBO_MESSAGES = ["🔥 سلسلة نارية!","⚡ أنت في القمة!","🌟 لا يمكن إيقافك!","💎 أداء أسطوري!","🚀 انطلق بقوة!"];
+
+/* ============ بيانات الأسئلة (شاملة الكل) ============ */
+const SECTION_TITLES = {
+  "MAHA":"د. مها ظفر",
+  "CL":"التجميعات",
+  "CHAP":"الفصول (1-5)"
+};
+
+// دمج جميع الأسئلة في مصفوفة واحدة
+const QUESTIONS = [
+  /* ========== أسئلة دكتورة مها ظفر (MAHA) ========== */
+  {s:"MAHA", t:45, en:"Data Structure is a data organization and management that affects the program performance in terms of:", ar:"هيكل البيانات هو تنظيم وإدارة البيانات الذي يؤثر على أداء البرنامج من حيث:", o:["Time.","Space.","Both above.","None of the above."], c:2, e:"هياكل البيانات تؤثر على وقت التنفيذ (Time) وعلى المساحة المستخدمة في الذاكرة (Space)."},
+  {s:"MAHA", t:45, en:"Which of the following is a non-linear data structure?", ar:"أي من التالي يعتبر هيكل بيانات غير خطي؟", o:["queue","stack","linked List","binary tree"], c:3, e:"الشجرة (Tree) هي هيكل غير خطي، بينما الطابور والمكدس والقائمة خطية."},
+  {s:"MAHA", t:45, en:"What is a pointer in C++:", ar:"ما هو المؤشر في لغة سي بلس بلس؟", o:["A data type that holds a memory address","A type of array.","A Function","All of the above."], c:0, e:"المؤشر هو نوع بيانات يحمل عنوان ذاكرة (Memory Address)."},
+  {s:"MAHA", t:45, en:"The declaration of a variable of pointer to pointer to integer type is:", ar:"إعلان متغير من نوع مؤشر لمؤشر إلى عدد صحيح هو:", o:["int **p;","int &p;","int *&p;","int *p;"], c:0, e:"النجمتان (**) تعنيان مؤشر لمؤشر (Pointer to Pointer)."},
+  {s:"MAHA", t:45, en:"If head == nullptr, this means:", ar:"إذا كان head == nullptr، فهذا يعني:", o:["The list contains one node","The linked list is empty","The first node contains zero","The last node is missing"], c:1, e:"NULL تعني أن القائمة فارغة ولا تحتوي على أي عقد."},
+  {s:"MAHA", t:45, en:"What is the main purpose of a struct in C++?", ar:"ما هو الغرض الرئيسي من struct في C++؟", o:["To repeat a block of code","To store only numerical values","To group related data items of different data types","To create dynamic arrays"], c:2, e:"الهيكل (Struct) يجمع بيانات مختلفة النوع تحت اسم واحد."},
+  {s:"MAHA", t:45, en:"Which of the following correctly defines a structure named Car with an integer member named model?", ar:"أي مما يلي يعرف بشكل صحيح هيكلاً باسم Car يحتوي على عضو عدد صحيح باسم model؟", o:["struct Car {int model; };","structure Car {int model;};","struct {int model;} Car","struct Car (int model;)"], c:0, e:"الصيغة الصحيحة هي struct Name { members }; مع الفاصلة المنقوطة."},
+  {s:"MAHA", t:45, en:"Which of the following is NOT an operation on a data structure?", ar:"أي من العمليات التالية ليست من عمليات هيكل البيانات؟", o:["insertion","deletion","compilation","searching"], c:2, e:"الترجمة (Compilation) هي عملية بناء الكود وليست عملية على هيكل البيانات."},
+  {s:"MAHA", t:45, en:"Which stack operation adds a new element?", ar:"أي عملية في المكدس تضيف عنصراً جديداً؟", o:["add( )","insert( )","pop( )","push( )"], c:3, e:"الإضافة في المكدس تسمى Push."},
+  {s:"MAHA", t:45, en:"If a stack is empty and top is initialized to -1, what condition checks whether the stack is empty?", ar:"إذا كان المكدس فارغاً وتم تهيئة top إلى -1، فما هو الشرط الذي يتحقق من أنه فارغ؟", o:["top == 0","top == 1","top == -1","top == MAX"], c:2, e:"عندما يكون top = -1 فهذا يعني أن المكدس فارغ."},
+  {s:"MAHA", t:45, en:"How do you access the member city of a structure object named country?", ar:"كيف تصل إلى العضو city لهيكل اسمه country؟", o:["country.city;","*country.city;","country->city;","city.country;"], c:0, e:"نستخدم النقطة (.) للوصول لأعضاء الهيكل العادي."},
+  {s:"MAHA", t:45, en:"In Circular linked lists, the last node points to NULL.", ar:"في القوائم المترابطة الدائرية، تشير العقدة الأخيرة إلى NULL.", o:["TRUE","FALSE"], c:1, e:"في القائمة الدائرية، العقدة الأخيرة تشير إلى العقدة الأولى (head) وليس NULL."},
+  {s:"MAHA", t:45, en:"To visit every node in a singly linked list, we normally follow the next pointers one by one.", ar:"لزيارة كل عقدة في قائمة مترابطة مفردة، نتبع عادةً مؤشرات next واحداً تلو الآخر.", o:["TRUE","FALSE"], c:0, e:"هذه هي الطريقة الوحيدة للتنقل في القائمة المفردة."},
+  {s:"MAHA", t:45, en:"Deletion in linked lists requires the shifting of data.", ar:"الحذف في القوائم المترابطة يتطلب إزاحة البيانات.", o:["TRUE","FALSE"], c:1, e:"الحذف في القوائم لا يتطلب إزاحة، فقط تغيير المؤشرات (على عكس المصفوفات)."},
+  {s:"MAHA", t:45, en:"A stack follows FIFO ordering.", ar:"المكدس يتبع ترتيب FIFO.", o:["TRUE","FALSE"], c:1, e:"المكدس يتبع LIFO (Last In First Out)."},
+  {s:"MAHA", t:60, en:"The output after running: int A=100, B=200; int *p1=&A; int *p2=&B; *p1 = *p2 - 50; cout << *p1 << ' ' << A << ' ' << *p2;", ar:"ما هو ناتج الكود التالي؟", o:["100 100 200","150 150 200","100 150 200","150 100 200"], c:1, e:"قيمة B هي 200، نطرح 50 تصبح 150 وتوضع في A. الطباعة: *p1 (150)، A (150)، *p2 (200)."},
+  {s:"MAHA", t:60, en:"Evaluate the following postfix expression: 6 2 * 3 +", ar:"قم بتقييم تعبير postfix التالي: 6 2 * 3 +", o:["15","18","21","12"], c:0, e:"6 * 2 = 12، ثم 12 + 3 = 15."},
+  
+  /* ========== أسئلة التجميعات (CL) ========== */
+  {s:"CL", t:45, en:"Which of the following correctly declares an array?", ar:"أي مما يلي يعلن بشكل صحيح عن مصفوفة؟", o:["int array[10];","int array[ ];","array{10};","int array{10};"], c:0, e:"الصيغة القياسية هي النوع ثم الاسم ثم الحجم بين أقواس مربعة."},
+  {s:"CL", t:45, en:"What is the most efficient way to display out arrays?", ar:"ما هي الطريقة الأكثر كفاءة لعرض المصفوفات؟", o:["functions","loops","pointers"], c:1, e:"الحلقات التكرارية (Loops) هي الأفضل للوصول لكل العناصر."},
+  {s:"CL", t:45, en:"Which of the following gives the memory address of the first element in array?", ar:"أي مما يلي يعطي عنوان الذاكرة للعنصر الأول في المصفوفة؟", o:["array[0];","array[1];","array(2);","array;"], c:3, e:"اسم المصفوفة يمثل عنوان أول عنصر فيها."},
+  {s:"CL", t:45, en:"What do arrays?", ar:"ماذا تفعل المصفوفات؟", o:["Hold addresses","Hold values under a single name","Hold one value"], c:1, e:"المصفوفة تحمل قيماً متعددة تحت اسم واحد."},
+  {s:"CL", t:45, en:"The operator used for pointer is", ar:"العامل المستخدم للمؤشر هو:", o:["*","&","->","%"], c:0, e:"النجمة (*) تستخدم لتعريف المؤشر أو الوصول للقيمة."},
+  {s:"CL", t:45, en:"Which of the following is illegal?", ar:"أي من التالي غير قانوني؟", o:["int *ip;","int i, *ip = i;","double i=10.0; double* dp = &i;","int *pi = 0;"], c:1, e:"لا يمكن إسناد قيمة متغير لمؤشر مباشرة، يجب إسناد عنوانه (&i)."},
+  {s:"CL", t:45, en:"Which of the following is illegal?", ar:"أي من التالي غير قانوني؟", o:["int x[2]={1,2},y[2]={3,4};","int x[2]={1,2},*p=x;","int x[2]={1,2},p=x;","int x[2]={1,2},*p=&x[0];"], c:2, e:"p هنا متغير عادي وليس مؤشر، فلا يمكنه استقبال عنوان المصفوفة."},
+  {s:"CL", t:45, en:"What is the output of: int a=5, b=10, c=15; int *arr[] = {&a, &b, &c}; cout << *arr;", ar:"ما هو إخراج الكود؟", o:["5","10","15","it will return error"], c:0, e:"*arr تشير لأول عنصر في مصفوفة المؤشرات وهو عنوان a. ولطباعة القيمة نستخدم **arr. (ملاحظة: حسب سياق السؤال، الإجابة 5)."},
+  {s:"CL", t:45, en:"Complex data structures can be formed by defining ...... of ......", ar:"يمكن تشكيل هياكل بيانات معقدة من خلال تعريف ...... من ......", o:["arrays / structs","structs / arrays","pointers / arrays","structs / pointers"], c:0, e:"مصفوفة من الهياكل (Array of Structs)."},
+  {s:"CL", t:45, en:"What's the best type of sorts when we have half sorted array?", ar:"ما هو أفضل نوع من عمليات الفرز عندما يكون لدينا مصفوفة نصف مرتبة؟", o:["Bubble Sort","Insertion Sort","Selection Sort","None of above"], c:1, e:"فرز الإدراج (Insertion Sort) ممتاز مع المصفوفات شبه المرتبة."},
+  {s:"CL", t:45, en:"Whats the big O of unsorted array when deleting minimum number?", ar:"ما هو الـ Big O لمصفوفة غير مرتبة عند حذف أصغر رقم؟", o:["O(1)","O(1)*","O(n)","O(n²)"], c:2, e:"نحتاج للبحث عن الأصغر أولاً (O(n)) ثم الحذف."},
+  {s:"CL", t:45, en:"Data storage & operations encapsulated by an .... ?", ar:"تخزين البيانات والعمليات المغلفة بواسطة ....؟", o:["Array","Data Structure","Abstract Data Types ADT","All of Above"], c:2, e:"نوع البيانات المجرد (ADT) يغلف البيانات والعمليات."},
+  {s:"CL", t:45, en:"The size of this array n[]=[0,0,0,0,0] is", ar:"حجم هذه المصفوفة هو:", o:["5","0","N","None of above"], c:0, e:"عدد العناصر هو 5."},
+  {s:"CL", t:45, en:"Total memory of float n[5]; array is ?", ar:"إجمالي الذاكرة لمصفوفة float n[5]; هو؟", o:["16","20","12","4"], c:1, e:"الـ float يأخذ 4 بايت، إذن 5 * 4 = 20 بايت."},
+  {s:"CL", t:45, en:"Stack is", ar:"المكدس هو:", o:["LIFO","FILO","FIFO","LILO"], c:0, e:"Last In First Out."},
+  {s:"CL", t:45, en:"A Boolean value indicating whether no elements are stored", ar:"قيمة منطقية تشير إلى ما إذا لم يتم تخزين أي عناصر:", o:["Size()","Top()","isFull()","isEmpty()"], c:3, e:"isEmpty() تتحقق مما إذا كان فارغاً."},
+  {s:"CL", t:45, en:"A pointer can contain", ar:"يمكن أن يحتوي المؤشر على:", o:["A variable value","A constant value","A memory address"], c:2, e:"المؤشر يحتوي على عنوان ذاكرة."},
+  {s:"CL", t:45, en:"Which code is correct To insert a new node N between two nodes N1 and N2", ar:"أي كود هو الصحيح لإدراج عقدة جديدة N بين عقدتين N1 و N2؟", o:["N->next = N2; N2->precede = N1;","N1->next = N2; N2->precede = N;","N1->next = N; N->next = N2;"], c:2, e:"نربط N1 بـ N، ثم N بـ N2."},
+  {s:"CL", t:45, en:"while (curr->next!=null) curr = curr->next; is used to", ar:"يتم استخدام الكود التالي لـ:", o:["Insert newNode as the last node","check if there are no nodes in the list","Traverse the List to Find the last node in the list"], c:2, e:"لإيجاد العقدة الأخيرة."},
+  {s:"CL", t:45, en:"The statement : if (!head) means", ar:"العبارة if (!head) تعني:", o:["if head != NULL","if the list is not empty","if the list is empty"], c:2, e:"!head تعني أن head يساوي NULL (القائمة فارغة)."},
+  {s:"CL", t:45, en:"STUDENT Student[10]; means", ar:"العبارة STUDENT Student[10]; تعني:", o:["Students is an array of structure of type STUDENT","STUDENT is a structure","All the statements"], c:2, e:"كل العبارات صحيحة، فهي مصفوفة من نوع هيكل STUDENT."},
+  {s:"CL", t:45, en:"When a node is a linked list has its next pointing to NULL (value of next =NULL)", ar:"عندما تكون العقدة في قائمة مترابطة، يشير مؤشر next الخاص بها إلى NULL:", o:["This is the first node","Can be any node in the list","This is the last node"], c:2, e:"هذه هي العقدة الأخيرة."},
+  {s:"CL", t:45, en:"The structures can store", ar:"يمكن للهياكل أن تخزن:", o:["One type of data","No data","Combination of data types"], c:2, e:"مزيج من أنواع البيانات المختلفة."},
+  {s:"CL", t:45, en:"The operator new used with lists means", ar:"العامل new المستخدم مع القوائم يعني:", o:["Create a new node","Allocate memory and create a new node","Allocate memory for a node"], c:1, e:"يحجز الذاكرة وينشئ العقدة."},
+  {s:"CL", t:45, en:"Which code is correct To delete a node from the head of the list", ar:"أي كود هو الصحيح لحذف عقدة من رأس القائمة؟", o:["curr = head->next; delete head;","delete head;","curr = head->next; delete head; head = curr;"], c:2, e:"نحفظ التالي، نحذف الحالي، ثم نحدث الرأس."},
+  {s:"CL", t:45, en:"When current->next = head, we have", ar:"عندما current->next = head، لدينا:", o:["An empty list","Just one node in the list","The last node of a circular list"], c:2, e:"هذه هي العقدة الأخيرة في قائمة دائرية."},
+  {s:"CL", t:45, en:"Which code is correct To insert a new node N in the head of the list", ar:"أي كود هو الصحيح لإدراج عقدة جديدة N في رأس القائمة؟", o:["N->next = head;","head = N; N->next = head;","N1 = head; head = N; head->next = N1;"], c:2, e:"نحفظ الرأس القديم، نجعل N هو الرأس، ونربطه بالقديم."},
+  {s:"CL", t:45, en:"The array is better than the structure", ar:"المصفوفة أفضل من الهيكل:", o:["True","False"], c:1, e:"كل منهما له استخداماته، لا يوجد أفضلية مطلقة."},
+  {s:"CL", t:45, en:"What is the correct way to initialize values in an array?", ar:"ما هي الطريقة الصحيحة لتهيئة القيم في مصفوفة؟", o:["arr [5] = {1, 3, 7, 9, 2, 6};","arr[ ] = {4, 4, 0, 3};","arr[6]={1,2,3,4,5};"], c:1, e:"التهيئة بدون تحديد الحجم صحيحة."},
+  {s:"CL", t:45, en:"Based on struct st1 { float ab; int cd; } struct st2 { st1 y; } Choose the correct answer:", ar:"بناءً على الكود، اختر الإجابة الصحيحة:", o:["st1 quiz; quiz.y.ab = 13.5; quiz.y.cd = 4;","st2 quiz; quiz.y.ab = 5; quiz.y.cd = 2.5;","st2 quiz; quiz.y.ab = 13; quiz.y.cd = 5;","quiz.y.ab = 11.2; quiz.y.cd = 8;"], c:2, e:"يجب تعريف المتغير من نوع st2 للوصول للهيكل الداخلي y."},
+  {s:"CL", t:45, en:"Regarding the following initialization: char string1[] = 'exam_lab',", ar:"بخصوص التهيئة التالية:", o:["the size of string1 is equal to 10","the size of string1 is equal to 9","the size of string1 is equal to 8"], c:1, e:"8 أحرف + 1 لـ Null terminator = 9."},
+  {s:"CL", t:45, en:"Choose the correct fragment of C++ code", ar:"اختر المقطع الصحيح من كود C++:", o:["float x; int *y; y = &x;","float x, *y; x = 17; y = &x;","float *x,y; x = 10.2; y = x;","float x, y; y = &x;"], c:1, e:"يجب أن يكون المؤشر من نفس نوع المتغير."},
+  {s:"CL", t:45, en:"These index of an array must be an integer or an integer expression", ar:"فهرس المصفوفة يجب أن يكون عدداً صحيحاً أو تعبيراً صحيحاً.", o:["True","False"], c:0, e:"صحيح، لا يمكن أن يكون نصاً أو عدداً عشرياً."},
+  {s:"CL", t:45, en:"The operator delete is not necessary to complete the total deletion of the node from the memory", ar:"العامل delete ليس ضرورياً لإكمال الحذف الكلي للعقدة من الذاكرة.", o:["True","False"], c:1, e:"خطأ، يجب استخدام delete لتحرير الذاكرة."},
+  {s:"CL", t:45, en:"Array based implementations require less memory than a pointer based ones", ar:"تطبيقات المصفوفة تتطلب ذاكرة أقل من التطبيقات القائمة على المؤشرات.", o:["True","False"], c:0, e:"صحيح، المؤشرات تحتاج مساحة إضافية لتخزين العناوين."},
+  {s:"CL", t:45, en:"Insertion and deletions in arrays require shifting of data", ar:"الإدراج والحذف في المصفوفات يتطلب إزاحة البيانات.", o:["True","False"], c:0, e:"صحيح، يجب إزاحة العناصر."},
+  {s:"CL", t:45, en:"The operator & means address of a variable", ar:"العامل & يعني عنوان المتغير.", o:["True","False"], c:0, e:"صحيح."},
+  {s:"CL", t:45, en:"linked list is an indexed set of variables", ar:"القائمة المترابطة هي مجموعة مفهرسة من المتغيرات.", o:["True","False"], c:1, e:"خطأ، القائمة ليست مفهرسة (لا يمكن الوصول للعنصر مباشرة)."},
+  {s:"CL", t:45, en:"In linked lists, the access time is constant", ar:"في القوائم المترابطة، وقت الوصول ثابت.", o:["True","False"], c:1, e:"خطأ، وقت الوصول هو O(n)."},
+  {s:"CL", t:45, en:"The operator * means address of a pointer", ar:"العامل * يعني عنوان المؤشر.", o:["True","False"], c:1, e:"خطأ، * تعني Dereference (القيمة التي يشير إليها)."},
+  {s:"CL", t:45, en:"Insertions and deletions in a list do not require traversing the list", ar:"الإدراج والحذف في القائمة لا يتطلب المرور عبر القائمة.", o:["True","False"], c:1, e:"خطأ، للوصول للموقع المطلوب يجب المرور عبر القائمة (Traverse)."},
+  {s:"CL", t:45, en:"Two- dimensional arrays always have the same number of rows and columns", ar:"المصفوفات ثنائية الأبعاد دائماً لها نفس عدد الصفوف والأعمدة.", o:["True","False"], c:1, e:"خطأ، يمكن أن تكون 2x3 أو 3x5."},
+  {s:"CL", t:45, en:"When the last node = NULL, it signifies an empty list", ar:"عندما تكون العقدة الأخيرة = NULL، فهذا يدل على قائمة فارغة.", o:["True","False"], c:1, e:"خطأ، يدل على نهاية القائمة وليس أنها فارغة."},
+  {s:"CL", t:45, en:"int *ip; is invalid pointer declaration", ar:"العبارة int *ip; هي إعلان مؤشر غير صالح.", o:["True","False"], c:1, e:"خطأ، هي إعلان صالح تماماً."},
+  {s:"CL", t:45, en:"There is only one NULL pointer in a doubly linked list", ar:"هناك مؤشر NULL واحد فقط في قائمة مترابطة مزدوجة.", o:["True","False"], c:1, e:"خطأ، يوجد مؤشران (في البداية والنهاية)."},
+  {s:"CL", t:45, en:"All elements of an array are of the same type", ar:"جميع عناصر المصفوفة من نفس النوع.", o:["True","False"], c:0, e:"صحيح."},
+  {s:"CL", t:45, en:"In linked lists, the only way to access an item is to traverse the list", ar:"في القوائم المترابطة، الطريقة الوحيدة للوصول إلى عنصر هي المرور عبر القائمة.", o:["True","False"], c:0, e:"صحيح."},
+
+  /* ========== الفصول (CHAP) - الـ 22 سؤالاً ========== */
+  {s:"CHAP", t:45, en:"Which of the following correctly declares an array?", ar:"أي مما يلي يعتبر إعلاناً صحيحاً لمصفوفة؟", o:["int array[10];","int array[];","array{10};","int array{10};"], c:0, e:"يتم تعريف المصفوفة بتحديد النوع، الاسم، ثم الحجم بين قوسين مربعين."},
+  {s:"CHAP", t:45, en:"What is the most efficient way to display out arrays?", ar:"ما هي الطريقة الأكثر كفاءة لطباعة عناصر المصفوفة؟", o:["functions","loops","pointers"], c:1, e:"لأن المصفوفة تحتوي على عناصر متعددة، نستخدم حلقات التكرار للوصول لكل عنصر."},
+  {s:"CHAP", t:45, en:"int n[] = {1, 2, 3, 4, 5}; means that the size of array 'n' equals...", ar:"المصفوفة int n[] = {1, 2, 3, 4, 5}; تعني أن حجم المصفوفة 'n' يساوي...", o:["4","5","6","None"], c:1, e:"عندما لا نحدد الحجم، يقوم المترجم بحساب عدد العناصر، وهي 5 عناصر."},
+  {s:"CHAP", t:45, en:"char string1[] = 'exam_lab'; The size of string1 is equal to:", ar:"حجم المصفوفة النصية string1 يساوي:", o:["8","9","10","None"], c:1, e:"الكلمة تحتوي على 8 أحرف، + 1 حرف إضافي في النهاية (Null character) يمثل نهاية النص."},
+  {s:"CHAP", t:45, en:"In a 2D array b[2][2] = {{1}, {3, 4}};, the element b[0][1] will be:", ar:"في المصفوفة ثنائية الأبعاد، العنصر b[0][1] سيكون:", o:["0","1","3","None"], c:0, e:"لأن الصف الأول تم تهيئته بعنصر واحد فقط (1)، والخانة الثانية سيكملها المترجم تلقائياً بالصفر."},
+  {s:"CHAP", t:45, en:"int &ip; is a valid pointer declaration. (True/False)", ar:"هل int &ip; إعلان صحيح لمؤشر؟", o:["True","False"], c:1, e:"الرمز & يعني 'مرجع' (Reference)، بينما المؤشر يُعلن باستخدام النجمة *."},
+  {s:"CHAP", t:45, en:"int a; int *p = &a; The output of cout << &p << endl; is:", ar:"إذا كان لدينا الكود، فإن ناتج cout << &p; هو:", o:["Value of a","Value of p","Address of 'p'","Address of 'a'"], c:2, e:"المؤشر p هو نفسه متغير، وله عنوان في الذاكرة. الرمز & يجلب عنوان المتغير نفسه."},
+  {s:"CHAP", t:45, en:"If int a = 20; int *pa = &a; int **pp = &pa; what is the output of **pp?", ar:"ما هو ناتج طباعة **pp؟", o:["20","Address of a","Address of pa","Error"], c:0, e:"pp يشير إلى pa، و pa يشير إلى a. النجمة الأولى تصل إلى pa، والثانية تصل إلى قيمة a وهي 20."},
+  {s:"CHAP", t:45, en:"Which of the following is illegal?", ar:"أي مما يلي يعتبر خطأ برمجياً (غير قانوني)؟", o:["int *ip;","int i, *ip = i;","double i=10.0; double* dp = &i;","int *pi = 0;"], c:1, e:"المؤشر يجب أن يأخذ 'عنوان' متغير، وليس 'قيمة' متغير. الصحيح هو *ip = &i."},
+  {s:"CHAP", t:45, en:"By defining a structure, new data types can be created. (True/False)", ar:"بتعريف الهيكل (Struct)، يتم إنشاء أنواع بيانات جديدة.", o:["True","False"], c:0, e:"الهيكل يسمح لنا بإنشاء نوع بيانات مخصص."},
+  {s:"CHAP", t:45, en:"How do you access the month member of a nested date structure inside an Employee variable emp1?", ar:"كيف تصل إلى عضو month في هيكل date المتداخل داخل متغير Employee المسمى emp1؟", o:["emp1.month","emp1.date.month","date.emp1.month","emp1->date.month"], c:1, e:"نستخدم النقطة . للوصول للهيكل الخارجي ثم النقطة . للوصول للهيكل الداخلي."},
+  {s:"CHAP", t:60, en:"Write the C++ code to define a Book structure with (title, author_id, pages, pub_year).", ar:"اكتب كود C++ لتعريف هيكل كتاب (اختر الخيار الأقرب للصيغة الصحيحة):", o:["struct Book { string title; int author_id; int pages; int pub_year; };","struct Book { char title; int id; int pages; };","Book struct { string title, int id, int pages, int year };","struct Book (string title; int id; int pages; int year);"], c:0, e:"الصيغة القياسية تتضمن كلمة struct ثم الاسم ثم الأقواس المعقوفة وفاصلة منقوطة."},
+  {s:"CHAP", t:45, en:"The last node in a singly linked list has a next pointer set to:", ar:"العقدة الأخيرة في القائمة المرتبطة المفردة يكون مؤشر next فيها مضبوطاً على:", o:["The head node","Itself","NULL","None"], c:2, e:"للدلالة على نهاية القائمة."},
+  {s:"CHAP", t:45, en:"What is the output of this code (Insert at beginning)? newNode->data = 10; curr = head; head = newNode; newNode->next = curr;", ar:"ما هو ناتج كود إدخال عقدة في البداية؟", o:["The new node becomes the tail","The new node (10) becomes the head, and points to the old head","The list becomes empty","Error"], c:1, e:"المتغير head أصبح يشير للعقدة الجديدة (10)، ومؤشر العقدة (10) أصبح يشير للعقدة الأولى السابقة."},
+  {s:"CHAP", t:45, en:"while (curr->next != NULL) curr = curr->next; What does this code do?", ar:"ماذا يفعل هذا الكود؟", o:["Deletes the last node","Finds the last node in the linked list","Inserts a node at the beginning","Checks if the list is empty"], c:1, e:"الحلقة تستمر حتى يصل المؤشر إلى العقدة التي يشير مؤشرها التالي إلى NULL (أي العقدة الأخيرة)."},
+  {s:"CHAP", t:45, en:"How to multiply each data item in a linked list by 2?", ar:"كيف نضرب بيانات كل عقدة في القائمة بالرقم 2؟", o:["curr->data = curr->data * 2; inside the loop","curr->next = curr->data * 2;","head->data = head->data * 2;","curr = curr->data * 2;"], c:0, e:"نقوم بتعديل قيمة البيانات داخل العقدة أثناء المرور عليها."},
+  {s:"CHAP", t:45, en:"If the bottom of the stack is at location 0, then an empty stack is represented by:", ar:"إذا كانت قاعدة المكدس عند الموقع 0، فإن المكدس الفارغ يُمثل بـ:", o:["top = 0","top = 1","top = -1","top = NULL"], c:2, e:"-1 تعني أن المؤشر خارج حدود المصفوفة، أي لا يوجد أي عنصر."},
+  {s:"CHAP", t:45, en:"If TOP == MAXSIZE then:", ar:"إذا كان TOP == MAXSIZE فإن:", o:["Stack empty","Stack full","Stack overflow","Stack error"], c:1, e:"لأن المكدس وصل إلى الحجم الأقصى للمصفوفة."},
+  {s:"CHAP", t:45, en:"In Stack, pop() operation returns the last inserted element without removing it. (True/False)", ar:"عملية pop() ترجع آخر عنصر تم إدخاله دون إزالته.", o:["True","False"], c:1, e:"pop() تقوم بـ إزالة (Remove) العنصر وإرجاعه. أما الدالة top() أو peek() هي التي ترجع العنصر دون إزالته."},
+  {s:"CHAP", t:60, en:"What is the value of the postfix expression '5 4 3 7 + -' ?", ar:"ما هي قيمة تعبير Postfix التالي؟", o:["-30","30","-10","10"], c:0, e:"Push 5, 4, 3, 7. (+) -> Pop 7, 3 (3+7=10). Push 10. Stack: [5, 4, 10]. (-) -> Pop 10, 4 (4-10 = -6). Push -6. Stack: [5, -6]. (*) -> Pop -6, 5 (5 * -6 = -30)."},
+  {s:"CHAP", t:45, en:"A stack can be used to verify whether a program contains balanced braces. (True/False)", ar:"يمكن استخدام المكدس للتحقق من توازن الأقواس في البرنامج.", o:["True","False"], c:0, e:"عند رؤية قوس مفتوح نضعه في المكدس (Push)، وعند رؤية قوس مغلق نسحب من المكدس (Pop)."},
+  {s:"CHAP", t:45, en:"The operation of adding an element to the top of the stack is called:", ar:"عملية إضافة عنصر إلى قمة المكدس تسمى:", o:["Pop","Push","Top","Insert"], c:1, e:"الإضافة تسمى Push."}
+];
+
+const PHRASES = [
+  "أنت أقوى مما تظن، استمر! 💪", "كل دقيقة مراجعة تقرّبك من هدفك ⏳",
+  "الثقة بالنفس نصف النجاح ✨", "لا تقارن بدايتك بنهاية غيرك 🌱",
+  "تعب اليوم راحة الغد 🌟", "أنت قادر… فقط ابدأ 🚀",
+  "النجاح خطوات صغيرة تتكرر كل يوم 🔥", "الخطأ فرصة لتتعلم شيئًا جديدًا 📚",
+  "ركّز على التقدم لا على الكمال 🎯", "اقتربت كثيرًا، لا تتوقف الآن! 🏆"
+];
+
+const QUIZ_TOTAL_SECONDS = 120 * 60;
+const $ = id => document.getElementById(id);
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]];} return b; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const AR_KEYS = ['A','B','C','D'];
+const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+let toastTimer;
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+let playList = [];
+let idx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let locked = false;
+let wrongQuestions = [];
+let skippedCount = 0;
+let resultsBySection = {};
+let reviewReturnTo = 'screen-result';
+
+let globalTimeLeft = QUIZ_TOTAL_SECONDS;
+let questionTimeLeft = 60;
+let currentQuestionTime = 60;
+let globalTimerId = null;
+let questionTimerId = null;
+let quizStartTime = 0;
+let elapsedSeconds = 0;
+
+function show(id){
+  ['screen-home','screen-quiz','screen-result','screen-review'].forEach(s=>$(s).classList.toggle('hidden', s!==id));
+  window.scrollTo(0,0);
+}
+
+function updateGlobalDisplay(){
+  const el = $('global-timer');
+  el.textContent = '⏱ ' + fmtTime(globalTimeLeft);
+  el.classList.remove('warn','danger');
+  if(globalTimeLeft <= 60) el.classList.add('danger');
+  else if(globalTimeLeft <= 300) el.classList.add('warn');
+}
+
+function startGlobalTick(){
+  if(globalTimerId) return;
+  globalTimerId = setInterval(()=>{
+    globalTimeLeft--;
+    updateGlobalDisplay();
+    if(globalTimeLeft <= 0){
+      clearInterval(globalTimerId); globalTimerId = null;
+      onGlobalTimeout();
+    }
+  },1000);
+}
+
+function pauseGlobalTick(){
+  if(globalTimerId){ clearInterval(globalTimerId); globalTimerId = null; }
+}
+
+function startQuestionTick(){
+  questionTimeLeft = currentQuestionTime;
+  updateQuestionDisplay();
+  if(questionTimerId) clearInterval(questionTimerId);
+  
+  questionTimerId = setInterval(()=>{
+    questionTimeLeft--;
+    updateQuestionDisplay();
+    
+    // تفعيل صوت التكتكة في آخر 10 ثواني
+    if(questionTimeLeft <= 10 && questionTimeLeft > 0) {
+        sfxTick();
+        if(questionTimeLeft <= 5) sfxTickDanger(); // صوت أسرع وأقوى في آخر 5 ثواني
+    }
+    
+    if(questionTimeLeft <= 0){
+      clearInterval(questionTimerId); questionTimerId = null;
+      if(!locked) revealAnswer(-1, true);
+    }
+  },1000);
+}
+
+function stopQuestionTick(){
+  if(questionTimerId){ clearInterval(questionTimerId); questionTimerId = null; }
+}
+
+function updateQuestionDisplay(){
+  $('q-timer-text').textContent = questionTimeLeft + 's';
+  const fill = $('q-timer-fill');
+  const pct = (questionTimeLeft / currentQuestionTime) * 100;
+  fill.style.width = pct + '%';
+  fill.classList.remove('warn','danger');
+  if(questionTimeLeft <= 10) fill.classList.add('danger');
+  else if(questionTimeLeft <= 20) fill.classList.add('warn');
+}
+
+function onGlobalTimeout(){
+  stopQuestionTick();
+  toast('⏰ انتهى الوقت الإجمالي!');
+  sfxLose();
+  if(!$('screen-quiz').classList.contains('hidden')) showResult();
+}
+
+function startGame(source){
+  initAudio();
+  sfxStart();
+  const src = source || QUESTIONS;
+  playList = shuffle(src.map(q => ({...q, o:[...q.o]})));
+  idx = 0; score = 0; locked = false; streak = 0; bestStreak = 0;
+  wrongQuestions = [];
+  skippedCount = 0;
+  resultsBySection = {};
+  playList.forEach(q => {
+    if(!resultsBySection[q.s]) resultsBySection[q.s] = {correct:0, total:0};
+    resultsBySection[q.s].total++;
+  });
+  $('score-pill').textContent = '⭐ 0';
+  $('streak-pill').textContent = '🔥 0';
+  $('streak-pill').classList.remove('active');
+  globalTimeLeft = QUIZ_TOTAL_SECONDS;
+  updateGlobalDisplay();
+  quizStartTime = Date.now();
+  elapsedSeconds = 0;
+  show('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const q = playList[idx];
+  currentQuestionTime = q.t || 60;
+  $('counter').textContent = `السؤال ${idx+1} من ${playList.length}`;
+  $('section-pill').textContent = SECTION_TITLES[q.s] || q.s;
+  $('progress-fill').style.width = (idx / playList.length * 100) + '%';
+  $('question-en').textContent = q.en;
+  $('question-ar').textContent = q.ar;
+  const box = $('options'); box.innerHTML = '';
+  q.o.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="key">${AR_KEYS[i]}</span><span>${escapeHtml(opt)}</span>`;
+    btn.addEventListener('click', function(e) { e.preventDefault(); revealAnswer(i, false); });
+    box.appendChild(btn);
+  });
+  const fb = $('feedback'); fb.className='feedback hidden'; fb.innerHTML='';
+  $('btn-next').classList.add('hidden');
+  $('btn-finish').classList.add('hidden');
+  $('btn-skip').classList.remove('hidden');
+  $('btn-skip').disabled = false;
+  startQuestionTick();
+  startGlobalTick();
+}
+
+function revealAnswer(chosenIdx, isTimeout){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  $('btn-skip').classList.add('hidden');
+  const q = playList[idx];
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[q.c]) all[q.c].classList.add('correct');
+  const fb = $('feedback');
+  const phrase = pick(PHRASES);
+  const isCorrect = !isTimeout && chosenIdx === q.c;
+
+  if(isCorrect){
+    score++;
+    streak++;
+    if(streak > bestStreak) bestStreak = streak;
+    resultsBySection[q.s].correct++;
+    $('score-pill').textContent = '⭐ ' + score;
+    $('streak-pill').textContent = '🔥 ' + streak;
+    $('streak-pill').classList.toggle('active', streak >= 3);
+    sfxCorrect();
+    const rect = all[q.c].getBoundingClientRect();
+    spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+    if(streak > 0 && streak % 3 === 0){
+      setTimeout(()=>showCombo(pick(COMBO_MESSAGES) + ' ' + streak), 200);
+    }
+    fb.className = 'feedback ok';
+    fb.innerHTML = `<span class="title">✅ إجابة صحيحة! ${streak>=3?'🔥 سلسلة '+streak:''}</span><div class="exp">${q.e}</div><span class="motive">${phrase}</span>`;
+  } else {
+    if(chosenIdx !== null && chosenIdx >= 0 && all[chosenIdx]) all[chosenIdx].classList.add('wrong');
+    wrongQuestions.push(q);
+    streak = 0;
+    $('streak-pill').textContent = '🔥 0';
+    $('streak-pill').classList.remove('active');
+    sfxWrong();
+    fb.className = 'feedback no';
+    const title = isTimeout ? '⏰ انتهى وقت السؤال!' : '❌ إجابة خاطئة';
+    fb.innerHTML = `<span class="title">${title}</span><div class="exp"><b>الإجابة الصحيحة:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(q.o[q.c])}</span><br><br>${q.e}</div><span class="motive">${phrase}</span>`;
+  }
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function skipQuestion(){
+  if(locked) return;
+  locked = true;
+  stopQuestionTick();
+  pauseGlobalTick();
+  $('btn-skip').classList.add('hidden');
+  skippedCount++;
+  streak = 0;
+  $('streak-pill').textContent = '🔥 0';
+  $('streak-pill').classList.remove('active');
+  sfxSkip();
+  const all = Array.from($('options').children);
+  all.forEach(o => o.disabled = true);
+  if (all[playList[idx].c]) all[playList[idx].c].classList.add('correct');
+  const fb = $('feedback');
+  fb.className = 'feedback skip';
+  fb.innerHTML = `<span class="title">⏭ تم التخطي</span><div class="exp"><b>الإجابة الصحيحة كانت:</b> <br><span style="font-family:monospace; direction:ltr; display:inline-block; white-space:pre-wrap; margin-top:5px; color:#6ee7b7">${escapeHtml(playList[idx].o[playList[idx].c])}</span></div>`;
+  const isLast = idx === playList.length - 1;
+  $('btn-next').classList.toggle('hidden', isLast);
+  $('btn-finish').classList.toggle('hidden', !isLast);
+}
+
+function nextQuestion() { idx++; renderQuestion(); }
+
+function showResult(){
+  stopQuestionTick(); pauseGlobalTick();
+  elapsedSeconds = Math.round((Date.now() - quizStartTime)/1000);
+  const total = playList.length;
+  const pct = total ? Math.round(score / total * 100) : 0;
+  $('result-score').textContent = `${score} / ${total}`;
+  $('result-pct').textContent = pct + '%';
+  $('ring').style.background = `conic-gradient(var(--cyan) ${pct*3.6}deg, rgba(255,255,255,.1) 0deg)`;
+  $('result-time').textContent = fmtTime(elapsedSeconds);
+  $('result-streak').textContent = bestStreak;
+  $('result-skipped').textContent = skippedCount;
+  let title, msg;
+  if(pct === 100){ title='مذهل! 🏆'; msg='إجابات كاملة! أنت جاهز تمامًا للاختبار.'; sfxWin(); }
+  else if(pct >= 70){ title='أداء ممتاز! 🌟'; msg='أنت على الطريق الصحيح.'; sfxWin(); }
+  else if(pct >= 40){ title='بداية جيدة 💪'; msg='تحتاج إلى مراجعة إضافية.'; }
+  else { title='لا بأس، ابدأ من هنا 🌱'; msg='راجع الأساسيات وأعد المحاولة.'; sfxLose(); }
+  $('result-title').textContent = title;
+  $('result-msg').textContent = msg;
+  const bd = $('breakdown');
+  const sections = Object.keys(resultsBySection).sort();
+  bd.innerHTML = `<h3>📊 تحليل الأداء</h3>` + sections.map(sec => {
+    const r = resultsBySection[sec];
+    const p = r.total ? Math.round(r.correct/r.total*100) : 0;
+    return `<div class="bd-row"><span class="bd-section">${sec}</span><span class="bd-title">${SECTION_TITLES[sec]}</span><span class="bd-bar"><i style="width:${p}%"></i></span><span class="bd-score">${r.correct}/${r.total}</span></div>`;
+  }).join('');
+  $('btn-review-wrong').style.display = wrongQuestions.length ? 'block' : 'none';
+  show('screen-result');
+}
+
+function renderReview(){
+  reviewReturnTo = 'screen-result';
+  $('review-title').textContent = 'مراجعة شاملة';
+  const list = $('review-list');
+  const bySec = {};
+  QUESTIONS.forEach(q => { if(!bySec[q.s]) bySec[q.s]=[]; bySec[q.s].push(q); });
+  let html = '';
+  Object.keys(bySec).sort().forEach(sec => {
+    html += `<div style="margin:6px 0 12px"><span class="review-section">${sec}</span> <span style="color:#cbd5e1;font-size:.8rem;font-weight:700">${SECTION_TITLES[sec]}</span></div>`;
+    bySec[sec].forEach((q,i)=>{
+      html += `<div class="review-item"><div class="review-en">${i+1}. ${escapeHtml(q.en)}</div><div class="review-ar">${escapeHtml(q.ar)}</div><div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="review-exp">${q.e}</div></div>`;
+    });
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+function renderWrongReview(){
+  reviewReturnTo = 'screen-result';
+  $('review-title').textContent = 'مراجعة الأخطاء';
+  const list = $('review-list');
+  if(!wrongQuestions.length){
+    list.innerHTML = '<p style="text-align:center;color:#6ee7b7;padding:30px;font-size:1.1rem">🎉 لا توجد أخطاء! أداء ممتاز.</p>';
+    show('screen-review');
+    return;
+  }
+  let html = `<div style="margin:6px 0 12px"><span class="review-section" style="background:rgba(248,113,113,.2);color:#f87171">الأخطاء</span> <span style="color:#cbd5e1;font-size:.8rem;font-weight:700">${wrongQuestions.length} سؤال</span></div>`;
+  wrongQuestions.forEach((q,i)=>{
+    html += `<div class="review-item" style="border-color:rgba(248,113,113,.4)"><div class="review-en">${i+1}. ${escapeHtml(q.en)}</div><div class="review-ar">${escapeHtml(q.ar)}</div><div class="review-answer">✔ ${escapeHtml(q.o[q.c])}</div><div class="review-exp">${q.e}</div></div>`;
+  });
+  list.innerHTML = html;
+  show('screen-review');
+}
+
+$('btn-start').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-next').addEventListener('click', e => { e.preventDefault(); nextQuestion(); });
+$('btn-finish').addEventListener('click', e => { e.preventDefault(); showResult(); });
+$('btn-skip').addEventListener('click', e => { e.preventDefault(); skipQuestion(); });
+$('btn-retry').addEventListener('click', e => { e.preventDefault(); startGame(QUESTIONS); });
+$('btn-review-wrong').addEventListener('click', e => { e.preventDefault(); renderWrongReview(); });
+$('btn-review-full').addEventListener('click', e => { e.preventDefault(); renderReview(); });
+$('btn-back-portal').addEventListener('click', e => { e.preventDefault(); window.location.href = 'index.html'; });
+$('btn-review-back').addEventListener('click', e => { e.preventDefault(); show(reviewReturnTo); });
+$('sound-btn').addEventListener('click', e => { e.preventDefault(); toggleSound(); });
+
+$('q-count').textContent = QUESTIONS.length;
+updateGlobalDisplay();
+</script>
+</body>
+                                                               </html>
